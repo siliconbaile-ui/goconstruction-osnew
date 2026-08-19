@@ -1,0 +1,90 @@
+{
+  "name": "InspeccionCalidad",
+  "type": "object",
+  "properties": {
+    "proyecto_id": {
+      "type": "string"
+    },
+    "partida_id": {
+      "type": "string"
+    },
+    "numero_correlativo": {
+      "type": "string"
+    },
+    "tipo": {
+      "type": "string",
+      "enum": [
+        "checklist",
+        "foto",
+        "nota_voz",
+        "inspeccion_formal"
+      ],
+      "default": "checklist"
+    },
+    "gravedad": {
+      "type": "string",
+      "enum": [
+        "leve",
+        "moderada",
+        "critica"
+      ],
+      "default": "leve"
+    },
+    "estado": {
+      "type": "string",
+      "enum": [
+        "abierta",
+        "en_revision",
+        "cerrada",
+        "aprobada",
+        "rechazada"
+      ],
+      "default": "abierta"
+    },
+    "descripcion": {
+      "type": "string"
+    },
+    "observacion": {
+      "type": "string"
+    },
+    "responsable": {
+      "type": "string"
+    },
+    "inspector": {
+      "type": "string"
+    },
+    "fecha_limite_cierre": {
+      "type": "string",
+      "format": "date"
+    },
+    "fecha_cierre_real": {
+      "type": "string",
+      "format": "date"
+    },
+    "evidencia_foto_url": {
+      "type": "string"
+    },
+    "evidencia_cierre_url": {
+      "type": "string"
+    },
+    "coordenadas_gps": {
+      "type": "string"
+    },
+    "pilar": {
+      "type": "string",
+      "enum": [
+        "procesos",
+        "personas",
+        "tecnologia"
+      ]
+    },
+    "es_no_conformidad": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "proyecto_id",
+    "partida_id"
+  ]
+}

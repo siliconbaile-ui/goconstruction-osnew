@@ -1,0 +1,101 @@
+{
+  "name": "PartidaControl",
+  "type": "object",
+  "properties": {
+    "proyecto_id": {
+      "type": "string"
+    },
+    "codigo": {
+      "type": "string"
+    },
+    "nombre": {
+      "type": "string"
+    },
+    "categoria": {
+      "type": "string"
+    },
+    "avance_programado": {
+      "type": "number",
+      "default": 0
+    },
+    "avance_real": {
+      "type": "number",
+      "default": 0
+    },
+    "fecha_inicio_programada": {
+      "type": "string",
+      "format": "date"
+    },
+    "fecha_fin_programada": {
+      "type": "string",
+      "format": "date"
+    },
+    "fecha_inicio_real": {
+      "type": "string",
+      "format": "date"
+    },
+    "fecha_fin_real": {
+      "type": "string",
+      "format": "date"
+    },
+    "estado": {
+      "type": "string",
+      "enum": [
+        "pendiente",
+        "en_progreso",
+        "completada",
+        "bloqueada"
+      ],
+      "default": "pendiente"
+    },
+    "estado_calidad": {
+      "type": "string",
+      "enum": [
+        "sin_inspeccion",
+        "pendiente",
+        "aprobado",
+        "rechazado"
+      ],
+      "default": "sin_inspeccion"
+    },
+    "estado_pago": {
+      "type": "string",
+      "enum": [
+        "sin_hito",
+        "bloqueado",
+        "pendiente_revision",
+        "aprobado"
+      ],
+      "default": "sin_hito"
+    },
+    "monto_contrato_usd": {
+      "type": "number"
+    },
+    "subcontratista": {
+      "type": "string"
+    },
+    "responsable": {
+      "type": "string"
+    },
+    "hito_pago_porcentaje": {
+      "type": "number"
+    },
+    "fuente_dato": {
+      "type": "string",
+      "enum": [
+        "nupav",
+        "agisoft",
+        "csv",
+        "manual"
+      ],
+      "default": "manual"
+    },
+    "notas": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "proyecto_id",
+    "nombre"
+  ]
+}

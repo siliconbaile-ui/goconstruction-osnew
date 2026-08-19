@@ -1,0 +1,68 @@
+{
+  "name": "EstadoPago",
+  "type": "object",
+  "properties": {
+    "proyecto_id": {
+      "type": "string"
+    },
+    "partida_id": {
+      "type": "string"
+    },
+    "numero_edp": {
+      "type": "string"
+    },
+    "subcontratista": {
+      "type": "string"
+    },
+    "monto_usd": {
+      "type": "number"
+    },
+    "porcentaje_avance": {
+      "type": "number"
+    },
+    "estado": {
+      "type": "string",
+      "enum": [
+        "borrador",
+        "bloqueado_calidad",
+        "pendiente_firma",
+        "aprobado",
+        "rechazado",
+        "pagado"
+      ],
+      "default": "borrador"
+    },
+    "motivo_bloqueo": {
+      "type": "string"
+    },
+    "nc_ids": {
+      "type": "string"
+    },
+    "administrador_firma": {
+      "type": "string"
+    },
+    "fecha_firma": {
+      "type": "string",
+      "format": "date"
+    },
+    "fecha_pago": {
+      "type": "string",
+      "format": "date"
+    },
+    "observaciones": {
+      "type": "string"
+    },
+    "calidad_verificada": {
+      "type": "boolean",
+      "default": false
+    },
+    "avance_verificado": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "proyecto_id",
+    "partida_id"
+  ]
+}

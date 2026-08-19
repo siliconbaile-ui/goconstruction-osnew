@@ -1,0 +1,74 @@
+{
+  "name": "AlertaSistema",
+  "type": "object",
+  "properties": {
+    "proyecto_id": {
+      "type": "string"
+    },
+    "partida_id": {
+      "type": "string"
+    },
+    "tipo": {
+      "type": "string",
+      "enum": [
+        "desviacion_avance",
+        "no_conformidad",
+        "rdi_vencido",
+        "pago_bloqueado",
+        "sincronizacion_falla",
+        "escalamiento"
+      ],
+      "default": "desviacion_avance"
+    },
+    "nivel": {
+      "type": "string",
+      "enum": [
+        "info",
+        "advertencia",
+        "critica"
+      ],
+      "default": "advertencia"
+    },
+    "titulo": {
+      "type": "string"
+    },
+    "mensaje": {
+      "type": "string"
+    },
+    "estado": {
+      "type": "string",
+      "enum": [
+        "activa",
+        "reconocida",
+        "resuelta",
+        "archivada"
+      ],
+      "default": "activa"
+    },
+    "destinatario_rol": {
+      "type": "string",
+      "enum": [
+        "jefe_terreno",
+        "gerencia_media",
+        "alta_direccion",
+        "administrador"
+      ],
+      "default": "jefe_terreno"
+    },
+    "accion_correctiva_id": {
+      "type": "string"
+    },
+    "escalada": {
+      "type": "boolean",
+      "default": false
+    },
+    "horas_sin_respuesta": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "proyecto_id",
+    "titulo"
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "name": "RequerimientoInformacion",
+  "type": "object",
+  "properties": {
+    "proyecto_id": {
+      "type": "string"
+    },
+    "partida_id": {
+      "type": "string"
+    },
+    "numero_rdi": {
+      "type": "string"
+    },
+    "titulo": {
+      "type": "string"
+    },
+    "descripcion": {
+      "type": "string"
+    },
+    "estado": {
+      "type": "string",
+      "enum": [
+        "abierto",
+        "en_revision",
+        "respondido",
+        "cerrado",
+        "vencido"
+      ],
+      "default": "abierto"
+    },
+    "prioridad": {
+      "type": "string",
+      "enum": [
+        "baja",
+        "media",
+        "alta",
+        "critica"
+      ],
+      "default": "media"
+    },
+    "emisor": {
+      "type": "string"
+    },
+    "especialista_asignado": {
+      "type": "string"
+    },
+    "fecha_vencimiento": {
+      "type": "string",
+      "format": "date"
+    },
+    "fecha_respuesta": {
+      "type": "string",
+      "format": "date"
+    },
+    "respuesta": {
+      "type": "string"
+    },
+    "respuesta_sugerida_ia": {
+      "type": "string"
+    },
+    "confianza_ia": {
+      "type": "number"
+    },
+    "rdi_precedente_id": {
+      "type": "string"
+    },
+    "evidencia_url": {
+      "type": "string"
+    },
+    "categoria": {
+      "type": "string",
+      "enum": [
+        "diseno",
+        "materiales",
+        "procedimiento",
+        "contrato",
+        "seguridad",
+        "otro"
+      ],
+      "default": "otro"
+    }
+  },
+  "required": [
+    "proyecto_id",
+    "titulo"
+  ]
+}

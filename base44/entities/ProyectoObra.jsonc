@@ -1,0 +1,76 @@
+{
+  "name": "ProyectoObra",
+  "type": "object",
+  "properties": {
+    "nombre": {
+      "type": "string"
+    },
+    "codigo": {
+      "type": "string"
+    },
+    "estado": {
+      "type": "string",
+      "enum": [
+        "configuracion",
+        "activo",
+        "pausado",
+        "cerrado"
+      ],
+      "default": "configuracion"
+    },
+    "fecha_inicio": {
+      "type": "string",
+      "format": "date"
+    },
+    "fecha_fin_programada": {
+      "type": "string",
+      "format": "date"
+    },
+    "presupuesto_total_usd": {
+      "type": "number"
+    },
+    "avance_programado": {
+      "type": "number"
+    },
+    "avance_real": {
+      "type": "number"
+    },
+    "umbral_desviacion": {
+      "type": "number",
+      "default": 5
+    },
+    "herramienta_calidad": {
+      "type": "string",
+      "enum": [
+        "nupav",
+        "agisoft",
+        "csv",
+        "manual"
+      ],
+      "default": "csv"
+    },
+    "checklist_completitud": {
+      "type": "number",
+      "default": 0
+    },
+    "ultima_sincronizacion": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "mandante": {
+      "type": "string"
+    },
+    "administrador": {
+      "type": "string"
+    },
+    "jefe_terreno": {
+      "type": "string"
+    },
+    "descripcion": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "nombre"
+  ]
+}
