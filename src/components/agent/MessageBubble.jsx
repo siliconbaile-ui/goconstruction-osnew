@@ -5,8 +5,8 @@ import {
 } from 'lucide-react';
 
 const STATUS_META = {
-  pending: { icon: Loader2, label: 'Pendiente', color: '#4A6FA5', spin: true },
-  running: { icon: Loader2, label: 'Ejecutando', color: '#4A6FA5', spin: true },
+  pending: { icon: Loader2, label: 'Pendiente', color: '#999', spin: true },
+  running: { icon: Loader2, label: 'Ejecutando', color: '#999', spin: true },
   in_progress: { icon: Loader2, label: 'En progreso', color: '#F39C12', spin: true },
   completed: { icon: Check, label: 'Completado', color: '#27AE60', spin: false },
   success: { icon: Check, label: 'Listo', color: '#27AE60', spin: false },
@@ -44,41 +44,38 @@ function ToolCallDisplay({ toolCall }) {
   try { args = toolCall.arguments_string ? JSON.parse(toolCall.arguments_string) : null; }
   catch { args = toolCall.arguments_string; }
 
-  const toolName = toolCall.name || 'herramienta';
-  const friendlyName = toolName
-    .replace(/_/g, ' ')
-    .replace(/\b\w/g, c => c.toUpperCase());
+  const friendlyName = (toolCall.name || 'herramienta').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 
   return (
-    <div className="mt-2 text-xs" style={{ border: '1px solid #1E2D4A', borderRadius: 6, background: '#0A1628' }}>
+    <div className="mt-2 text-xs rounded-lg" style={{ background: '#F4F6FB', border: '1px solid #E8ECF4' }}>
       <button
         onClick={() => !hideDetails && setExpanded(!expanded)}
         className="w-full flex items-center gap-2 px-3 py-2 text-left"
         style={{ cursor: hideDetails ? 'default' : 'pointer' }}
       >
         {!hideDetails && (expanded
-          ? <ChevronDown className="w-3 h-3 text-slate-500" />
-          : <ChevronRight className="w-3 h-3 text-slate-500" />
+          ? <ChevronDown className="w-3 h-3" style={{ color: '#999' }} />
+          : <ChevronRight className="w-3 h-3" style={{ color: '#999' }} />
         )}
-        <Wrench className="w-3 h-3 text-slate-500" />
-        <span className="font-mono text-slate-300">{friendlyName}</span>
+        <Wrench className="w-3 h-3" style={{ color: '#999' }} />
+        <span className="font-mono" style={{ color: '#555' }}>{friendlyName}</span>
         <span className="ml-auto flex items-center gap-1.5 font-mono" style={{ color: effectiveFailed ? '#D35400' : meta.color }}>
           <Icon className={`w-3 h-3 ${meta.spin ? 'animate-spin' : ''}`} />
           {label}
         </span>
       </button>
       {expanded && !hideDetails && (
-        <div className="px-3 pb-3 pt-1 space-y-2 font-mono" style={{ borderTop: '1px solid #1E2D4A' }}>
+        <div className="px-3 pb-3 pt-1 space-y-2 font-mono" style={{ borderTop: '1px solid #E8ECF4' }}>
           {args && (
             <div>
-              <div className="text-[10px] uppercase tracking-wider mb-1" style={{ color: '#4A6FA5' }}>Parámetros</div>
-              <pre className="text-slate-300 whitespace-pre-wrap break-words text-[11px]">{JSON.stringify(args, null, 2)}</pre>
+              <div className="text-[10px] uppercase tracking-wider mb-1" style={{ color: '#999' }}>Parámetros</div>
+              <pre className="whitespace-pre-wrap break-words text-[11px]" style={{ color: '#555' }}>{JSON.stringify(args, null, 2)}</pre>
             </div>
           )}
           {parsedResults !== null && parsedResults !== undefined && (
             <div>
-              <div className="text-[10px] uppercase tracking-wider mb-1" style={{ color: '#4A6FA5' }}>Resultado</div>
-              <pre className="text-slate-300 whitespace-pre-wrap break-words text-[11px]">
+              <div className="text-[10px] uppercase tracking-wider mb-1" style={{ color: '#999' }}>Resultado</div>
+              <pre className="whitespace-pre-wrap break-words text-[11px]" style={{ color: '#555' }}>
                 {typeof parsedResults === 'object' ? JSON.stringify(parsedResults, null, 2) : String(parsedResults)}
               </pre>
             </div>
@@ -96,23 +93,23 @@ export default function MessageBubble({ message }) {
       <div className={`max-w-[85%] ${isUser ? '' : 'w-full md:max-w-[80%]'}`}>
         {!isUser && (
           <div className="flex items-center gap-2 mb-1.5">
-            <div className="w-5 h-5 rounded flex items-center justify-center" style={{ background: '#003399' }}>
+            <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ background: '#003399' }}>
               <span className="text-white text-[10px] font-bold">O</span>
             </div>
-            <span className="text-[11px] font-mono" style={{ color: '#4A6FA5' }}>ORION</span>
+            <span className="text-[11px] font-mono" style={{ color: '#999' }}>ORION</span>
           </div>
         )}
         <div
-          className={`px-4 py-3 rounded-lg ${isUser ? 'rounded-tr-sm' : 'rounded-tl-sm'}`}
+          className={`px-4 py-3 rounded-2xl ${isUser ? 'rounded-tr-sm' : 'rounded-tl-sm'}`}
           style={isUser
             ? { background: '#003399', color: 'white' }
-            : { background: '#0D1526', border: '1px solid #1E2D4A', color: '#E2E8F0' }
+            : { background: '#FFFFFF', border: '1px solid #EDEDED', color: '#212121' }
           }
         >
           {message.content && (
             isUser
               ? <p className="text-sm whitespace-pre-wrap leading-relaxed">{message.content}</p>
-              : <div className="text-sm leading-relaxed prose prose-sm prose-invert max-w-none [&_p]:my-1 [&_ul]:my-1 [&_li]:my-0.5">
+              : <div className="text-sm leading-relaxed prose prose-sm max-w-none [&_p]:my-1 [&_ul]:my-1 [&_li]:my-0.5 [&_code]:px-1 [&_code]:rounded [&_code]:bg-gray-100 [&_code]:text-[12px]">
                   <ReactMarkdown>{message.content}</ReactMarkdown>
                 </div>
           )}
