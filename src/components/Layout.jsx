@@ -11,6 +11,7 @@ const NAV_ITEMS = [
   { label: 'QA Terreno', path: '/qa-terreno', icon: CheckSquare },
   { label: 'Gestor RDI', path: '/gestor-rdi', icon: FileText },
   { label: 'Semáforo Pagos', path: '/semaforo-pagos', icon: CreditCard },
+  { label: 'Centro de Alertas', path: '/centro-alertas', icon: Bell },
   { label: 'Configuración', path: '/configuracion', icon: Settings },
   { label: 'Asistente Orion', path: '/asistente', icon: Bot },
 ];
@@ -116,10 +117,10 @@ export default function Layout() {
               <Activity className="w-3 h-3" style={{ color: '#27AE60' }} />
               <span>SYNC: <span style={{ color: '#27AE60' }}>OK</span></span>
             </div>
-            <button className="relative p-2 rounded text-slate-400 hover:text-white hover:bg-white/5">
+            <Link to="/centro-alertas" className="relative p-2 rounded text-slate-400 hover:text-white hover:bg-white/5" title="Centro de Alertas">
               <Bell className="w-4 h-4" />
               <span className="absolute top-1 right-1 w-2 h-2 rounded-full" style={{ background: '#D35400' }} />
-            </button>
+            </Link>
           </div>
         </header>
 
