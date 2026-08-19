@@ -1,0 +1,41 @@
+{
+  "name": "Detecci\u00f3n de Desviaci\u00f3n de Avance",
+  "description": "Al actualizarse el avance de una partida, calcula la desviaci\u00f3n real vs programada; si supera el umbral del proyecto genera una alerta autom\u00e1tica (cr\u00edtica si duplica el umbral) y si vuelve a programa resuelve las alertas previas.",
+  "trigger": {
+    "config": {
+      "trigger_type": "entity",
+      "entity_name": "PartidaControl",
+      "events": [
+        "create",
+        "update"
+      ]
+    },
+    "condition": "${ .trigger.event_type == \"create\" or (.trigger.changed_fields | index(\"avance_real\") != null) or (.trigger.changed_fields | index(\"avance_programado\") != null) }"
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "deteccion_desviacion_avance",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "evaluar_desviacion": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "detectarDesviacion",
+            "args": {
+              "partida_id": "${ .trigger.entity_id }"
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Evaluar desviaci\u00f3n",
+            "description": "Real vs programado"
+          }
+        }
+      }
+    ]
+  }
+}

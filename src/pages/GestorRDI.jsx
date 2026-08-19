@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { FileText, Plus, Clock, CheckCircle, AlertTriangle, Zap } from 'lucide-react';
+import { FileText, Plus, Clock, CheckCircle, AlertTriangle, Zap, Sparkles, Loader2 } from 'lucide-react';
 import OrionCard from '@/components/OrionCard';
 import { prioridadColor, formatFecha, bgSemaforo } from '@/lib/orionUtils';
 
@@ -13,6 +13,7 @@ export default function GestorRDI() {
   const [filtro, setFiltro] = useState('activos');
   const [respondiendo, setRespondiendo] = useState(null);
   const [respuesta, setRespuesta] = useState('');
+  const [sugiriendo, setSugiriendo] = useState(null);
   const [form, setForm] = useState({
     titulo: '', descripcion: '', partida_id: '', emisor: '',
     especialista_asignado: '', prioridad: 'media', categoria: 'otro',
@@ -58,6 +59,37 @@ export default function GestorRDI() {
     setRdis(prev => prev.map(r => r.id === id ? { ...r, respuesta, estado: 'respondido' } : r));
     setRespondiendo(null);
     setRespuesta('');
+  };
+
+  const sugerirIA = async (rdi) => {
+    setSugiriendo(rdi.id);
+    try {
+      const partida = partidas.find(p => p.id === rdi.partida_id);
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: `Eres un especialista técnico senior en construcción (obras de edificación en Chile). Responde este Requerimiento de Información (RDI) de forma técnica, precisa y accionable, en español, máximo 120 palabras.
+
+RDI ${rdi.numero_rdi || ''}: ${rdi.titulo}
+Descripción: ${rdi.descripcion || 'Sin descripción'}
+Categoría: ${rdi.categoria || 'otro'} · Prioridad: ${rdi.prioridad || 'media'}
+${partida ? `Partida asociada: ${partida.nombre} (avance real ${partida.avance_real || 0}%, calidad: ${partida.estado_calidad || 'sin inspección'})` : ''}
+
+Entrega una respuesta técnica sugerida y un nivel de confianza (0 a 100) según cuánta información hay disponible para responder con certeza.`,
+        response_json_schema: {
+          type: 'object',
+          properties: {
+            respuesta: { type: 'string' },
+            confianza: { type: 'number' }
+          }
+        }
+      });
+      await base44.entities.RequerimientoInformacion.update(rdi.id, {
+        respuesta_sugerida_ia: result.respuesta,
+        confianza_ia: result.confianza,
+      });
+      setRdis(prev => prev.map(r => r.id === rdi.id ? { ...r, respuesta_sugerida_ia: result.respuesta, confianza_ia: result.confianza } : r));
+    } finally {
+      setSugiriendo(null);
+    }
   };
 
   const cerrar = async (id) => {
@@ -239,10 +271,44 @@ export default function GestorRDI() {
                   </div>
                 )}
 
+                {rdi.respuesta_sugerida_ia && !rdi.respuesta && (
+                  <div className="mt-3 p-3 rounded text-xs" style={{ background: 'rgba(0,51,153,0.08)', border: '1px solid rgba(0,51,153,0.35)' }}>
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="font-mono text-[10px] flex items-center gap-1" style={{ color: '#5B8DEF' }}>
+                        <Sparkles className="w-3 h-3" /> RESPUESTA SUGERIDA POR IA
+                      </div>
+                      {typeof rdi.confianza_ia === 'number' && (
+                        <span className="font-mono text-[10px]" style={{ color: rdi.confianza_ia >= 70 ? '#27AE60' : '#F39C12' }}>
+                          CONFIANZA: {Math.round(rdi.confianza_ia)}%
+                        </span>
+                      )}
+                    </div>
+                    <div className="text-slate-300">{rdi.respuesta_sugerida_ia}</div>
+                    {['abierto', 'en_revision'].includes(rdi.estado) && (
+                      <button
+                        onClick={() => { setRespondiendo(rdi.id); setRespuesta(rdi.respuesta_sugerida_ia); }}
+                        className="mt-2 px-3 py-1 rounded text-[10px] font-mono text-white"
+                        style={{ background: '#003399' }}
+                      >
+                        Usar como respuesta
+                      </button>
+                    )}
+                  </div>
+                )}
+
                 {['abierto', 'en_revision'].includes(rdi.estado) && (
                   <div className="mt-3 pt-3 flex gap-2 flex-wrap" style={{ borderTop: '1px solid #1E2D4A' }}>
                     <button onClick={() => setRespondiendo(rdi.id)} className="px-3 py-1.5 rounded text-xs font-mono text-white flex items-center gap-1" style={{ background: '#003399' }}>
                       <Zap className="w-3 h-3" /> Responder
+                    </button>
+                    <button
+                      onClick={() => sugerirIA(rdi)}
+                      disabled={sugiriendo === rdi.id}
+                      className="px-3 py-1.5 rounded text-xs font-mono flex items-center gap-1 disabled:opacity-50"
+                      style={{ background: 'rgba(0,51,153,0.15)', border: '1px solid rgba(0,51,153,0.4)', color: '#5B8DEF' }}
+                    >
+                      {sugiriendo === rdi.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
+                      {sugiriendo === rdi.id ? 'Generando...' : 'Sugerir con IA'}
                     </button>
                     <button onClick={() => cerrar(rdi.id)} className="px-3 py-1.5 rounded text-xs font-mono text-emerald-400 flex items-center gap-1" style={{ background: 'rgba(39,174,96,0.1)', border: '1px solid rgba(39,174,96,0.3)' }}>
                       <CheckCircle className="w-3 h-3" /> Cerrar
