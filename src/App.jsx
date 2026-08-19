@@ -15,6 +15,7 @@ import SemaforoPagos from '@/pages/SemaforoPagos';
 import Configuracion from '@/pages/Configuracion';
 import AsistenteOrion from '@/pages/AsistenteOrion';
 import CentroAlertas from '@/pages/CentroAlertas';
+import SincronizacionDatos from '@/pages/SincronizacionDatos';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -50,6 +51,7 @@ const AuthenticatedApp = () => {
         <Route path="/configuracion" element={<Configuracion />} />
         <Route path="/asistente" element={<AsistenteOrion />} />
         <Route path="/centro-alertas" element={<CentroAlertas />} />
+        <Route path="/sincronizacion" element={<SincronizacionDatos />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
