@@ -1,0 +1,45 @@
+{
+  "description": "Cada hora revisa los RDIs abiertos: marca como vencidos los que pasaron su fecha de vencimiento y genera alertas por RDI vencido o sin especialista asignado por m\u00e1s de 2 horas.",
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "control_vencimiento_rdis",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "revisar_rdis": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "detectarRDIVencidos",
+            "args": {}
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Revisar RDIs abiertos",
+            "description": "Vencidos y sin asignar"
+          }
+        }
+      }
+    ]
+  },
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "0 * * * *",
+      "one_time_date": null,
+      "timezone": "America/Santiago",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  },
+  "name": "Control de Vencimiento de RDIs"
+}
