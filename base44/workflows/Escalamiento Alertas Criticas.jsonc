@@ -1,0 +1,45 @@
+{
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "0 * * * *",
+      "one_time_date": null,
+      "timezone": "America/Santiago",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  },
+  "name": "Escalamiento Autom\u00e1tico de Alertas Cr\u00edticas",
+  "description": "Cada hora busca alertas cr\u00edticas activas con m\u00e1s de 24h sin respuesta y las escala autom\u00e1ticamente al siguiente nivel jer\u00e1rquico (jefe_terreno \u2192 gerencia_media \u2192 alta_direccion \u2192 administrador), registrando una traza de escalamiento.",
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "escalamiento_alertas_criticas",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "escalar": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "escalarAlertasCriticas",
+            "args": {}
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Escalar alertas cr\u00edticas",
+            "description": ">24h sin respuesta"
+          }
+        }
+      }
+    ]
+  }
+}
