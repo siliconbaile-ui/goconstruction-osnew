@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { FileText, Plus, Clock, CheckCircle, AlertTriangle, Zap, Sparkles, Loader2 } from 'lucide-react';
+import { FileText, Plus, Clock, CheckCircle, AlertTriangle, Zap, Sparkles, Loader2, LayoutGrid, List } from 'lucide-react';
 import OrionCard from '@/components/OrionCard';
+import RDIKanban from '@/components/rdi/RDIKanban';
 import { prioridadColor, formatFecha, bgSemaforo } from '@/lib/orionUtils';
 
 export default function GestorRDI() {
@@ -11,6 +12,7 @@ export default function GestorRDI() {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [filtro, setFiltro] = useState('activos');
+  const [vista, setVista] = useState('kanban');
   const [respondiendo, setRespondiendo] = useState(null);
   const [respuesta, setRespuesta] = useState('');
   const [sugiriendo, setSugiriendo] = useState(null);
@@ -92,6 +94,11 @@ Entrega una respuesta técnica sugerida y un nivel de confianza (0 a 100) según
     }
   };
 
+  const moverEstado = async (id, estado) => {
+    await base44.entities.RequerimientoInformacion.update(id, { estado });
+    setRdis(prev => prev.map(r => r.id === id ? { ...r, estado } : r));
+  };
+
   const cerrar = async (id) => {
     await base44.entities.RequerimientoInformacion.update(id, { estado: 'cerrado' });
     setRdis(prev => prev.map(r => r.id === id ? { ...r, estado: 'cerrado' } : r));
@@ -162,6 +169,18 @@ Entrega una respuesta técnica sugerida y un nivel de confianza (0 a 100) según
             {f.label}
           </button>
         ))}
+        <div className="ml-auto flex gap-1 rounded p-0.5" style={{ background: '#0D1526', border: '1px solid #1E2D4A' }}>
+          {[{ key: 'kanban', icon: LayoutGrid }, { key: 'lista', icon: List }].map(v => {
+            const Icon = v.icon;
+            return (
+              <button key={v.key} onClick={() => setVista(v.key)} title={v.key}
+                className="px-2.5 py-1.5 rounded transition-colors"
+                style={vista === v.key ? { background: '#003399', color: 'white' } : { color: '#4A6FA5' }}>
+                <Icon className="w-3.5 h-3.5" />
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Form */}
@@ -217,7 +236,13 @@ Entrega una respuesta técnica sugerida y un nivel de confianza (0 a 100) según
         </OrionCard>
       )}
 
+      {/* Kanban */}
+      {vista === 'kanban' && !loading && (
+        <RDIKanban rdis={filtro === 'todos' ? rdis : rdis} partidas={partidas} onMove={moverEstado} />
+      )}
+
       {/* Lista RDIs */}
+      {vista === 'lista' && (
       <div className="space-y-3">
         {loading ? (
           <OrionCard className="p-8 text-center text-slate-500 font-mono text-xs">CARGANDO RDIs...</OrionCard>
@@ -337,6 +362,7 @@ Entrega una respuesta técnica sugerida y un nivel de confianza (0 a 100) según
           })
         )}
       </div>
+      )}
     </div>
   );
 }

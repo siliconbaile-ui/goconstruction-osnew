@@ -44,7 +44,8 @@ const AuthenticatedApp = () => {
   return (
     <Routes>
       <Route element={<Layout />}>
-        <Route path="/" element={<Dashboard />} />
+        <Route path="/" element={<AsistenteOrion />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/monitor-avance" element={<MonitorAvance />} />
         <Route path="/qa-terreno" element={<QATerreno />} />
         <Route path="/gestor-rdi" element={<GestorRDI />} />

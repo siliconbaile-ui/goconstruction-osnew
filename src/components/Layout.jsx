@@ -6,7 +6,8 @@ import {
 } from 'lucide-react';
 
 const NAV_ITEMS = [
-  { label: 'Dashboard', path: '/', icon: LayoutDashboard },
+  { label: 'Asistente Orion', path: '/', icon: Bot },
+  { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
   { label: 'Monitor Avance', path: '/monitor-avance', icon: TrendingUp },
   { label: 'QA Terreno', path: '/qa-terreno', icon: CheckSquare },
   { label: 'Gestor RDI', path: '/gestor-rdi', icon: FileText },
@@ -15,7 +16,6 @@ const NAV_ITEMS = [
   { label: 'Sincronización', path: '/sincronizacion', icon: Database },
   { label: 'Informe Ejecutivo', path: '/informe-ejecutivo', icon: FileBarChart },
   { label: 'Configuración', path: '/configuracion', icon: Settings },
-  { label: 'Asistente Orion', path: '/asistente', icon: Bot },
 ];
 
 export default function Layout() {

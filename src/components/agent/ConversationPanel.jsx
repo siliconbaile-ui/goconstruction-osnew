@@ -107,14 +107,16 @@ export default function ConversationPanel() {
     })();
   }, [messages]);
 
-  const send = async (text) => {
+  const send = async (text, fileUrls = []) => {
     const content = (text ?? input).trim();
-    if (!content || !activeId || sending) return;
+    if ((!content && fileUrls.length === 0) || !activeId || sending) return;
     setInput('');
     setSending(true);
     try {
       const conv = conversations.find(c => c.id === activeId) || await base44.agents.getConversation(activeId);
-      await base44.agents.addMessage(conv, { role: 'user', content });
+      const msg = { role: 'user', content: content || 'Analiza los documentos adjuntos, extrae los datos relevantes y crúzalos con la información de la obra.' };
+      if (fileUrls.length > 0) msg.file_urls = fileUrls;
+      await base44.agents.addMessage(conv, msg);
     } catch (e) {
       console.error(e);
     } finally {
@@ -208,7 +210,7 @@ export default function ConversationPanel() {
             )}
           </div>
 
-          <ChatComposer value={input} onChange={setInput} onSend={() => send()} sending={sending} />
+          <ChatComposer value={input} onChange={setInput} onSend={(fileUrls) => send(undefined, fileUrls)} sending={sending} />
         </div>
       </div>
 

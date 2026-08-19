@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import {
-  ChevronDown, ChevronRight, Check, X, Loader2, AlertTriangle, Wrench
+  ChevronDown, ChevronRight, Check, X, Loader2, AlertTriangle, Wrench, FileText
 } from 'lucide-react';
+import SmartDataCard from './SmartDataCard';
 
 const STATUS_META = {
   pending: { icon: Loader2, label: 'Pendiente', color: '#999', spin: true },
@@ -46,6 +47,13 @@ function ToolCallDisplay({ toolCall }) {
 
   const friendlyName = (toolCall.name || 'herramienta').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 
+  const records = Array.isArray(parsedResults) ? parsedResults
+    : Array.isArray(parsedResults?.data) ? parsedResults.data
+    : Array.isArray(parsedResults?.results) ? parsedResults.results
+    : null;
+  const showCards = !hideDetails && !effectiveFailed && records && records.length > 0 &&
+    typeof records[0] === 'object' && records[0] !== null;
+
   return (
     <div className="mt-2 text-xs rounded-lg" style={{ background: '#F4F6FB', border: '1px solid #E8ECF4' }}>
       <button
@@ -64,6 +72,11 @@ function ToolCallDisplay({ toolCall }) {
           {label}
         </span>
       </button>
+      {showCards && !expanded && (
+        <div className="px-3 pb-3">
+          <SmartDataCard records={records} />
+        </div>
+      )}
       {expanded && !hideDetails && (
         <div className="px-3 pb-3 pt-1 space-y-2 font-mono" style={{ borderTop: '1px solid #E8ECF4' }}>
           {args && (
@@ -112,6 +125,19 @@ export default function MessageBubble({ message }) {
               : <div className="text-sm leading-relaxed prose prose-sm max-w-none [&_p]:my-1 [&_ul]:my-1 [&_li]:my-0.5 [&_code]:px-1 [&_code]:rounded [&_code]:bg-gray-100 [&_code]:text-[12px]">
                   <ReactMarkdown>{message.content}</ReactMarkdown>
                 </div>
+          )}
+          {message.file_urls?.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 mt-2">
+              {message.file_urls.map((url, i) => (
+                <a key={i} href={url} target="_blank" rel="noreferrer"
+                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono"
+                  style={isUser
+                    ? { background: 'rgba(255,255,255,0.15)', color: 'white' }
+                    : { background: '#F1F4FB', color: '#003399' }}>
+                  <FileText className="w-3 h-3" /> DOC {i + 1}
+                </a>
+              ))}
+            </div>
           )}
           {message.tool_calls?.map((tc, i) => <ToolCallDisplay key={i} toolCall={tc} />)}
         </div>
