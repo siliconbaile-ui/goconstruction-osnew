@@ -13,6 +13,7 @@ import QATerreno from '@/pages/QATerreno';
 import GestorRDI from '@/pages/GestorRDI';
 import SemaforoPagos from '@/pages/SemaforoPagos';
 import Configuracion from '@/pages/Configuracion';
+import AsistenteOrion from '@/pages/AsistenteOrion';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -46,6 +47,7 @@ const AuthenticatedApp = () => {
         <Route path="/gestor-rdi" element={<GestorRDI />} />
         <Route path="/semaforo-pagos" element={<SemaforoPagos />} />
         <Route path="/configuracion" element={<Configuracion />} />
+        <Route path="/asistente" element={<AsistenteOrion />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

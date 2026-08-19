@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, TrendingUp, CheckSquare, FileText, CreditCard,
-  Settings, Bell, ChevronRight, Menu, X, Activity, Zap
+  Settings, Bell, ChevronRight, Menu, X, Activity, Zap, Bot
 } from 'lucide-react';
 
 const NAV_ITEMS = [
@@ -12,6 +12,7 @@ const NAV_ITEMS = [
   { label: 'Gestor RDI', path: '/gestor-rdi', icon: FileText },
   { label: 'Semáforo Pagos', path: '/semaforo-pagos', icon: CreditCard },
   { label: 'Configuración', path: '/configuracion', icon: Settings },
+  { label: 'Asistente Orion', path: '/asistente', icon: Bot },
 ];
 
 export default function Layout() {
