@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, TrendingUp, CheckSquare, FileText, CreditCard,
-  Settings, Bell, ChevronRight, Menu, X, Activity, Zap, Bot, Database
+  Settings, Bell, ChevronRight, Menu, X, Activity, Zap, Bot, Database, FileBarChart
 } from 'lucide-react';
 
 const NAV_ITEMS = [
@@ -13,6 +13,7 @@ const NAV_ITEMS = [
   { label: 'Semáforo Pagos', path: '/semaforo-pagos', icon: CreditCard },
   { label: 'Centro de Alertas', path: '/centro-alertas', icon: Bell },
   { label: 'Sincronización', path: '/sincronizacion', icon: Database },
+  { label: 'Informe Ejecutivo', path: '/informe-ejecutivo', icon: FileBarChart },
   { label: 'Configuración', path: '/configuracion', icon: Settings },
   { label: 'Asistente Orion', path: '/asistente', icon: Bot },
 ];

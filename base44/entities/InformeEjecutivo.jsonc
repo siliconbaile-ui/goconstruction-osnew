@@ -1,0 +1,64 @@
+{
+  "name": "InformeEjecutivo",
+  "type": "object",
+  "properties": {
+    "proyecto_id": {
+      "type": "string"
+    },
+    "periodo": {
+      "type": "string"
+    },
+    "fecha_generacion": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "resumen_ejecutivo": {
+      "type": "string"
+    },
+    "riesgos_principales": {
+      "type": "string"
+    },
+    "acciones_recomendadas": {
+      "type": "string"
+    },
+    "estado_general": {
+      "type": "string",
+      "enum": [
+        "verde",
+        "amarillo",
+        "rojo"
+      ],
+      "default": "verde"
+    },
+    "avance_real": {
+      "type": "number"
+    },
+    "avance_programado": {
+      "type": "number"
+    },
+    "desviacion": {
+      "type": "number"
+    },
+    "nc_abiertas": {
+      "type": "number"
+    },
+    "rdis_abiertos": {
+      "type": "number"
+    },
+    "edps_bloqueados": {
+      "type": "number"
+    },
+    "monto_bloqueado_usd": {
+      "type": "number"
+    },
+    "alertas_criticas": {
+      "type": "number"
+    },
+    "generado_por": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "proyecto_id"
+  ]
+}
