@@ -18,6 +18,7 @@ import CentroAlertas from '@/pages/CentroAlertas';
 import SincronizacionDatos from '@/pages/SincronizacionDatos';
 import InformeEjecutivo from '@/pages/InformeEjecutivo';
 import BaseConocimiento from '@/pages/BaseConocimiento';
+import EvidenciaTerreno from '@/pages/EvidenciaTerreno';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -57,6 +58,7 @@ const AuthenticatedApp = () => {
         <Route path="/sincronizacion" element={<SincronizacionDatos />} />
         <Route path="/informe-ejecutivo" element={<InformeEjecutivo />} />
         <Route path="/base-conocimiento" element={<BaseConocimiento />} />
+        <Route path="/evidencia-terreno" element={<EvidenciaTerreno />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
