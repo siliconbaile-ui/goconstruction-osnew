@@ -21,21 +21,24 @@
       "entity_name": "RequerimientoInformacion",
       "allowed_operations": [
         "read",
-        "update"
+        "update",
+        "create"
       ]
     },
     {
       "entity_name": "InspeccionCalidad",
       "allowed_operations": [
         "read",
-        "update"
+        "update",
+        "create"
       ]
     },
     {
       "entity_name": "EstadoPago",
       "allowed_operations": [
         "read",
-        "update"
+        "update",
+        "create"
       ]
     },
     {
@@ -43,6 +46,25 @@
       "allowed_operations": [
         "read"
       ]
+    },
+    {
+      "entity_name": "InformeEjecutivo",
+      "allowed_operations": [
+        "read",
+        "create"
+      ]
+    },
+    {
+      "function_name": "escalarAlertasCriticas",
+      "description": "Escala alertas cr\u00edticas con m\u00e1s de 24h sin respuesta al siguiente nivel jer\u00e1rquico"
+    },
+    {
+      "function_name": "detectarDesviacion",
+      "description": "Analiza todas las partidas y genera alertas por desviaci\u00f3n de avance sobre el umbral"
+    },
+    {
+      "function_name": "detectarRDIVencidos",
+      "description": "Detecta RDIs vencidos o sin especialista asignado y genera alertas"
     }
   ],
   "context_files": [],
