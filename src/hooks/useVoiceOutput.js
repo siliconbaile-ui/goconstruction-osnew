@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 
-// Lee en voz alta la última respuesta de Orion con el perfil de voz "river".
-export default function useVoiceOutput(messages, activo) {
+// Lee en voz alta la última respuesta de Orion con voz neuronal profesional
+// de Google Cloud (español latinoamericano). Si Google falla, usa la voz nativa.
+export default function useVoiceOutput(messages, activo, voz = 'river') {
   const ultimoLeido = useRef(null);
   const audioRef = useRef(null);
   const [hablando, setHablando] = useState(false);
@@ -28,14 +29,22 @@ export default function useVoiceOutput(messages, activo) {
     (async () => {
       setHablando(true);
       try {
-        const { url } = await base44.integrations.Core.GenerateSpeech({
-          text: texto,
-          voice: 'river',
-          language_code: 'es',
-        });
-        if (cancelado || !url) return;
+        let src = null;
+        try {
+          const { data } = await base44.functions.invoke('vozOrion', { texto, voz });
+          if (data?.audio_base64) src = `data:audio/mp3;base64,${data.audio_base64}`;
+        } catch {
+          src = null;
+        }
+        if (!src) {
+          const { url } = await base44.integrations.Core.GenerateSpeech({
+            text: texto, voice: voz, language_code: 'es',
+          });
+          src = url;
+        }
+        if (cancelado || !src) return;
         audioRef.current?.pause();
-        const audio = new Audio(url);
+        const audio = new Audio(src);
         audioRef.current = audio;
         audio.onended = () => setHablando(false);
         await audio.play();
@@ -45,7 +54,7 @@ export default function useVoiceOutput(messages, activo) {
     })();
 
     return () => { cancelado = true; };
-  }, [messages, activo]);
+  }, [messages, activo, voz]);
 
   useEffect(() => {
     if (!activo && audioRef.current) {
