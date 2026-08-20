@@ -17,6 +17,7 @@ import AsistenteOrion from '@/pages/AsistenteOrion';
 import CentroAlertas from '@/pages/CentroAlertas';
 import SincronizacionDatos from '@/pages/SincronizacionDatos';
 import InformeEjecutivo from '@/pages/InformeEjecutivo';
+import BaseConocimiento from '@/pages/BaseConocimiento';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -55,6 +56,7 @@ const AuthenticatedApp = () => {
         <Route path="/centro-alertas" element={<CentroAlertas />} />
         <Route path="/sincronizacion" element={<SincronizacionDatos />} />
         <Route path="/informe-ejecutivo" element={<InformeEjecutivo />} />
+        <Route path="/base-conocimiento" element={<BaseConocimiento />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, TrendingUp, CheckSquare, FileText, CreditCard,
-  Settings, Bell, ChevronRight, Menu, X, Activity, Zap, Bot, Database, FileBarChart
+  Settings, Bell, ChevronRight, Menu, X, Activity, Zap, Bot, Database, FileBarChart, BookOpen
 } from 'lucide-react';
 
 const NAV_ITEMS = [
@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
   { label: 'Monitor Avance', path: '/monitor-avance', icon: TrendingUp },
   { label: 'QA Terreno', path: '/qa-terreno', icon: CheckSquare },
+  { label: 'Base Conocimiento', path: '/base-conocimiento', icon: BookOpen },
   { label: 'Gestor RDI', path: '/gestor-rdi', icon: FileText },
   { label: 'Semáforo Pagos', path: '/semaforo-pagos', icon: CreditCard },
   { label: 'Centro de Alertas', path: '/centro-alertas', icon: Bell },

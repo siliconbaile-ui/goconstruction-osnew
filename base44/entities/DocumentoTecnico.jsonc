@@ -1,0 +1,77 @@
+{
+  "name": "DocumentoTecnico",
+  "type": "object",
+  "properties": {
+    "proyecto_id": {
+      "type": "string"
+    },
+    "titulo": {
+      "type": "string"
+    },
+    "tipo": {
+      "type": "string",
+      "enum": [
+        "plano",
+        "eett",
+        "normativa",
+        "contrato",
+        "protocolo",
+        "presupuesto",
+        "otro"
+      ],
+      "default": "otro"
+    },
+    "especialidad": {
+      "type": "string",
+      "enum": [
+        "arquitectura",
+        "estructura",
+        "sanitario",
+        "electrico",
+        "clima",
+        "obra_civil",
+        "general"
+      ],
+      "default": "general"
+    },
+    "file_url": {
+      "type": "string"
+    },
+    "nombre_archivo": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "estado_indexacion": {
+      "type": "string",
+      "enum": [
+        "pendiente",
+        "indexando",
+        "indexado",
+        "error"
+      ],
+      "default": "pendiente"
+    },
+    "resumen": {
+      "type": "string"
+    },
+    "indice_contenido": {
+      "type": "string"
+    },
+    "paginas_totales": {
+      "type": "number"
+    },
+    "vigente": {
+      "type": "boolean",
+      "default": true
+    },
+    "notas": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "titulo",
+    "file_url"
+  ]
+}
