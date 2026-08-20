@@ -174,8 +174,7 @@
 .light textarea::placeholder {
   color: hsl(var(--muted-foreground)) !important;
 }
-/* El asistente se diseñó en tonos claros: en modo oscuro se remapea
-   a las superficies ink del command center. */
+/* Compatibilidad legacy (vistas aún no migradas a tokens) */
 .dark [style*="rgb(246, 244, 241)"],
 .dark [style*="rgb(247, 246, 243)"] {
   background-color: hsl(var(--surface-0)) !important;

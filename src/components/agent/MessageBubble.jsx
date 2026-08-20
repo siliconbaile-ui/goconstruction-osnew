@@ -6,13 +6,13 @@ import {
 import SmartDataCard from './SmartDataCard';
 
 const STATUS_META = {
-  pending: { icon: Loader2, label: 'Pendiente', color: '#999', spin: true },
-  running: { icon: Loader2, label: 'Ejecutando', color: '#999', spin: true },
-  in_progress: { icon: Loader2, label: 'En progreso', color: '#F39C12', spin: true },
-  completed: { icon: Check, label: 'Completado', color: '#27AE60', spin: false },
-  success: { icon: Check, label: 'Listo', color: '#27AE60', spin: false },
-  failed: { icon: X, label: 'Falló', color: '#D35400', spin: false },
-  error: { icon: AlertTriangle, label: 'Error', color: '#D35400', spin: false },
+  pending: { icon: Loader2, label: 'Pendiente', color: 'hsl(var(--muted-foreground))', spin: true },
+  running: { icon: Loader2, label: 'Ejecutando', color: 'hsl(var(--muted-foreground))', spin: true },
+  in_progress: { icon: Loader2, label: 'En progreso', color: 'hsl(var(--warn))', spin: true },
+  completed: { icon: Check, label: 'Completado', color: 'hsl(var(--ok))', spin: false },
+  success: { icon: Check, label: 'Listo', color: 'hsl(var(--ok))', spin: false },
+  failed: { icon: X, label: 'Falló', color: 'hsl(var(--danger))', spin: false },
+  error: { icon: AlertTriangle, label: 'Error', color: 'hsl(var(--danger))', spin: false },
 };
 
 function ToolCallDisplay({ toolCall }) {
@@ -55,19 +55,19 @@ function ToolCallDisplay({ toolCall }) {
     typeof records[0] === 'object' && records[0] !== null;
 
   return (
-    <div className="mt-2 text-xs rounded-lg" style={{ background: '#F4F6FB', border: '1px solid #E8ECF4' }}>
+    <div className="mt-2 text-xs rounded-lg bg-surface-raised border border-hairline">
       <button
         onClick={() => !hideDetails && setExpanded(!expanded)}
         className="w-full flex items-center gap-2 px-3 py-2 text-left"
         style={{ cursor: hideDetails ? 'default' : 'pointer' }}
       >
         {!hideDetails && (expanded
-          ? <ChevronDown className="w-3 h-3" style={{ color: '#999' }} />
-          : <ChevronRight className="w-3 h-3" style={{ color: '#999' }} />
+          ? <ChevronDown className="w-3 h-3 text-muted-foreground" />
+          : <ChevronRight className="w-3 h-3 text-muted-foreground" />
         )}
-        <Wrench className="w-3 h-3" style={{ color: '#999' }} />
-        <span className="font-mono" style={{ color: '#555' }}>{friendlyName}</span>
-        <span className="ml-auto flex items-center gap-1.5 font-mono" style={{ color: effectiveFailed ? '#D35400' : meta.color }}>
+        <Wrench className="w-3 h-3 text-muted-foreground" />
+        <span className="font-mono text-muted-foreground">{friendlyName}</span>
+        <span className="ml-auto flex items-center gap-1.5 font-mono" style={{ color: effectiveFailed ? 'hsl(var(--danger))' : meta.color }}>
           <Icon className={`w-3 h-3 ${meta.spin ? 'animate-spin' : ''}`} />
           {label}
         </span>
@@ -78,17 +78,17 @@ function ToolCallDisplay({ toolCall }) {
         </div>
       )}
       {expanded && !hideDetails && (
-        <div className="px-3 pb-3 pt-1 space-y-2 font-mono" style={{ borderTop: '1px solid #E8ECF4' }}>
+        <div className="px-3 pb-3 pt-1 space-y-2 font-mono border-t border-hairline">
           {args && (
             <div>
-              <div className="text-[10px] uppercase tracking-wider mb-1" style={{ color: '#999' }}>Parámetros</div>
-              <pre className="whitespace-pre-wrap break-words text-[11px]" style={{ color: '#555' }}>{JSON.stringify(args, null, 2)}</pre>
+              <div className="text-[10px] uppercase tracking-wider mb-1 text-muted-foreground">Parámetros</div>
+              <pre className="whitespace-pre-wrap break-words text-[11px] text-foreground/80">{JSON.stringify(args, null, 2)}</pre>
             </div>
           )}
           {parsedResults !== null && parsedResults !== undefined && (
             <div>
-              <div className="text-[10px] uppercase tracking-wider mb-1" style={{ color: '#999' }}>Resultado</div>
-              <pre className="whitespace-pre-wrap break-words text-[11px]" style={{ color: '#555' }}>
+              <div className="text-[10px] uppercase tracking-wider mb-1 text-muted-foreground">Resultado</div>
+              <pre className="whitespace-pre-wrap break-words text-[11px] text-foreground/80">
                 {typeof parsedResults === 'object' ? JSON.stringify(parsedResults, null, 2) : String(parsedResults)}
               </pre>
             </div>
@@ -106,23 +106,21 @@ export default function MessageBubble({ message }) {
       <div className={`max-w-[85%] ${isUser ? '' : 'w-full md:max-w-[80%]'}`}>
         {!isUser && (
           <div className="flex items-center gap-2 mb-1.5">
-            <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ background: '#003399' }}>
-              <span className="text-white text-[10px] font-bold">O</span>
+            <div className="w-5 h-5 rounded-full flex items-center justify-center bg-primary">
+              <span className="text-primary-foreground text-[10px] font-bold">O</span>
             </div>
-            <span className="text-[11px] font-mono" style={{ color: '#999' }}>ORION</span>
+            <span className="text-[11px] font-mono text-muted-foreground">ORION</span>
           </div>
         )}
         <div
-          className={`px-4 py-3 rounded-2xl ${isUser ? 'rounded-tr-sm' : 'rounded-tl-sm'}`}
-          style={isUser
-            ? { background: '#003399', color: 'white' }
-            : { background: '#FFFFFF', border: '1px solid #EDEDED', color: '#212121' }
-          }
+          className={`px-4 py-3 rounded-2xl ${isUser
+            ? 'rounded-tr-sm bg-primary text-primary-foreground'
+            : 'rounded-tl-sm bg-surface border border-hairline text-foreground'}`}
         >
           {message.content && (
             isUser
               ? <p className="text-sm whitespace-pre-wrap leading-relaxed">{message.content}</p>
-              : <div className="text-sm leading-relaxed prose prose-sm max-w-none [&_p]:my-1 [&_ul]:my-1 [&_li]:my-0.5 [&_code]:px-1 [&_code]:rounded [&_code]:bg-gray-100 [&_code]:text-[12px]">
+              : <div className="text-sm leading-relaxed text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ul]:list-disc [&_ul]:pl-4 [&_li]:my-0.5 [&_strong]:font-semibold [&_table]:w-full [&_table]:text-xs [&_th]:text-left [&_th]:font-mono [&_th]:text-muted-foreground [&_th]:py-1 [&_td]:py-1 [&_td]:border-t [&_td]:border-hairline [&_code]:px-1 [&_code]:rounded [&_code]:bg-surface-raised [&_code]:text-[12px]">
                   <ReactMarkdown>{message.content}</ReactMarkdown>
                 </div>
           )}
@@ -130,10 +128,7 @@ export default function MessageBubble({ message }) {
             <div className="flex flex-wrap gap-1.5 mt-2">
               {message.file_urls.map((url, i) => (
                 <a key={i} href={url} target="_blank" rel="noreferrer"
-                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono"
-                  style={isUser
-                    ? { background: 'rgba(255,255,255,0.15)', color: 'white' }
-                    : { background: '#F1F4FB', color: '#003399' }}>
+                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono ${isUser ? 'bg-white/15 text-white' : 'bg-surface-raised text-primary'}`}>
                   <FileText className="w-3 h-3" /> DOC {i + 1}
                 </a>
               ))}

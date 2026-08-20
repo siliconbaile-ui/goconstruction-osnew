@@ -156,10 +156,10 @@ export default function ConversationPanel() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-full" style={{ background: '#F6F4F1' }}>
+      <div className="flex items-center justify-center h-full bg-surface-base">
         <div className="text-center">
-          <Loader2 className="w-6 h-6 animate-spin mx-auto mb-3" style={{ color: '#003399' }} />
-          <p className="font-mono text-xs" style={{ color: '#8A94A6' }}>INICIANDO ORION...</p>
+          <Loader2 className="w-6 h-6 animate-spin mx-auto mb-3 text-primary" />
+          <p className="font-mono text-xs text-muted-foreground">INICIANDO ORION...</p>
         </div>
       </div>
     );
@@ -168,40 +168,38 @@ export default function ConversationPanel() {
   const hasMessages = messages.length > 0;
 
   return (
-    <div className="flex h-full min-h-0 overflow-hidden" style={{ background: '#F6F4F1', color: '#141821' }}>
+    <div className="flex h-full min-h-0 overflow-hidden bg-surface-base text-foreground">
       <AgentSidebar onPrompt={send} ficha={ficha} />
 
       {/* CENTRO */}
       <div className="flex-1 flex flex-col min-w-0 min-h-0 p-2 sm:p-4 lg:pr-0">
-        <div className="flex flex-col min-h-0 flex-1 rounded-2xl overflow-hidden" style={{ background: '#FBFAF8', border: '1px solid #E9E6E1' }}>
+        <div className="flex flex-col min-h-0 flex-1 rounded-2xl overflow-hidden bg-surface-base border border-hairline">
           {/* Header agente */}
-          <header className="flex items-center gap-3 px-5 lg:px-8 py-4 flex-shrink-0" style={{ borderBottom: '1px solid #EFECE7', background: '#FFFFFF' }}>
-            <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: '#0A1E4D' }}>
-              <Sparkles className="w-4 h-4 text-white" />
+          <header className="flex items-center gap-3 px-5 lg:px-8 py-4 flex-shrink-0 border-b border-hairline bg-surface">
+            <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 bg-primary">
+              <Sparkles className="w-4 h-4 text-primary-foreground" />
             </div>
             <div className="min-w-0">
-              <div className="text-sm font-semibold leading-tight truncate" style={{ color: '#141821' }}>
+              <div className="text-sm font-semibold leading-tight truncate text-foreground">
                 Orion<span className="hidden sm:inline"> · asistente de obra</span>
               </div>
-              <div className="flex items-center gap-1.5 text-[10px] font-mono tracking-widest" style={{ color: '#27AE60' }}>
-                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#27AE60' }} />
+              <div className="flex items-center gap-1.5 text-[10px] font-mono tracking-widest" style={{ color: 'hsl(var(--ok))' }}>
+                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: 'hsl(var(--ok))' }} />
                 <span className="whitespace-nowrap">EN VIVO<span className="hidden sm:inline"> · VIGILANDO</span></span>
               </div>
             </div>
             <div className="ml-auto flex items-center gap-3">
-              <span className="hidden md:inline text-[11px]" style={{ color: '#8A94A6' }}>
+              <span className="hidden md:inline text-[11px] text-muted-foreground">
                 responde al tiro, con datos reales de tu obra
               </span>
               <WhatsAppButton />
               <button onClick={() => setPanelMovil(true)}
-                className="lg:hidden flex items-center gap-1.5 px-3 py-2 rounded-full text-[11px] font-semibold tracking-wide flex-shrink-0"
-                style={{ background: '#F1F0ED', color: '#41485A' }}>
+                className="lg:hidden flex items-center gap-1.5 px-3 py-2 rounded-full text-[11px] font-semibold tracking-wide flex-shrink-0 bg-surface-raised text-foreground/85">
                 <Activity className="w-3.5 h-3.5" />
                 OBRA
               </button>
               <button onClick={startNewConversation}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-full text-[11px] font-semibold tracking-wide flex-shrink-0"
-                style={{ background: '#F1F4FB', color: '#003399' }}>
+                className="flex items-center gap-1.5 px-3 py-2 rounded-full text-[11px] font-semibold tracking-wide flex-shrink-0 bg-surface-raised text-primary">
                 <Plus className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">NUEVA SESIÓN</span>
               </button>
@@ -216,8 +214,8 @@ export default function ConversationPanel() {
               <div className="max-w-3xl mx-auto space-y-4">
                 {messages.map(m => <MessageBubble key={m.id || m.created_date} message={m} />)}
                 {sending && (
-                  <div className="flex items-center gap-2 text-xs" style={{ color: '#8A94A6' }}>
-                    <Loader2 className="w-3.5 h-3.5 animate-spin" style={{ color: '#003399' }} />
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <Loader2 className="w-3.5 h-3.5 animate-spin text-primary" />
                     Orion está operando...
                   </div>
                 )}
@@ -239,7 +237,7 @@ export default function ConversationPanel() {
       </div>
 
       {panelMovil && (
-        <div className="fixed inset-0 z-50 lg:hidden" style={{ background: '#F6F4F1' }}>
+        <div className="fixed inset-0 z-50 lg:hidden bg-surface-base">
           <ObraLivePanel
             movil
             onCerrar={() => setPanelMovil(false)}

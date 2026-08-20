@@ -40,12 +40,10 @@ export default function VoiceRecorder({ onTranscript, disabled }) {
       onClick={grabando ? detener : iniciar}
       disabled={disabled || ocupado}
       title={grabando ? 'Detener y transcribir' : 'Hablar con Orion'}
-      className="p-2 rounded-full disabled:opacity-50"
-      style={grabando
-        ? { background: '#FDECEA', color: '#C0392B' }
-        : { color: '#A8B0BF' }}
+      className={`w-11 h-11 sm:w-9 sm:h-9 rounded-full flex items-center justify-center disabled:opacity-50 ${grabando ? 'bg-surface-raised' : ''}`}
+      style={{ color: grabando ? 'hsl(var(--danger))' : 'hsl(var(--muted-foreground))' }}
     >
-      {ocupado ? <Loader2 className="w-4 h-4 animate-spin" style={{ color: '#003399' }} />
+      {ocupado ? <Loader2 className="w-4 h-4 animate-spin text-primary" />
         : grabando ? <Square className="w-4 h-4" />
         : <Mic className="w-4 h-4" />}
     </button>
