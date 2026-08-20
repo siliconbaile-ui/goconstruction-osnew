@@ -1,0 +1,66 @@
+{
+  "name": "Bloqueo Autom\u00e1tico por No Conformidad",
+  "description": "Cuando se registra una no conformidad en terreno, aplica la regla No Quality No Pay: bloquea la partida y sus EDPs, alerta al nivel que corresponde y, si a las 24h la NC sigue abierta, escala.",
+  "trigger": {
+    "config": {
+      "trigger_type": "entity",
+      "entity_name": "InspeccionCalidad",
+      "events": [
+        "create"
+      ]
+    },
+    "condition": "${ .trigger.data.es_no_conformidad == true }"
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "bloqueo_automatico_por_nc",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "bloquear_pago": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "bloquearPagoPorNC",
+            "args": {
+              "inspeccion_id": "${ .trigger.entity_id }"
+            }
+          },
+          "then": "esperar_24h",
+          "x-base44": {
+            "title": "Bloquear pago y alertar",
+            "description": "No Quality, No Pay"
+          }
+        }
+      },
+      {
+        "esperar_24h": {
+          "wait": "P1D",
+          "then": "verificar_cierre",
+          "x-base44": {
+            "title": "Esperar 24 horas",
+            "description": "Plazo de cierre"
+          }
+        }
+      },
+      {
+        "verificar_cierre": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "verificarCierreNC",
+            "args": {
+              "inspeccion_id": "${ .trigger.entity_id }"
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Verificar cierre o escalar",
+            "description": "Escalamiento jer\u00e1rquico"
+          }
+        }
+      }
+    ]
+  }
+}

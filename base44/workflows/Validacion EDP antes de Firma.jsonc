@@ -1,0 +1,85 @@
+{
+  "name": "Validaci\u00f3n de EDP antes de Firma",
+  "description": "Cada vez que un estado de pago pasa a pendiente de firma, valida NC cr\u00edticas abiertas y consistencia del avance cobrado; si no cumple, lo bloquea y alerta al administrador antes de que se firme.",
+  "trigger": {
+    "config": {
+      "trigger_type": "entity",
+      "entity_name": "EstadoPago",
+      "events": [
+        "create",
+        "update"
+      ]
+    },
+    "condition": "${ .trigger.data.estado == \"pendiente_firma\" and (.trigger.old_data.estado // \"\") != \"pendiente_firma\" }"
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "validacion_edp_antes_de_firma",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "validar_edp": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "validarEDPCalidad",
+            "args": {
+              "edp_id": "${ .trigger.entity_id }"
+            }
+          },
+          "then": "revisar_resultado",
+          "x-base44": {
+            "title": "Validar calidad y avance",
+            "description": "NC cr\u00edticas y % cobrado"
+          }
+        }
+      },
+      {
+        "revisar_resultado": {
+          "switch": [
+            {
+              "when": "${ .validar_edp.aprobable == false }",
+              "then": "esperar_resolucion"
+            },
+            {
+              "when": "${ true }",
+              "then": "end"
+            }
+          ],
+          "x-base44": {
+            "title": "\u00bfEDP aprobable?",
+            "description": "Bifurcaci\u00f3n"
+          }
+        }
+      },
+      {
+        "esperar_resolucion": {
+          "wait": "P2D",
+          "then": "revalidar_edp",
+          "x-base44": {
+            "title": "Esperar 48 horas",
+            "description": "Plazo de resoluci\u00f3n"
+          }
+        }
+      },
+      {
+        "revalidar_edp": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "validarEDPCalidad",
+            "args": {
+              "edp_id": "${ .trigger.entity_id }"
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Revalidar EDP",
+            "description": "Segunda pasada"
+          }
+        }
+      }
+    ]
+  }
+}

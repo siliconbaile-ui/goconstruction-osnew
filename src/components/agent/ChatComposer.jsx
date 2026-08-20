@@ -1,8 +1,9 @@
 import { useRef, useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Send, Loader2, Paperclip, X, FileText } from 'lucide-react';
+import { Send, Loader2, Paperclip, X, FileText, Volume2, VolumeX } from 'lucide-react';
+import VoiceRecorder from './VoiceRecorder';
 
-export default function ChatComposer({ value, onChange, onSend, sending }) {
+export default function ChatComposer({ value, onChange, onSend, sending, onVoice, voiceMode, setVoiceMode }) {
   const fileRef = useRef(null);
   const [files, setFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
@@ -53,10 +54,17 @@ export default function ChatComposer({ value, onChange, onSend, sending }) {
           value={value}
           onChange={e => onChange(e.target.value)}
           onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); enviar(); } }}
-          placeholder="pídele algo a Orion o adjunta planillas, planos e informes para analizarlos"
+          placeholder="habla o escríbele a Orion, o adjunta planillas, planos e informes"
           className="flex-1 bg-transparent outline-none text-sm py-2.5 min-w-0"
           style={{ color: '#141821' }}
         />
+        <VoiceRecorder onTranscript={onVoice} disabled={sending || uploading} />
+        <button onClick={() => setVoiceMode(!voiceMode)}
+          className="p-2 rounded-full hover:bg-gray-100"
+          style={voiceMode ? { background: '#E7F7EC', color: '#1E8449' } : { color: '#A8B0BF' }}
+          title={voiceMode ? 'Respuestas en voz activadas' : 'Activar respuestas en voz'}>
+          {voiceMode ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+        </button>
         <input ref={fileRef} type="file" multiple className="hidden" onChange={handleFiles}
           accept=".csv,.xlsx,.xls,.json,.pdf,.png,.jpg,.jpeg,.html" />
         <button onClick={() => fileRef.current?.click()} disabled={uploading}

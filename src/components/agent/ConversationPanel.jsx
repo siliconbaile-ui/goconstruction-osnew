@@ -7,6 +7,7 @@ import ObraLivePanel from './ObraLivePanel';
 import ChatComposer from './ChatComposer';
 import WelcomeHero from './WelcomeHero';
 import { WhatsAppButton } from './WhatsAppConnect';
+import useVoiceOutput from '@/hooks/useVoiceOutput';
 
 const AGENT_NAME = 'orion_asistente';
 
@@ -22,7 +23,10 @@ export default function ConversationPanel() {
   const [stats, setStats] = useState({ alertas: 0, desviaciones: 0, rdis: 0, pagos: 0 });
   const [proyecto, setProyecto] = useState(null);
   const [topAlerts, setTopAlerts] = useState([]);
+  const [voiceMode, setVoiceMode] = useState(false);
   const scrollRef = useRef(null);
+
+  useVoiceOutput(messages, voiceMode);
 
   const loadConversations = useCallback(async () => {
     try {
@@ -212,7 +216,15 @@ export default function ConversationPanel() {
             )}
           </div>
 
-          <ChatComposer value={input} onChange={setInput} onSend={(fileUrls) => send(undefined, fileUrls)} sending={sending} />
+          <ChatComposer
+            value={input}
+            onChange={setInput}
+            onSend={(fileUrls) => send(undefined, fileUrls)}
+            sending={sending}
+            onVoice={(texto) => { setVoiceMode(true); send(texto); }}
+            voiceMode={voiceMode}
+            setVoiceMode={setVoiceMode}
+          />
         </div>
       </div>
 
