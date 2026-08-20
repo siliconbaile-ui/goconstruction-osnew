@@ -23,12 +23,12 @@ export default function MobileTabBar() {
         const activo = pathname === path;
         return (
           <Link key={path} to={path}
-            className="relative flex-1 flex flex-col items-center justify-center gap-1 py-2.5 transition-colors"
+            className="relative flex-1 flex flex-col items-center justify-center gap-1 min-h-[60px] py-3 transition-colors active:opacity-70"
             style={{ color: activo ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground))' }}>
             {activo && (
               <span className="absolute top-0 h-0.5 w-8 rounded-full" style={{ background: 'hsl(var(--primary))' }} />
             )}
-            <Icon className="w-5 h-5" strokeWidth={activo ? 2.2 : 1.7} />
+            <Icon className="w-[22px] h-[22px]" strokeWidth={activo ? 2.2 : 1.7} />
             <span className="font-mono text-[9px] tracking-wider">{label.toUpperCase()}</span>
           </Link>
         );

@@ -180,10 +180,12 @@ export default function ConversationPanel() {
               <Sparkles className="w-4 h-4 text-white" />
             </div>
             <div className="min-w-0">
-              <div className="text-sm font-semibold leading-tight truncate" style={{ color: '#141821' }}>Orion · asistente de obra</div>
+              <div className="text-sm font-semibold leading-tight truncate" style={{ color: '#141821' }}>
+                Orion<span className="hidden sm:inline"> · asistente de obra</span>
+              </div>
               <div className="flex items-center gap-1.5 text-[10px] font-mono tracking-widest" style={{ color: '#27AE60' }}>
                 <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#27AE60' }} />
-                EN VIVO · VIGILANDO
+                <span className="whitespace-nowrap">EN VIVO<span className="hidden sm:inline"> · VIGILANDO</span></span>
               </div>
             </div>
             <div className="ml-auto flex items-center gap-3">

@@ -48,39 +48,44 @@ export default function ChatComposer({ value, onChange, onSend, sending, onVoice
           ))}
         </div>
       )}
-      <div className="max-w-3xl mx-auto flex items-center gap-2 pl-5 pr-2 py-2 rounded-full"
+      {/* Móvil: input arriba, acciones grandes abajo. Desktop: una sola fila. */}
+      <div className="max-w-3xl mx-auto flex flex-col sm:flex-row sm:items-center gap-2 px-3 sm:pl-5 sm:pr-2 py-2 rounded-3xl sm:rounded-full"
         style={{ background: '#FFFFFF', border: '1px solid #E4E0DA', boxShadow: '0 1px 2px rgba(20,24,33,0.04)' }}>
         <input
           value={value}
           onChange={e => onChange(e.target.value)}
           onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); enviar(); } }}
-          placeholder="habla o escríbele a Orion, o adjunta planillas, planos e informes"
-          className="flex-1 bg-transparent outline-none text-base sm:text-sm py-2.5 min-w-0"
+          placeholder="habla o escríbele a Orion"
+          className="flex-1 bg-transparent outline-none text-base sm:text-sm px-2 sm:px-0 py-3 sm:py-2.5 min-w-0"
           style={{ color: '#141821' }}
         />
-        <VoiceRecorder onTranscript={onVoice} disabled={sending || uploading} />
-        <button onClick={() => setVoiceMode(!voiceMode)}
-          className="p-2 rounded-full hover:bg-gray-100"
-          style={voiceMode ? { background: '#E7F7EC', color: '#1E8449' } : { color: '#A8B0BF' }}
-          title={voiceMode ? 'Respuestas en voz activadas' : 'Activar respuestas en voz'}>
-          {voiceMode ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
-        </button>
-        <input ref={fileRef} type="file" multiple className="hidden" onChange={handleFiles}
-          accept=".csv,.xlsx,.xls,.json,.pdf,.png,.jpg,.jpeg,.html" />
-        <button onClick={() => fileRef.current?.click()} disabled={uploading}
-          className="p-2 rounded-full hover:bg-gray-100 disabled:opacity-50" style={{ color: '#A8B0BF' }} title="Adjuntar documentos">
-          {uploading ? <Loader2 className="w-4 h-4 animate-spin" style={{ color: '#003399' }} /> : <Paperclip className="w-4 h-4" />}
-        </button>
-        <button
-          onClick={enviar}
-          disabled={(!value.trim() && files.length === 0) || sending || uploading}
-          className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 disabled:opacity-40"
-          style={{ background: '#0A1E4D', color: 'white' }}
-        >
-          {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-        </button>
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <VoiceRecorder onTranscript={onVoice} disabled={sending || uploading} />
+          <button onClick={() => setVoiceMode(!voiceMode)}
+            className="w-11 h-11 sm:w-9 sm:h-9 rounded-full flex items-center justify-center hover:bg-gray-100"
+            style={voiceMode ? { background: '#E7F7EC', color: '#1E8449' } : { color: '#A8B0BF' }}
+            title={voiceMode ? 'Respuestas en voz activadas' : 'Activar respuestas en voz'}>
+            {voiceMode ? <Volume2 className="w-5 h-5 sm:w-4 sm:h-4" /> : <VolumeX className="w-5 h-5 sm:w-4 sm:h-4" />}
+          </button>
+          <input ref={fileRef} type="file" multiple className="hidden" onChange={handleFiles}
+            accept=".csv,.xlsx,.xls,.json,.pdf,.png,.jpg,.jpeg,.html" />
+          <button onClick={() => fileRef.current?.click()} disabled={uploading}
+            className="w-11 h-11 sm:w-9 sm:h-9 rounded-full flex items-center justify-center hover:bg-gray-100 disabled:opacity-50"
+            style={{ color: '#A8B0BF' }} title="Adjuntar documentos">
+            {uploading ? <Loader2 className="w-5 h-5 sm:w-4 sm:h-4 animate-spin" style={{ color: '#003399' }} /> : <Paperclip className="w-5 h-5 sm:w-4 sm:h-4" />}
+          </button>
+          <button
+            onClick={enviar}
+            disabled={(!value.trim() && files.length === 0) || sending || uploading}
+            className="flex-1 sm:flex-none h-11 sm:w-10 sm:h-10 px-5 sm:px-0 rounded-full flex items-center justify-center gap-2 flex-shrink-0 disabled:opacity-40 text-sm font-semibold"
+            style={{ background: '#0A1E4D', color: 'white' }}
+          >
+            {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+            <span className="sm:hidden">Enviar</span>
+          </button>
+        </div>
       </div>
-      <p className="max-w-3xl mx-auto text-[10px] text-center mt-2" style={{ color: '#A8B0BF' }}>
+      <p className="max-w-3xl mx-auto text-[10px] text-center mt-2 hidden sm:block" style={{ color: '#A8B0BF' }}>
         Orion opera con los datos reales de tu obra, analiza tus documentos y registra cada acción que ejecuta.
       </p>
     </div>

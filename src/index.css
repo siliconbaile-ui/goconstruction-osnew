@@ -126,29 +126,27 @@
    claro se remapean a las superficies claras para conservar
    contraste y legibilidad sin reescribir cada vista.
    =========================================================== */
-.light [style*="#070D1A"],
-.light [style*="#0A0F1E"],
-.light [style*="#040A15"] {
+.light [style*="rgb(7, 13, 26)"],
+.light [style*="rgb(10, 15, 30)"],
+.light [style*="rgb(4, 10, 21)"] {
   background-color: hsl(var(--surface-0)) !important;
 }
-.light [style*="#0D1526"],
-.light [style*="#0A1628"] {
+.light [style*="rgb(13, 21, 38)"],
+.light [style*="rgb(10, 22, 40)"] {
   background-color: hsl(var(--surface-2)) !important;
 }
-.light [style*="#1E2D4A"],
-.light [style*="#0F1D35"] {
+.light [style*="rgb(30, 45, 74)"],
+.light [style*="rgb(15, 29, 53)"] {
   border-color: hsl(var(--hairline)) !important;
 }
-.light [style*="color: #4A6FA5"],
-.light [style*="color: #2D4A6E"],
-.light [style*="color: #5B8DEF"],
-.light [style*="color: #8A94A6"] {
+.light [style*="color: rgb(74, 111, 165)"],
+.light [style*="color: rgb(45, 74, 110)"],
+.light [style*="color: rgb(91, 141, 239)"],
+.light [style*="color: rgb(138, 148, 166)"] {
   color: hsl(var(--muted-foreground)) !important;
 }
 .light .text-white,
-.light .text-slate-300,
-.light .text-slate-400,
-.light .text-slate-500 {
+.light .text-slate-300 {
   color: hsl(var(--foreground)) !important;
 }
 .light .text-slate-400,
@@ -156,15 +154,15 @@
   color: hsl(var(--muted-foreground)) !important;
 }
 /* Botones y chips de marca conservan texto blanco */
-.light [style*="#003399"].text-white,
-.light [style*="#003399"] .text-white,
-.light [style*="#0A1E4D"] .text-white,
-.light button[style*="#003399"],
-.light button[style*="#003399"] * {
+.light [style*="rgb(0, 51, 153)"].text-white,
+.light [style*="rgb(0, 51, 153)"] .text-white,
+.light [style*="rgb(10, 30, 77)"] .text-white,
+.light button[style*="background: rgb(0, 51, 153)"],
+.light button[style*="background: rgb(0, 51, 153)"] * {
   color: #fff !important;
 }
-.light [style*="background: #003399"],
-.light [style*="background: #0A1E4D"] {
+.light [style*="background: rgb(0, 51, 153)"],
+.light [style*="background: rgb(10, 30, 77)"] {
   background-color: hsl(var(--primary)) !important;
 }
 .light input[style],
@@ -178,38 +176,49 @@
 }
 /* El asistente se diseñó en tonos claros: en modo oscuro se remapea
    a las superficies ink del command center. */
-.dark [style*="#F6F4F1"],
-.dark [style*="#F7F6F3"] {
+.dark [style*="rgb(246, 244, 241)"],
+.dark [style*="rgb(247, 246, 243)"] {
   background-color: hsl(var(--surface-0)) !important;
 }
-.dark [style*="#FBFAF8"],
-.dark [style*="#FFFFFF"],
-.dark [style*="#FDFCFA"] {
+.dark [style*="rgb(251, 250, 248)"],
+.dark [style*="rgb(255, 255, 255)"] {
   background-color: hsl(var(--surface-1)) !important;
 }
-.dark [style*="#F1F0ED"],
-.dark [style*="#F1F4FB"],
-.dark [style*="#F4F2EE"],
-.dark [style*="#EFEDE9"] {
+.dark [style*="rgb(241, 240, 237)"],
+.dark [style*="rgb(241, 244, 251)"],
+.dark [style*="rgb(248, 247, 245)"],
+.dark [style*="rgb(231, 247, 236)"] {
   background-color: hsl(var(--surface-2)) !important;
 }
-.dark [style*="#E9E6E1"],
-.dark [style*="#EFECE7"],
-.dark [style*="#E4E0DA"] {
+.dark [style*="rgb(233, 230, 225)"],
+.dark [style*="rgb(239, 236, 231)"],
+.dark [style*="rgb(228, 224, 218)"],
+.dark [style*="rgb(237, 235, 231)"],
+.dark [style*="rgb(240, 238, 234)"],
+.dark [style*="rgb(220, 228, 246)"],
+.dark [style*="rgb(216, 212, 206)"] {
   border-color: hsl(var(--hairline)) !important;
 }
-.dark [style*="color: #141821"],
-.dark [style*="color: #1B2030"] {
+.dark [style*="color: rgb(20, 24, 33)"],
+.dark [style*="color: rgb(43, 49, 61)"] {
   color: hsl(var(--foreground)) !important;
 }
-.dark [style*="color: #8A94A6"],
-.dark [style*="color: #6B7382"],
-.dark [style*="color: #41485A"],
-.dark [style*="color: #4B5262"] {
+.dark [style*="color: rgb(138, 148, 166)"],
+.dark [style*="color: rgb(107, 115, 130)"],
+.dark [style*="color: rgb(65, 72, 90)"],
+.dark [style*="color: rgb(168, 176, 191)"] {
   color: hsl(var(--muted-foreground)) !important;
 }
-.dark [style*="color: #003399"] {
+.dark [style*="color: rgb(0, 51, 153)"] {
   color: hsl(var(--primary)) !important;
+}
+.dark [style*="background: rgb(10, 30, 77)"],
+.dark [style*="background: rgb(0, 51, 153)"] {
+  background-color: hsl(var(--primary)) !important;
+}
+.dark [style*="rgb(0, 51, 153)"] .text-white,
+.dark [style*="rgb(10, 30, 77)"] .text-white {
+  color: #fff !important;
 }
 
 /* El asistente ya es claro: no se remapea en modo claro */
@@ -229,6 +238,29 @@
 }
 .light .orion-elevated {
   box-shadow: 0 1px 2px rgb(19 22 30 / 0.04), 0 14px 34px -20px rgb(19 22 30 / 0.18);
+}
+
+/* ===========================================================
+   TERRENO · ergonomía táctil móvil
+   =========================================================== */
+button, a, [role="button"] {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (max-width: 640px) {
+  /* Campos cómodos y sin zoom involuntario en iOS */
+  input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+  select,
+  textarea {
+    min-height: 46px;
+    font-size: 16px;
+  }
+  /* Scroll aislado por panel: no arrastra la página completa */
+  main, [data-scroll-area] {
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 /* Scrollbar */

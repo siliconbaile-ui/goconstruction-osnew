@@ -24,7 +24,7 @@ export default function WelcomeHero({ onPrompt, activo }) {
         <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style={{ background: '#0A1E4D' }}>
           <span className="text-white text-[11px] font-bold">O</span>
         </div>
-        <div className="rounded-2xl rounded-tl-md px-5 py-4" style={{ background: '#FFFFFF', border: '1px solid #E9E6E1' }}>
+        <div className="rounded-2xl rounded-tl-md px-4 sm:px-5 py-4" style={{ background: '#FFFFFF', border: '1px solid #E9E6E1' }}>
           <p className="text-sm leading-relaxed" style={{ color: '#2B313D' }}>
             Hola, soy Orion. Acá el asistente no acompaña la obra: el asistente <strong>opera</strong> la obra.
             Leo avance, calidad, RDIs y estados de pago, detecto los desvíos y escalo al nivel que corresponde —
@@ -34,7 +34,7 @@ export default function WelcomeHero({ onPrompt, activo }) {
       </div>
 
       {/* Capítulo / loop agéntico */}
-      <div className="rounded-2xl p-5 mb-6" style={{ background: '#FFFFFF', border: '1px solid #E9E6E1' }}>
+      <div className="rounded-2xl p-4 sm:p-5 mb-6" style={{ background: '#FFFFFF', border: '1px solid #E9E6E1' }}>
         <div className="flex items-center justify-between mb-1.5">
           <div className="text-[10px] font-mono tracking-widest" style={{ color: '#003399' }}>CICLO 1 · CÓMO OPERA ORION</div>
           <div className="flex gap-1">
@@ -60,7 +60,7 @@ export default function WelcomeHero({ onPrompt, activo }) {
           ))}
         </div>
         <button onClick={() => onPrompt('¿Qué es lo más urgente en la obra ahora mismo y qué debo hacer primero?')}
-          className="w-full flex items-center justify-center gap-2 py-3 rounded-full text-xs font-semibold tracking-wide"
+          className="w-full flex items-center justify-center gap-2 min-h-12 py-3 rounded-full text-xs font-semibold tracking-wide active:scale-[0.99]"
           style={{ background: '#003399', color: 'white' }}>
           ¿Y QUÉ ES LO MÁS URGENTE HOY? <ArrowRight className="w-3.5 h-3.5" />
         </button>
@@ -70,10 +70,10 @@ export default function WelcomeHero({ onPrompt, activo }) {
       <div className="grid grid-cols-2 gap-3 mb-4">
         {TILES.map(({ label, sub, icon: Icon, prompt }) => (
           <button key={label} onClick={() => onPrompt(prompt)}
-            className="text-left p-4 rounded-2xl transition-all hover:shadow-sm"
+            className="text-left p-4 min-h-[104px] rounded-2xl transition-all hover:shadow-sm active:scale-[0.98]"
             style={{ background: '#FFFFFF', border: '1px solid #E9E6E1' }}>
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center mb-3" style={{ background: '#F1F4FB' }}>
-              <Icon className="w-4 h-4" style={{ color: '#003399' }} />
+            <div className="w-10 h-10 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center mb-3" style={{ background: '#F1F4FB' }}>
+              <Icon className="w-5 h-5 sm:w-4 sm:h-4" style={{ color: '#003399' }} />
             </div>
             <div className="font-semibold text-sm" style={{ color: '#141821' }}>{label}</div>
             <div className="text-xs" style={{ color: '#8A94A6' }}>{sub}</div>
@@ -85,7 +85,7 @@ export default function WelcomeHero({ onPrompt, activo }) {
       <div className="flex flex-wrap gap-2">
         {CHIPS.map(c => (
           <button key={c} onClick={() => onPrompt(c)}
-            className="px-3.5 py-2 rounded-full text-xs transition-colors hover:bg-white"
+            className="px-4 min-h-11 flex items-center rounded-full text-sm sm:text-xs transition-colors hover:bg-white active:scale-[0.98]"
             style={{ background: '#FFFFFF', border: '1px solid #E9E6E1', color: '#41485A' }}>
             {c}
           </button>
