@@ -4,43 +4,103 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
+/* ===========================================================
+   ORION DESIGN SYSTEM · 2026/27
+   Paleta: Ink Navy (base) · Cobalt (marca) · Jade / Amber / Terracotta
+   Modo oscuro = por defecto (command center)
+   Modo claro  = "site light", alto contraste para terreno con sol
+   =========================================================== */
+
 @layer base {
+  /* ---------- DARK (default) ---------- */
   :root {
-    --background: 0 0% 0%;
-    --foreground: 210 40% 96%;
-    --card: 222 40% 10%;
-    --card-foreground: 210 40% 96%;
-    --popover: 222 40% 10%;
-    --popover-foreground: 210 40% 96%;
-    --primary: 220 100% 40%;
+    --background: 225 30% 4%;
+    --foreground: 210 30% 96%;
+    --card: 222 32% 8%;
+    --card-foreground: 210 30% 96%;
+    --popover: 222 32% 9%;
+    --popover-foreground: 210 30% 96%;
+    --primary: 220 95% 58%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 222 30% 16%;
-    --secondary-foreground: 210 40% 96%;
-    --muted: 222 30% 14%;
-    --muted-foreground: 215 20% 55%;
-    --accent: 222 30% 18%;
-    --accent-foreground: 210 40% 96%;
-    --destructive: 14 90% 52%;
+    --secondary: 222 26% 14%;
+    --secondary-foreground: 210 30% 94%;
+    --muted: 222 24% 12%;
+    --muted-foreground: 215 20% 64%;
+    --accent: 222 26% 16%;
+    --accent-foreground: 210 30% 96%;
+    --destructive: 14 82% 52%;
     --destructive-foreground: 0 0% 100%;
-    --border: 222 30% 18%;
-    --input: 222 30% 16%;
-    --ring: 220 100% 40%;
-    --radius: 0.375rem;
-    --orion-blue: #003399;
-    --orion-alert: #D35400;
-    --orion-success: #27AE60;
-    --orion-text: #2C3E50;
+    --border: 220 24% 17%;
+    --input: 222 26% 14%;
+    --ring: 220 95% 58%;
+    --radius: 0.625rem;
+
+    /* superficies extra */
+    --surface-0: 225 30% 4%;
+    --surface-1: 222 32% 8%;
+    --surface-2: 222 28% 11%;
+    --hairline: 220 24% 17%;
+
+    /* señales */
+    --ok: 152 62% 42%;
+    --warn: 38 92% 52%;
+    --danger: 14 82% 52%;
+    --info: 220 95% 62%;
+
     --font-heading: 'Inter', ui-sans-serif, system-ui, sans-serif;
     --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
     --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;
-    --sidebar-background: 222 47% 6%;
-    --sidebar-foreground: 210 40% 90%;
-    --sidebar-primary: 220 100% 50%;
+
+    --sidebar-background: 225 32% 5%;
+    --sidebar-foreground: 210 30% 90%;
+    --sidebar-primary: 220 95% 58%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 222 30% 14%;
-    --sidebar-accent-foreground: 210 40% 96%;
-    --sidebar-border: 222 30% 14%;
-    --sidebar-ring: 220 100% 50%;
+    --sidebar-accent: 222 26% 13%;
+    --sidebar-accent-foreground: 210 30% 96%;
+    --sidebar-border: 220 24% 15%;
+    --sidebar-ring: 220 95% 58%;
+  }
+
+  /* ---------- LIGHT ---------- */
+  .light {
+    --background: 40 20% 97%;
+    --foreground: 222 32% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 32% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 32% 12%;
+    --primary: 222 88% 42%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 38 16% 94%;
+    --secondary-foreground: 222 32% 16%;
+    --muted: 38 16% 94%;
+    --muted-foreground: 220 12% 40%;
+    --accent: 40 18% 92%;
+    --accent-foreground: 222 32% 14%;
+    --destructive: 12 74% 44%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 36 14% 87%;
+    --input: 36 14% 90%;
+    --ring: 222 88% 42%;
+
+    --surface-0: 40 20% 97%;
+    --surface-1: 0 0% 100%;
+    --surface-2: 38 18% 95%;
+    --hairline: 36 14% 87%;
+
+    --ok: 152 58% 32%;
+    --warn: 32 88% 40%;
+    --danger: 12 74% 44%;
+    --info: 222 88% 44%;
+
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 222 32% 16%;
+    --sidebar-primary: 222 88% 42%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 38 18% 94%;
+    --sidebar-accent-foreground: 222 32% 14%;
+    --sidebar-border: 36 14% 88%;
+    --sidebar-ring: 222 88% 42%;
   }
 }
 
@@ -52,6 +112,7 @@
   body {
     @apply bg-background text-foreground font-body;
     font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
   }
 
   .font-mono {
@@ -59,18 +120,129 @@
   }
 }
 
-/* Orion custom scrollbar */
+/* ===========================================================
+   PUENTE DE TEMA
+   El command center se pintó con hex oscuros en línea. En modo
+   claro se remapean a las superficies claras para conservar
+   contraste y legibilidad sin reescribir cada vista.
+   =========================================================== */
+.light [style*="#070D1A"],
+.light [style*="#0A0F1E"],
+.light [style*="#040A15"] {
+  background-color: hsl(var(--surface-0)) !important;
+}
+.light [style*="#0D1526"],
+.light [style*="#0A1628"] {
+  background-color: hsl(var(--surface-2)) !important;
+}
+.light [style*="#1E2D4A"],
+.light [style*="#0F1D35"] {
+  border-color: hsl(var(--hairline)) !important;
+}
+.light [style*="color: #4A6FA5"],
+.light [style*="color: #2D4A6E"],
+.light [style*="color: #5B8DEF"],
+.light [style*="color: #8A94A6"] {
+  color: hsl(var(--muted-foreground)) !important;
+}
+.light .text-white,
+.light .text-slate-300,
+.light .text-slate-400,
+.light .text-slate-500 {
+  color: hsl(var(--foreground)) !important;
+}
+.light .text-slate-400,
+.light .text-slate-500 {
+  color: hsl(var(--muted-foreground)) !important;
+}
+/* Botones y chips de marca conservan texto blanco */
+.light [style*="#003399"].text-white,
+.light [style*="#003399"] .text-white,
+.light [style*="#0A1E4D"] .text-white,
+.light button[style*="#003399"],
+.light button[style*="#003399"] * {
+  color: #fff !important;
+}
+.light [style*="background: #003399"],
+.light [style*="background: #0A1E4D"] {
+  background-color: hsl(var(--primary)) !important;
+}
+.light input[style],
+.light select[style],
+.light textarea[style] {
+  color: hsl(var(--foreground)) !important;
+}
+.light input::placeholder,
+.light textarea::placeholder {
+  color: hsl(var(--muted-foreground)) !important;
+}
+/* El asistente se diseñó en tonos claros: en modo oscuro se remapea
+   a las superficies ink del command center. */
+.dark [style*="#F6F4F1"],
+.dark [style*="#F7F6F3"] {
+  background-color: hsl(var(--surface-0)) !important;
+}
+.dark [style*="#FBFAF8"],
+.dark [style*="#FFFFFF"],
+.dark [style*="#FDFCFA"] {
+  background-color: hsl(var(--surface-1)) !important;
+}
+.dark [style*="#F1F0ED"],
+.dark [style*="#F1F4FB"],
+.dark [style*="#F4F2EE"],
+.dark [style*="#EFEDE9"] {
+  background-color: hsl(var(--surface-2)) !important;
+}
+.dark [style*="#E9E6E1"],
+.dark [style*="#EFECE7"],
+.dark [style*="#E4E0DA"] {
+  border-color: hsl(var(--hairline)) !important;
+}
+.dark [style*="color: #141821"],
+.dark [style*="color: #1B2030"] {
+  color: hsl(var(--foreground)) !important;
+}
+.dark [style*="color: #8A94A6"],
+.dark [style*="color: #6B7382"],
+.dark [style*="color: #41485A"],
+.dark [style*="color: #4B5262"] {
+  color: hsl(var(--muted-foreground)) !important;
+}
+.dark [style*="color: #003399"] {
+  color: hsl(var(--primary)) !important;
+}
+
+/* El asistente ya es claro: no se remapea en modo claro */
+.light .orion-light-surface,
+.light .orion-light-surface * {
+  color: inherit;
+}
+
+/* Contenedores premium reutilizables */
+.orion-panel {
+  background-color: hsl(var(--surface-1));
+  border: 1px solid hsl(var(--hairline));
+  border-radius: var(--radius);
+}
+.orion-elevated {
+  box-shadow: 0 1px 2px hsl(var(--surface-0) / 0.6), 0 12px 32px -18px hsl(var(--surface-0) / 0.9);
+}
+.light .orion-elevated {
+  box-shadow: 0 1px 2px rgb(19 22 30 / 0.04), 0 14px 34px -20px rgb(19 22 30 / 0.18);
+}
+
+/* Scrollbar */
 ::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: hsl(222 47% 7%);
+  background: hsl(var(--surface-0));
 }
 ::-webkit-scrollbar-thumb {
-  background: hsl(222 30% 22%);
-  border-radius: 2px;
+  background: hsl(var(--hairline));
+  border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(220 100% 40%);
+  background: hsl(var(--primary));
 }

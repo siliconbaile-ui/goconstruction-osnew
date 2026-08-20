@@ -1,10 +1,10 @@
 export default function OrionCard({ children, className = '', style = {} }) {
   return (
     <div
-      className={`rounded-lg ${className}`}
+      className={`rounded-xl orion-elevated ${className}`}
       style={{
-        background: '#0D1526',
-        border: '1px solid #1E2D4A',
+        background: 'hsl(var(--surface-1))',
+        border: '1px solid hsl(var(--hairline))',
         ...style,
       }}
     >

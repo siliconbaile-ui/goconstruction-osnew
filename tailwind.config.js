@@ -43,6 +43,16 @@ module.exports = {
   			border: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',
   			ring: 'hsl(var(--ring))',
+  			hairline: 'hsl(var(--hairline))',
+  			surface: {
+  				DEFAULT: 'hsl(var(--surface-1))',
+  				base: 'hsl(var(--surface-0))',
+  				raised: 'hsl(var(--surface-2))'
+  			},
+  			ok: 'hsl(var(--ok))',
+  			warn: 'hsl(var(--warn))',
+  			danger: 'hsl(var(--danger))',
+  			info: 'hsl(var(--info))',
   			chart: {
   				'1': 'hsl(var(--chart-1))',
   				'2': 'hsl(var(--chart-2))',

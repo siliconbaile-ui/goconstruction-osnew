@@ -1,12 +1,12 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Bot, Camera, LayoutGrid, CreditCard, Bell } from 'lucide-react';
+import { Bot, Camera, ClipboardList, Wallet, BellRing } from 'lucide-react';
 
 const TABS = [
   { label: 'Orion', path: '/', icon: Bot },
   { label: 'Terreno', path: '/evidencia-terreno', icon: Camera },
-  { label: 'RDIs', path: '/gestor-rdi', icon: LayoutGrid },
-  { label: 'Pagos', path: '/semaforo-pagos', icon: CreditCard },
-  { label: 'Alertas', path: '/centro-alertas', icon: Bell },
+  { label: 'RDIs', path: '/gestor-rdi', icon: ClipboardList },
+  { label: 'Pagos', path: '/semaforo-pagos', icon: Wallet },
+  { label: 'Alertas', path: '/centro-alertas', icon: BellRing },
 ];
 
 // Navegación inferior para uso con una mano en terreno.
@@ -14,14 +14,21 @@ export default function MobileTabBar() {
   const { pathname } = useLocation();
   return (
     <nav className="lg:hidden flex-shrink-0 flex items-stretch"
-      style={{ background: '#040A15', borderTop: '1px solid #0F1D35', paddingBottom: 'env(safe-area-inset-bottom)' }}>
+      style={{
+        background: 'hsl(var(--surface-1))',
+        borderTop: '1px solid hsl(var(--hairline))',
+        paddingBottom: 'env(safe-area-inset-bottom)',
+      }}>
       {TABS.map(({ label, path, icon: Icon }) => {
         const activo = pathname === path;
         return (
           <Link key={path} to={path}
-            className="flex-1 flex flex-col items-center justify-center gap-1 py-2.5"
-            style={{ color: activo ? '#5B8DEF' : '#4A6FA5' }}>
-            <Icon className="w-5 h-5" />
+            className="relative flex-1 flex flex-col items-center justify-center gap-1 py-2.5 transition-colors"
+            style={{ color: activo ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground))' }}>
+            {activo && (
+              <span className="absolute top-0 h-0.5 w-8 rounded-full" style={{ background: 'hsl(var(--primary))' }} />
+            )}
+            <Icon className="w-5 h-5" strokeWidth={activo ? 2.2 : 1.7} />
             <span className="font-mono text-[9px] tracking-wider">{label.toUpperCase()}</span>
           </Link>
         );
