@@ -7,7 +7,7 @@ import ObraLivePanel from './ObraLivePanel';
 import ChatComposer from './ChatComposer';
 import WelcomeHero from './WelcomeHero';
 import { WhatsAppButton } from './WhatsAppConnect';
-import useVoiceOutput from '@/hooks/useVoiceOutput';
+import useVoiceOutput, { desbloquearVoz } from '@/hooks/useVoiceOutput';
 
 const AGENT_NAME = 'orion_asistente';
 
@@ -228,9 +228,9 @@ export default function ConversationPanel() {
             onChange={setInput}
             onSend={(fileUrls) => send(undefined, fileUrls)}
             sending={sending}
-            onVoice={(texto) => { setVoiceMode(true); send(texto); }}
+            onVoice={(texto) => { desbloquearVoz(); setVoiceMode(true); send(texto); }}
             voiceMode={voiceMode}
-            setVoiceMode={(v) => { if (!v) detenerVoz(); setVoiceMode(v); }}
+            setVoiceMode={(v) => { if (v) desbloquearVoz(); else detenerVoz(); setVoiceMode(v); }}
             hablando={hablando}
           />
         </div>

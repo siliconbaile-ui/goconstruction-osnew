@@ -5,10 +5,10 @@ import { secrets } from 'base44:runtime';
 // Chirp3-HD entrega la locución más natural disponible para es-US (LatAm neutro,
 // el registro que usan los equipos de obra en Chile).
 const VOCES = {
-  river: 'es-US-Chirp3-HD-Aoede',   // femenina, calma y clara (por defecto)
-  storm: 'es-US-Chirp3-HD-Charon',  // masculina, autoridad de mando
-  honey: 'es-US-Chirp3-HD-Leda',    // femenina, cálida
-  spark: 'es-US-Chirp3-HD-Puck',    // masculina, enérgica
+  river: 'es-US-Chirp3-HD-Sulafat',  // femenina, cálida y muy natural (por defecto)
+  storm: 'es-US-Chirp3-HD-Alnilam',  // masculina, autoridad de mando
+  honey: 'es-US-Chirp3-HD-Leda',     // femenina, cálida
+  spark: 'es-US-Chirp3-HD-Puck',     // masculina, enérgica
 };
 
 export default async function (req: Request): Promise<Response> {
@@ -17,7 +17,7 @@ export default async function (req: Request): Promise<Response> {
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { texto, voz = 'river', velocidad = 1.0 } = await req.json();
+    const { texto, voz = 'river', velocidad = 1.05 } = await req.json();
     if (!texto || !texto.trim()) {
       return Response.json({ error: 'Texto requerido' }, { status: 400 });
     }
