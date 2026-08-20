@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { Send, Loader2, Paperclip, X, FileText, Volume2, VolumeX } from 'lucide-react';
 import VoiceRecorder from './VoiceRecorder';
 
-export default function ChatComposer({ value, onChange, onSend, sending, onVoice, voiceMode, setVoiceMode }) {
+export default function ChatComposer({ value, onChange, onSend, sending, onVoice, voiceMode, setVoiceMode, hablando }) {
   const fileRef = useRef(null);
   const [files, setFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
@@ -62,9 +62,9 @@ export default function ChatComposer({ value, onChange, onSend, sending, onVoice
         <div className="flex items-center gap-1.5 sm:gap-2">
           <VoiceRecorder onTranscript={onVoice} disabled={sending || uploading} />
           <button onClick={() => setVoiceMode(!voiceMode)}
-            className="w-11 h-11 sm:w-9 sm:h-9 rounded-full flex items-center justify-center hover:bg-gray-100"
+            className={`w-11 h-11 sm:w-9 sm:h-9 rounded-full flex items-center justify-center hover:bg-gray-100 ${hablando ? 'animate-pulse' : ''}`}
             style={voiceMode ? { background: '#E7F7EC', color: '#1E8449' } : { color: '#A8B0BF' }}
-            title={voiceMode ? 'Respuestas en voz activadas' : 'Activar respuestas en voz'}>
+            title={hablando ? 'Orion está hablando · toca para silenciar' : voiceMode ? 'Respuestas en voz activadas (voz river)' : 'Activar respuestas en voz'}>
             {voiceMode ? <Volume2 className="w-5 h-5 sm:w-4 sm:h-4" /> : <VolumeX className="w-5 h-5 sm:w-4 sm:h-4" />}
           </button>
           <input ref={fileRef} type="file" multiple className="hidden" onChange={handleFiles}

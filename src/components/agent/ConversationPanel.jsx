@@ -27,7 +27,7 @@ export default function ConversationPanel() {
   const [panelMovil, setPanelMovil] = useState(false);
   const scrollRef = useRef(null);
 
-  useVoiceOutput(messages, voiceMode);
+  const { hablando, detener: detenerVoz } = useVoiceOutput(messages, voiceMode);
 
   const loadConversations = useCallback(async () => {
     try {
@@ -232,7 +232,8 @@ export default function ConversationPanel() {
             sending={sending}
             onVoice={(texto) => { setVoiceMode(true); send(texto); }}
             voiceMode={voiceMode}
-            setVoiceMode={setVoiceMode}
+            setVoiceMode={(v) => { if (!v) detenerVoz(); setVoiceMode(v); }}
+            hablando={hablando}
           />
         </div>
       </div>
