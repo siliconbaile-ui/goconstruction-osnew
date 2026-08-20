@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 
 // Lee en voz alta la última respuesta de Orion con voz neuronal profesional
 // de Google Cloud (español latinoamericano). Si Google falla, usa la voz nativa.
-export default function useVoiceOutput(messages, activo, voz = 'river') {
+function useVoiceOutput(messages, activo, voz = 'river') {
   const ultimoLeido = useRef(null);
   const audioRef = useRef(null);
   const [hablando, setHablando] = useState(false);
@@ -72,3 +72,6 @@ export default function useVoiceOutput(messages, activo, voz = 'river') {
 
   return { hablando, detener };
 }
+
+export default useVoiceOutput;
+export { useVoiceOutput };
