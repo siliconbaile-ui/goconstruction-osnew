@@ -3,6 +3,7 @@ import {
   Bell, TrendingUp, FileText, CheckSquare, CreditCard, Activity,
   ChevronDown, ChevronUp, Zap, Boxes
 } from 'lucide-react';
+import WhatsAppConnect from './WhatsAppConnect';
 
 const GRUPOS = [
   {
@@ -69,6 +70,8 @@ export default function AgentSidebar({ onPrompt, ficha }) {
           ))}
         </ul>
       </div>
+
+      <WhatsAppConnect />
 
       {/* Grupos */}
       {GRUPOS.map((g, gi) => {

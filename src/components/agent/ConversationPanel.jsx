@@ -6,6 +6,7 @@ import AgentSidebar from './AgentSidebar';
 import ObraLivePanel from './ObraLivePanel';
 import ChatComposer from './ChatComposer';
 import WelcomeHero from './WelcomeHero';
+import { WhatsAppButton } from './WhatsAppConnect';
 
 const AGENT_NAME = 'orion_asistente';
 
@@ -184,6 +185,7 @@ export default function ConversationPanel() {
               <span className="hidden md:inline text-[11px]" style={{ color: '#8A94A6' }}>
                 responde al tiro, con datos reales de tu obra
               </span>
+              <WhatsAppButton />
               <button onClick={startNewConversation}
                 className="flex items-center gap-1.5 px-3 py-2 rounded-full text-[11px] font-semibold tracking-wide flex-shrink-0"
                 style={{ background: '#F1F4FB', color: '#003399' }}>
