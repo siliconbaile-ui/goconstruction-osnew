@@ -4,6 +4,9 @@ import {
   LayoutDashboard, TrendingUp, CheckSquare, FileText, CreditCard,
   Settings, Bell, ChevronRight, Menu, X, Activity, Zap, Bot, Database, FileBarChart, BookOpen, Camera
 } from 'lucide-react';
+import MobileTabBar from '@/components/MobileTabBar';
+import NotificacionesMovil from '@/components/pwa/NotificacionesMovil';
+import InstalarApp from '@/components/pwa/InstalarApp';
 
 const NAV_ITEMS = [
   { label: 'Asistente Orion', path: '/', icon: Bot },
@@ -25,7 +28,7 @@ export default function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen flex" style={{ background: '#070D1A' }}>
+    <div className="h-[100dvh] flex overflow-hidden" style={{ background: '#070D1A' }}>
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div
@@ -99,9 +102,10 @@ export default function Layout() {
       </aside>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 min-h-0">
+        <InstalarApp />
         {/* Top bar */}
-        <header className="flex items-center justify-between px-4 lg:px-6 py-3 flex-shrink-0" style={{ background: '#040A15', borderBottom: '1px solid #0F1D35' }}>
+        <header className="flex items-center justify-between px-4 lg:px-6 py-3 flex-shrink-0" style={{ background: '#040A15', borderBottom: '1px solid #0F1D35', paddingTop: 'max(0.75rem, env(safe-area-inset-top))' }}>
           <div className="flex items-center gap-3">
             <button
               onClick={() => setSidebarOpen(true)}
@@ -121,6 +125,7 @@ export default function Layout() {
               <Activity className="w-3 h-3" style={{ color: '#27AE60' }} />
               <span>SYNC: <span style={{ color: '#27AE60' }}>OK</span></span>
             </div>
+            <NotificacionesMovil />
             <Link to="/centro-alertas" className="relative p-2 rounded text-slate-400 hover:text-white hover:bg-white/5" title="Centro de Alertas">
               <Bell className="w-4 h-4" />
               <span className="absolute top-1 right-1 w-2 h-2 rounded-full" style={{ background: '#D35400' }} />
@@ -129,9 +134,10 @@ export default function Layout() {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-auto" style={{ background: '#070D1A' }}>
+        <main className="flex-1 overflow-auto min-h-0" style={{ background: '#070D1A' }}>
           <Outlet />
         </main>
+        <MobileTabBar />
       </div>
     </div>
   );

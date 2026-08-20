@@ -1,14 +1,16 @@
 import { Link } from 'react-router-dom';
-import { MessageSquare, Trash2, Loader2, ArrowRight, Plus } from 'lucide-react';
+import { MessageSquare, Trash2, Loader2, ArrowRight, Plus, X } from 'lucide-react';
 
 const NIVEL_DOT = { critica: '#D35400', advertencia: '#F39C12', info: '#4A6FA5' };
 
 export default function ObraLivePanel({
   tab, setTab, stats, topAlerts, conversations, activeId, setActiveId,
-  onDelete, onPrompt, loadingConvs, onNueva,
+  onDelete, onPrompt, loadingConvs, onNueva, movil = false, onCerrar,
 }) {
   return (
-    <aside className="w-80 flex-shrink-0 hidden lg:flex flex-col min-h-0 p-4">
+    <aside className={movil
+      ? 'w-full h-full flex flex-col min-h-0 p-3'
+      : 'w-80 flex-shrink-0 hidden lg:flex flex-col min-h-0 p-4'}>
       <div className="flex flex-col min-h-0 flex-1 rounded-2xl overflow-hidden" style={{ background: '#FFFFFF', border: '1px solid #E9E6E1' }}>
         {/* Header */}
         <div className="px-5 pt-5 pb-4 flex-shrink-0" style={{ borderBottom: '1px solid #F0EEEA' }}>
@@ -17,10 +19,17 @@ export default function ObraLivePanel({
               <div className="text-[10px] font-mono tracking-widest mb-1" style={{ color: '#003399' }}>TU OBRA, EN VIVO</div>
               <div className="text-lg font-semibold leading-tight" style={{ color: '#141821' }}>Así se ve tu obra ahora</div>
             </div>
-            <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono flex-shrink-0" style={{ background: '#0A1E4D', color: 'white' }}>
-              <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#27AE60' }} />
-              EN VIVO
-            </span>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono" style={{ background: '#0A1E4D', color: 'white' }}>
+                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#27AE60' }} />
+                EN VIVO
+              </span>
+              {movil && (
+                <button onClick={onCerrar} className="p-1.5 rounded-full" style={{ background: '#F1F0ED', color: '#6B7382' }}>
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
           </div>
           <p className="text-[11px] mt-2 leading-relaxed" style={{ color: '#8A94A6' }}>
             Toca cualquier dato o pregúntale a Orion: este panel es tu obra.

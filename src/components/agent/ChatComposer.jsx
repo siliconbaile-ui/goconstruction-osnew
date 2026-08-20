@@ -32,7 +32,7 @@ export default function ChatComposer({ value, onChange, onSend, sending, onVoice
   };
 
   return (
-    <div className="flex-shrink-0 px-4 lg:px-8 pb-5 pt-2">
+    <div className="flex-shrink-0 px-3 sm:px-4 lg:px-8 pb-3 sm:pb-5 pt-2">
       {files.length > 0 && (
         <div className="max-w-3xl mx-auto flex flex-wrap gap-2 mb-2">
           {files.map(f => (
@@ -55,7 +55,7 @@ export default function ChatComposer({ value, onChange, onSend, sending, onVoice
           onChange={e => onChange(e.target.value)}
           onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); enviar(); } }}
           placeholder="habla o escríbele a Orion, o adjunta planillas, planos e informes"
-          className="flex-1 bg-transparent outline-none text-sm py-2.5 min-w-0"
+          className="flex-1 bg-transparent outline-none text-base sm:text-sm py-2.5 min-w-0"
           style={{ color: '#141821' }}
         />
         <VoiceRecorder onTranscript={onVoice} disabled={sending || uploading} />
