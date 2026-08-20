@@ -26,6 +26,18 @@ export default function WhatsAppConnect() {
       <p className="text-xs leading-relaxed mb-3" style={{ color: '#6B7382' }}>
         Foto de terreno, consulta de EETT con página citada, avance de partida o RDI — todo por WhatsApp, con las mismas reglas y los mismos datos.
       </p>
+      <ul className="space-y-1.5 mb-3">
+        {[
+          ['«alertas»', 'las alertas activas por criticidad'],
+          ['«RDI …»', 'crea, consulta y responde requerimientos'],
+          ['«pagos»', 'EDPs bloqueados y su motivo'],
+        ].map(([cmd, desc]) => (
+          <li key={cmd} className="flex gap-2 text-[11px]" style={{ color: '#6B7382' }}>
+            <span className="font-mono flex-shrink-0" style={{ color: '#1E8449' }}>{cmd}</span>
+            <span className="truncate">{desc}</span>
+          </li>
+        ))}
+      </ul>
       <a href={url()} target="_blank" rel="noreferrer"
         className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl text-sm font-semibold text-white"
         style={{ background: '#1E8449' }}>

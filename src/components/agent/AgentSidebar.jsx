@@ -4,6 +4,7 @@ import {
   ChevronDown, ChevronUp, Zap, Boxes
 } from 'lucide-react';
 import WhatsAppConnect from './WhatsAppConnect';
+import AtajosOperacion from './AtajosOperacion';
 
 const GRUPOS = [
   {
@@ -48,6 +49,10 @@ export default function AgentSidebar({ onPrompt, ficha }) {
           <div className="text-base font-semibold leading-tight" style={{ color: '#141821' }}>Orion</div>
           <div className="text-[10px] font-mono tracking-widest" style={{ color: '#8A94A6' }}>OBRA AGÉNTICA</div>
         </div>
+      </div>
+
+      <div className="sticky top-0 z-10 pb-1" style={{ background: '#F6F4F1' }}>
+        <AtajosOperacion />
       </div>
 
       {/* Manifiesto */}

@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { FileText, Plus, Clock, CheckCircle, AlertTriangle, Zap, Sparkles, Loader2, LayoutGrid, List } from 'lucide-react';
+import { FileText, Plus, Clock, CheckCircle, AlertTriangle, Zap, Sparkles, Loader2, LayoutGrid, List, MapPin } from 'lucide-react';
 import OrionCard from '@/components/OrionCard';
 import RDIKanban from '@/components/rdi/RDIKanban';
+import EvidenciaGeo from '@/components/rdi/EvidenciaGeo';
 import { prioridadColor, formatFecha, bgSemaforo } from '@/lib/orionUtils';
 
 export default function GestorRDI() {
@@ -19,7 +20,7 @@ export default function GestorRDI() {
   const [form, setForm] = useState({
     titulo: '', descripcion: '', partida_id: '', emisor: '',
     especialista_asignado: '', prioridad: 'media', categoria: 'otro',
-    fecha_vencimiento: ''
+    fecha_vencimiento: '', evidencia_url: '', coordenadas_gps: '', precision_gps_m: undefined
   });
 
   useEffect(() => {
@@ -48,7 +49,7 @@ export default function GestorRDI() {
     });
     setRdis(prev => [nuevo, ...prev]);
     setShowForm(false);
-    setForm({ titulo: '', descripcion: '', partida_id: '', emisor: '', especialista_asignado: '', prioridad: 'media', categoria: 'otro', fecha_vencimiento: '' });
+    setForm({ titulo: '', descripcion: '', partida_id: '', emisor: '', especialista_asignado: '', prioridad: 'media', categoria: 'otro', fecha_vencimiento: '', evidencia_url: '', coordenadas_gps: '', precision_gps_m: undefined });
   };
 
   const responder = async (id) => {
@@ -225,6 +226,12 @@ Entrega una respuesta técnica sugerida y un nivel de confianza (0 a 100) según
               <input type="date" value={form.fecha_vencimiento} onChange={e => setForm(p => ({ ...p, fecha_vencimiento: e.target.value }))} className="w-full px-3 py-2 rounded text-sm text-white font-mono" style={{ background: '#0A1628', border: '1px solid #1E2D4A' }} />
             </div>
             <div className="sm:col-span-2">
+              <EvidenciaGeo
+                valor={{ evidencia_url: form.evidencia_url, coordenadas_gps: form.coordenadas_gps, precision_gps_m: form.precision_gps_m }}
+                onChange={(v) => setForm(p => ({ ...p, ...v }))}
+              />
+            </div>
+            <div className="sm:col-span-2">
               <label className="text-xs font-mono mb-1 block" style={{ color: '#4A6FA5' }}>Descripción</label>
               <textarea value={form.descripcion} onChange={e => setForm(p => ({ ...p, descripcion: e.target.value }))} rows={3} className="w-full px-3 py-2 rounded text-sm text-white font-mono resize-none" style={{ background: '#0A1628', border: '1px solid #1E2D4A' }} placeholder="Describe el requerimiento técnico..." />
             </div>
@@ -287,7 +294,19 @@ Entrega una respuesta técnica sugerida y un nivel de confianza (0 a 100) según
                   {rdi.especialista_asignado ? <span>Asignado: {rdi.especialista_asignado}</span> : <span className="text-amber-400">⚠ Sin asignar</span>}
                   {partida && <span>Partida: {partida.nombre}</span>}
                   {rdi.fecha_vencimiento && <span>Vence: {formatFecha(rdi.fecha_vencimiento)}</span>}
+                  {rdi.coordenadas_gps && (
+                    <a href={`https://www.google.com/maps?q=${encodeURIComponent(rdi.coordenadas_gps)}`} target="_blank" rel="noreferrer"
+                      className="flex items-center gap-1" style={{ color: '#27AE60' }}>
+                      <MapPin className="w-3 h-3" /> {rdi.coordenadas_gps}
+                    </a>
+                  )}
                 </div>
+
+                {rdi.evidencia_url && (
+                  <a href={rdi.evidencia_url} target="_blank" rel="noreferrer" className="mt-3 inline-block">
+                    <img src={rdi.evidencia_url} alt="Evidencia de terreno" className="h-24 rounded object-cover" style={{ border: '1px solid #1E2D4A' }} />
+                  </a>
+                )}
 
                 {rdi.respuesta && (
                   <div className="mt-3 p-3 rounded text-xs" style={{ background: '#0A1628', border: '1px solid #1E2D4A' }}>

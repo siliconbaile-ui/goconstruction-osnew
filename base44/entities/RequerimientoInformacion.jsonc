@@ -67,6 +67,12 @@
     "evidencia_url": {
       "type": "string"
     },
+    "coordenadas_gps": {
+      "type": "string"
+    },
+    "precision_gps_m": {
+      "type": "number"
+    },
     "categoria": {
       "type": "string",
       "enum": [
