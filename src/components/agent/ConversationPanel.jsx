@@ -8,6 +8,7 @@ import ChatComposer from './ChatComposer';
 import WelcomeHero from './WelcomeHero';
 import { WhatsAppButton } from './WhatsAppConnect';
 import useVoiceOutput, { desbloquearVoz } from '@/hooks/useVoiceOutput';
+import agruparMensajes from '@/lib/agruparMensajes';
 
 const AGENT_NAME = 'orion_asistente';
 
@@ -212,7 +213,7 @@ export default function ConversationPanel() {
               <WelcomeHero onPrompt={send} activo={sending} />
             ) : (
               <div className="max-w-3xl mx-auto space-y-4">
-                {messages.map(m => <MessageBubble key={m.id || m.created_date} message={m} />)}
+                {agruparMensajes(messages).map(m => <MessageBubble key={m.id || m.created_date} message={m} />)}
                 {sending && (
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <Loader2 className="w-3.5 h-3.5 animate-spin text-primary" />

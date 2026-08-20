@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ReactMarkdown from 'react-markdown';
+import MarkdownContent from './MarkdownContent';
 import {
   ChevronDown, ChevronRight, Check, X, Loader2, AlertTriangle, Wrench, FileText
 } from 'lucide-react';
@@ -120,9 +120,7 @@ export default function MessageBubble({ message }) {
           {message.content && (
             isUser
               ? <p className="text-sm whitespace-pre-wrap leading-relaxed">{message.content}</p>
-              : <div className="text-sm leading-relaxed text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ul]:list-disc [&_ul]:pl-4 [&_li]:my-0.5 [&_strong]:font-semibold [&_table]:w-full [&_table]:text-xs [&_th]:text-left [&_th]:font-mono [&_th]:text-muted-foreground [&_th]:py-1 [&_td]:py-1 [&_td]:border-t [&_td]:border-hairline [&_code]:px-1 [&_code]:rounded [&_code]:bg-surface-raised [&_code]:text-[12px]">
-                  <ReactMarkdown>{message.content}</ReactMarkdown>
-                </div>
+              : <MarkdownContent content={message.content} />
           )}
           {message.file_urls?.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mt-2">
