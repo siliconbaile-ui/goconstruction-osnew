@@ -3,7 +3,7 @@ import { Outlet, Link, useLocation } from 'react-router-dom';
 import {
   Gauge, TrendingUp, ShieldCheck, ClipboardList, Wallet,
   Settings2, Bell, ChevronRight, Menu, X, Radio, Bot, DatabaseZap,
-  FileBarChart, BookOpen, Camera, Triangle
+  FileBarChart, BookOpen, Camera, HardHat
 } from 'lucide-react';
 import MobileTabBar from '@/components/MobileTabBar';
 import ThemeToggle from '@/components/ThemeToggle';
@@ -66,11 +66,11 @@ export default function Layout() {
         <div className="px-5 py-5 flex items-center justify-between" style={{ borderBottom: '1px solid hsl(var(--hairline))' }}>
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: 'hsl(var(--primary))' }}>
-              <Triangle className="w-4 h-4 text-white" strokeWidth={2.4} />
+              <HardHat className="w-4 h-4 text-white" strokeWidth={2.2} />
             </div>
             <div>
-              <div className="font-bold text-sm leading-tight tracking-wide text-foreground">ORION</div>
-              <div className="font-mono text-[10px] leading-tight text-muted-foreground">BESALCO · CMD CTR</div>
+              <div className="font-bold text-sm leading-tight tracking-wide text-foreground">GoConstruction <span style={{ color: 'hsl(var(--primary))' }}>OS</span></div>
+              <div className="font-mono text-[10px] leading-tight text-muted-foreground">COMMAND CENTER · BESALCO</div>
             </div>
           </div>
           <button onClick={() => setSidebarOpen(false)} className="lg:hidden text-muted-foreground hover:text-foreground">
@@ -118,7 +118,7 @@ export default function Layout() {
         <div className="px-4 py-4" style={{ borderTop: '1px solid hsl(var(--hairline))' }}>
           <div className="text-[10px] font-mono space-y-1 text-muted-foreground">
             <div>OBRA PILOTO · ACTIVA</div>
-            <div>B2BYTES · ORION v1.0</div>
+            <div>B2BYTES · GOCONSTRUCTION OS v1.0</div>
           </div>
         </div>
       </aside>
@@ -136,9 +136,9 @@ export default function Layout() {
             <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-1 text-muted-foreground hover:text-foreground">
               <Menu className="w-5 h-5" />
             </button>
-            <span className="lg:hidden font-bold text-sm tracking-wide text-foreground">ORION</span>
+            <span className="lg:hidden font-bold text-sm tracking-wide text-foreground">GoConstruction <span style={{ color: 'hsl(var(--primary))' }}>OS</span></span>
             <div className="hidden lg:block font-mono text-xs text-muted-foreground">
-              BESALCO COMMAND CENTER · <span style={{ color: 'hsl(var(--ok))' }}>OBRA PILOTO ACTIVA</span>
+              GOCONSTRUCTION OS · COMMAND CENTER · <span style={{ color: 'hsl(var(--ok))' }}>OBRA PILOTO ACTIVA</span>
             </div>
           </div>
           <div className="flex items-center gap-2">

@@ -42,7 +42,7 @@ export default function AgentSidebar({ onPrompt, ficha }) {
         </div>
         <div>
           <div className="text-base font-semibold leading-tight text-foreground">Orion</div>
-          <div className="text-[10px] font-mono tracking-widest text-muted-foreground">OBRA AGÉNTICA</div>
+          <div className="text-[10px] font-mono tracking-widest text-muted-foreground">GOCONSTRUCTION OS</div>
         </div>
       </div>
 

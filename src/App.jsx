@@ -28,7 +28,7 @@ const AuthenticatedApp = () => {
       <div className="fixed inset-0 flex items-center justify-center" style={{ background: '#070D1A' }}>
         <div className="text-center">
           <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="font-mono text-xs" style={{ color: '#4A6FA5' }}>ORION · INICIALIZANDO...</p>
+          <p className="font-mono text-xs" style={{ color: '#4A6FA5' }}>GOCONSTRUCTION OS · INICIALIZANDO...</p>
         </div>
       </div>
     );
