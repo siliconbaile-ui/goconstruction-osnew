@@ -82,7 +82,7 @@ export default function ConversationPanel() {
       } catch (e) { console.error(e); }
     })();
     const unsubscribe = base44.agents.subscribeToConversation(activeId, (data) => {
-      if (mounted) setMessages(data.messages || []);
+      if (mounted && Array.isArray(data?.messages) && data.messages.length > 0) setMessages(data.messages);
     });
     return () => { mounted = false; unsubscribe(); };
   }, [activeId]);

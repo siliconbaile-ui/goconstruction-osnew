@@ -3,9 +3,18 @@ import { MessageCircle } from 'lucide-react';
 
 const url = () => base44.agents.getWhatsAppConnectURL('orion_asistente');
 
+// El enlace se genera AL HACER CLIC (token fresco) y se abre en pestaña nueva;
+// si el navegador bloquea la ventana, navegamos directo.
+const abrirWhatsApp = (e) => {
+  e.preventDefault();
+  const destino = url();
+  const win = window.open(destino, '_blank', 'noopener');
+  if (!win) window.location.href = destino;
+};
+
 export function WhatsAppButton() {
   return (
-    <a href={url()} target="_blank" rel="noreferrer"
+    <a href="#whatsapp" onClick={abrirWhatsApp}
       className="flex items-center gap-1.5 px-3 py-2 rounded-full text-[11px] font-semibold tracking-wide flex-shrink-0"
       style={{ background: '#E7F7EC', color: '#1E8449' }}>
       <MessageCircle className="w-3.5 h-3.5" />
@@ -38,7 +47,7 @@ export default function WhatsAppConnect() {
           </li>
         ))}
       </ul>
-      <a href={url()} target="_blank" rel="noreferrer"
+      <a href="#whatsapp" onClick={abrirWhatsApp}
         className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl text-sm font-semibold text-white"
         style={{ background: '#1E8449' }}>
         <MessageCircle className="w-4 h-4" />
