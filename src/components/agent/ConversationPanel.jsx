@@ -25,6 +25,7 @@ export default function ConversationPanel() {
   const [proyecto, setProyecto] = useState(null);
   const [topAlerts, setTopAlerts] = useState([]);
   const [voiceMode, setVoiceMode] = useState(false);
+  const [errorEnvio, setErrorEnvio] = useState(null);
   const [panelMovil, setPanelMovil] = useState(false);
   const scrollRef = useRef(null);
 
@@ -119,16 +120,26 @@ export default function ConversationPanel() {
     if ((!content && fileUrls.length === 0) || !activeId || sending) return;
     setInput('');
     setSending(true);
+    setErrorEnvio(null);
+    const msg = { role: 'user', content: content || 'Analiza los documentos adjuntos, extrae los datos relevantes y crúzalos con la información de la obra.' };
+    if (fileUrls.length > 0) msg.file_urls = fileUrls;
     try {
-      const conv = conversations.find(c => c.id === activeId) || await base44.agents.getConversation(activeId);
-      const msg = { role: 'user', content: content || 'Analiza los documentos adjuntos, extrae los datos relevantes y crúzalos con la información de la obra.' };
-      if (fileUrls.length > 0) msg.file_urls = fileUrls;
+      const conv = await base44.agents.getConversation(activeId);
       await base44.agents.addMessage(conv, msg);
     } catch (e) {
       console.error(e);
+      setInput(content);
+      setErrorEnvio(msg);
     } finally {
       setSending(false);
     }
+  };
+
+  const reintentar = () => {
+    if (!errorEnvio) return;
+    const { content, file_urls } = errorEnvio;
+    setErrorEnvio(null);
+    send(content, file_urls || []);
   };
 
   const deleteConversation = async (id) => {
@@ -223,6 +234,18 @@ export default function ConversationPanel() {
               </div>
             )}
           </div>
+
+          {errorEnvio && (
+            <div className="flex-shrink-0 px-4 lg:px-8 pb-1">
+              <div className="max-w-3xl mx-auto flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs border"
+                style={{ borderColor: 'hsl(var(--danger) / 0.4)', background: 'hsl(var(--danger) / 0.08)', color: 'hsl(var(--danger))' }}>
+                <span className="flex-1">No se pudo enviar el mensaje (problema de red). Revisa tu conexión.</span>
+                <button onClick={reintentar} className="px-3 py-1.5 rounded-full font-semibold text-primary-foreground bg-primary flex-shrink-0">
+                  Reintentar
+                </button>
+              </div>
+            </div>
+          )}
 
           <ChatComposer
             value={input}
