@@ -34,6 +34,7 @@ function limpiarTexto(contenido) {
 // usa un elemento de audio desbloqueado y cae a la voz nativa si Google falla.
 function useVoiceOutput(messages, activo, voz = 'river') {
   const ultimoLeido = useRef(null);
+  const textosLeidos = useRef([]); // últimos textos ya hablados: evita repetir lo mismo
   const timerRef = useRef(null);
   const activadoRef = useRef(false);
   const [hablando, setHablando] = useState(false);
@@ -67,6 +68,9 @@ function useVoiceOutput(messages, activo, voz = 'river') {
       ultimoLeido.current = key;
       const texto = limpiarTexto(contenido);
       if (!texto) return;
+      // Nunca repetir un texto ya leído (mensajes duplicados del mismo turno).
+      if (textosLeidos.current.includes(texto)) return;
+      textosLeidos.current = [...textosLeidos.current.slice(-4), texto];
 
       setHablando(true);
       try {

@@ -1,15 +1,80 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 import { secrets } from 'base44:runtime';
 
-// Voces neuronales profesionales de Google Cloud en español latinoamericano.
-// Chirp3-HD entrega la locución más natural disponible para es-US (LatAm neutro,
-// el registro que usan los equipos de obra en Chile).
-const VOCES = {
-  river: 'es-US-Chirp3-HD-Sulafat',  // femenina, cálida y muy natural (por defecto)
-  storm: 'es-US-Chirp3-HD-Alnilam',  // masculina, autoridad de mando
-  honey: 'es-US-Chirp3-HD-Leda',     // femenina, cálida
-  spark: 'es-US-Chirp3-HD-Puck',     // masculina, enérgica
+// Motor principal: ElevenLabs (eleven_multilingual_v2), la voz más natural
+// disponible en español. Respaldo: Google Cloud Chirp3-HD si ElevenLabs falla.
+const VOCES_11L = {
+  river: 'EXAVITQu4vr4xnSDxMaL', // Sarah · femenina, clara y cálida (por defecto)
+  honey: 'XB0fDUnXU5powFXDhCwa', // Charlotte · femenina, suave
+  storm: 'JBFqnCBsd6RMkjVDRZzb', // George · masculina, autoridad de mando
+  spark: 'TX3LPaxmHKxFdv7VOQHJ', // Liam · masculina, enérgica
 };
+
+const VOCES_GOOGLE = {
+  river: 'es-US-Chirp3-HD-Sulafat',
+  honey: 'es-US-Chirp3-HD-Leda',
+  storm: 'es-US-Chirp3-HD-Alnilam',
+  spark: 'es-US-Chirp3-HD-Puck',
+};
+
+function aBase64(buf) {
+  const bytes = new Uint8Array(buf);
+  let bin = '';
+  const paso = 0x8000;
+  for (let i = 0; i < bytes.length; i += paso) {
+    bin += String.fromCharCode(...bytes.subarray(i, i + paso));
+  }
+  return btoa(bin);
+}
+
+async function sintetizarElevenLabs(texto, voz) {
+  const apiKey = secrets.get('ELEVENLABS_API_KEY');
+  const voiceId = VOCES_11L[voz] || VOCES_11L.river;
+  const res = await fetch(
+    `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}?output_format=mp3_44100_128`,
+    {
+      method: 'POST',
+      headers: { 'xi-api-key': apiKey, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        text: texto,
+        model_id: 'eleven_multilingual_v2',
+        // Ajustes para locución clara y estable en español chileno.
+        voice_settings: { stability: 0.55, similarity_boost: 0.8, style: 0.25, use_speaker_boost: true },
+      }),
+    }
+  );
+  if (!res.ok) {
+    const detalle = await res.text().catch(() => '');
+    throw new Error(`ElevenLabs ${res.status}: ${detalle.slice(0, 200)}`);
+  }
+  return aBase64(await res.arrayBuffer());
+}
+
+async function sintetizarGoogle(texto, voz, velocidad) {
+  const apiKey = secrets.get('GOOGLE_CLOUD_TTS_API_KEY');
+  const res = await fetch(
+    `https://texttospeech.googleapis.com/v1/text:synthesize?key=${apiKey}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        input: { text: texto },
+        voice: { languageCode: 'es-US', name: VOCES_GOOGLE[voz] || VOCES_GOOGLE.river },
+        audioConfig: {
+          audioEncoding: 'MP3',
+          speakingRate: velocidad,
+          sampleRateHertz: 24000,
+          effectsProfileId: ['handset-class-device'],
+        },
+      }),
+    }
+  );
+  const data = await res.json();
+  if (!res.ok || !data.audioContent) {
+    throw new Error(data?.error?.message || 'Error de Google TTS');
+  }
+  return data.audioContent;
+}
 
 export default async function (req: Request): Promise<Response> {
   try {
@@ -21,37 +86,16 @@ export default async function (req: Request): Promise<Response> {
     if (!texto || !texto.trim()) {
       return Response.json({ error: 'Texto requerido' }, { status: 400 });
     }
+    const limpio = texto.slice(0, 2500);
 
-    const apiKey = secrets.get('GOOGLE_CLOUD_TTS_API_KEY');
-    const name = VOCES[voz] || VOCES.river;
-
-    const res = await fetch(
-      `https://texttospeech.googleapis.com/v1/text:synthesize?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          input: { text: texto.slice(0, 4500) },
-          voice: { languageCode: 'es-US', name },
-          audioConfig: {
-            audioEncoding: 'MP3',
-            speakingRate: velocidad,
-            sampleRateHertz: 24000,
-            effectsProfileId: ['handset-class-device'],
-          },
-        }),
-      }
-    );
-
-    const data = await res.json();
-    if (!res.ok || !data.audioContent) {
-      return Response.json(
-        { error: data?.error?.message || 'Error de Google TTS' },
-        { status: 502 }
-      );
+    try {
+      const audio = await sintetizarElevenLabs(limpio, voz);
+      return Response.json({ audio_base64: audio, motor: 'elevenlabs' });
+    } catch (e) {
+      console.warn('ElevenLabs falló, usando respaldo Google:', e.message);
+      const audio = await sintetizarGoogle(limpio, voz, velocidad);
+      return Response.json({ audio_base64: audio, motor: 'google' });
     }
-
-    return Response.json({ audio_base64: data.audioContent, voz: name });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
