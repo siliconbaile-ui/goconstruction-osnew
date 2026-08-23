@@ -30,10 +30,10 @@ export default function WhatsAppConnect() {
         CANAL TERRENO · WHATSAPP
       </div>
       <p className="text-sm font-semibold leading-snug mb-2" style={{ color: '#141821' }}>
-        El capataz no entra a la plataforma: le escribe a Orion.
+        El capataz no entra a la plataforma: le escribe a GO.
       </p>
       <p className="text-xs leading-relaxed mb-3" style={{ color: '#6B7382' }}>
-        Foto de terreno, consulta de EETT con página citada, avance de partida o RDI — todo por WhatsApp, con las mismas reglas y los mismos datos.
+        Foto de terreno, consulta de EETT con página citada, avance de partida o RDI — todo por WhatsApp, con el mismo criterio técnico y los mismos datos.
       </p>
       <ul className="space-y-1.5 mb-3">
         {[

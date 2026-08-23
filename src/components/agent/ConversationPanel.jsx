@@ -171,7 +171,7 @@ export default function ConversationPanel() {
       <div className="flex items-center justify-center h-full bg-surface-base">
         <div className="text-center">
           <Loader2 className="w-6 h-6 animate-spin mx-auto mb-3 text-primary" />
-          <p className="font-mono text-xs text-muted-foreground">INICIANDO ORION...</p>
+          <p className="font-mono text-xs text-muted-foreground">INICIANDO GO...</p>
         </div>
       </div>
     );
@@ -193,7 +193,7 @@ export default function ConversationPanel() {
             </div>
             <div className="min-w-0">
               <div className="text-sm font-semibold leading-tight truncate text-foreground">
-                Orion<span className="hidden sm:inline"> · asistente de obra</span>
+GO<span className="hidden sm:inline"> · jefe técnico de obra</span>
               </div>
               <div className="flex items-center gap-1.5 text-[10px] font-mono tracking-widest" style={{ color: 'hsl(var(--ok))' }}>
                 <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: 'hsl(var(--ok))' }} />
@@ -202,7 +202,7 @@ export default function ConversationPanel() {
             </div>
             <div className="ml-auto flex items-center gap-3">
               <span className="hidden md:inline text-[11px] text-muted-foreground">
-                responde al tiro, con datos reales de tu obra
+criterio técnico con los datos reales de tu obra
               </span>
               <WhatsAppButton />
               <button onClick={() => setPanelMovil(true)}
@@ -228,7 +228,7 @@ export default function ConversationPanel() {
                 {sending && (
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <Loader2 className="w-3.5 h-3.5 animate-spin text-primary" />
-                    Orion está operando...
+                    GO está operando...
                   </div>
                 )}
               </div>

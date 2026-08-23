@@ -19,7 +19,7 @@ const GRUPOS = [
   },
   {
     titulo: 'Operar la obra',
-    sub: 'Orion ejecuta por ti',
+    sub: 'GO ejecuta por ti',
     icon: Activity,
     items: [
       { label: 'Escalar alertas +24h', meta: 'jerarquía', prompt: 'Escala todas las alertas con más de 24h sin respuesta' },
@@ -41,7 +41,7 @@ export default function AgentSidebar({ onPrompt, ficha }) {
           <Zap className="w-4 h-4 text-primary-foreground" />
         </div>
         <div>
-          <div className="text-base font-semibold leading-tight text-foreground">Orion</div>
+          <div className="text-base font-semibold leading-tight text-foreground">GO</div>
           <div className="text-[10px] font-mono tracking-widest text-muted-foreground">GOCONSTRUCTION OS</div>
         </div>
       </div>

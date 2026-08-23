@@ -53,7 +53,7 @@ export default function ChatComposer({ value, onChange, onSend, sending, onVoice
           value={value}
           onChange={e => onChange(e.target.value)}
           onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); enviar(); } }}
-          placeholder="habla o escríbele a Orion"
+          placeholder="habla o escríbele a GO"
           className="flex-1 bg-transparent outline-none text-base sm:text-sm px-2 sm:px-0 py-3 sm:py-2.5 min-w-0 text-foreground placeholder:text-muted-foreground"
         />
         <div className="flex items-center gap-1.5 sm:gap-2">
@@ -61,7 +61,7 @@ export default function ChatComposer({ value, onChange, onSend, sending, onVoice
           <button onClick={() => setVoiceMode(!voiceMode)}
             className={`w-11 h-11 sm:w-9 sm:h-9 rounded-full flex items-center justify-center ${hablando ? 'animate-pulse' : ''} ${voiceMode ? 'bg-surface-raised' : ''}`}
             style={voiceMode ? { color: 'hsl(var(--ok))' } : { color: 'hsl(var(--muted-foreground))' }}
-            title={hablando ? 'Orion está hablando · toca para silenciar' : voiceMode ? 'Respuestas en voz activadas (voz river)' : 'Activar respuestas en voz'}>
+            title={hablando ? 'GO está hablando · toca para silenciar' : voiceMode ? 'Respuestas en voz activadas (voz técnica masculina)' : 'Activar respuestas en voz'}>
             {voiceMode ? <Volume2 className="w-5 h-5 sm:w-4 sm:h-4" /> : <VolumeX className="w-5 h-5 sm:w-4 sm:h-4" />}
           </button>
           <input ref={fileRef} type="file" multiple className="hidden" onChange={handleFiles}
@@ -82,7 +82,7 @@ export default function ChatComposer({ value, onChange, onSend, sending, onVoice
         </div>
       </div>
       <p className="max-w-3xl mx-auto text-[10px] text-center mt-2 hidden sm:block text-muted-foreground">
-        Orion opera con los datos reales de tu obra, analiza tus documentos y registra cada acción que ejecuta.
+        GO opera con los datos reales de tu obra, analiza tus documentos y registra cada acción que ejecuta.
       </p>
     </div>
   );

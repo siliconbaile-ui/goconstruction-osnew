@@ -3,18 +3,19 @@ import { secrets } from 'base44:runtime';
 
 // Motor principal: ElevenLabs (eleven_multilingual_v2), la voz más natural
 // disponible en español. Respaldo: Google Cloud Chirp3-HD si ElevenLabs falla.
+// GO habla con voz MASCULINA, técnica y serena: registro de arquitecto/ITO chileno.
 const VOCES_11L = {
-  river: 'EXAVITQu4vr4xnSDxMaL', // Sarah · femenina, clara y cálida (por defecto)
-  honey: 'XB0fDUnXU5powFXDhCwa', // Charlotte · femenina, suave
-  storm: 'JBFqnCBsd6RMkjVDRZzb', // George · masculina, autoridad de mando
-  spark: 'TX3LPaxmHKxFdv7VOQHJ', // Liam · masculina, enérgica
+  storm: 'onwK4e9ZLuTAKqWW03F9',  // Daniel · masculina, grave y técnica (GO por defecto)
+  spark: 'JBFqnCBsd6RMkjVDRZzb',  // George · masculina, autoridad de mando
+  river: 'onwK4e9ZLuTAKqWW03F9',  // alias legado → voz de GO
+  honey: 'TX3LPaxmHKxFdv7VOQHJ',  // Liam · masculina, más joven
 };
 
 const VOCES_GOOGLE = {
-  river: 'es-US-Chirp3-HD-Sulafat',
-  honey: 'es-US-Chirp3-HD-Leda',
   storm: 'es-US-Chirp3-HD-Alnilam',
   spark: 'es-US-Chirp3-HD-Puck',
+  river: 'es-US-Chirp3-HD-Alnilam',
+  honey: 'es-US-Chirp3-HD-Puck',
 };
 
 function aBase64(buf) {
@@ -29,7 +30,7 @@ function aBase64(buf) {
 
 async function sintetizarElevenLabs(texto, voz) {
   const apiKey = secrets.get('ELEVENLABS_API_KEY');
-  const voiceId = VOCES_11L[voz] || VOCES_11L.river;
+  const voiceId = VOCES_11L[voz] || VOCES_11L.storm;
   const res = await fetch(
     `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}?output_format=mp3_44100_128`,
     {
@@ -38,8 +39,9 @@ async function sintetizarElevenLabs(texto, voz) {
       body: JSON.stringify({
         text: texto,
         model_id: 'eleven_multilingual_v2',
-        // Ajustes para locución clara y estable en español chileno.
-        voice_settings: { stability: 0.55, similarity_boost: 0.8, style: 0.25, use_speaker_boost: true },
+        language_code: 'es',
+        // Locución sobria y estable: informe técnico de terreno, sin dramatismo.
+        voice_settings: { stability: 0.7, similarity_boost: 0.85, style: 0.1, use_speaker_boost: true },
       }),
     }
   );
@@ -59,7 +61,7 @@ async function sintetizarGoogle(texto, voz, velocidad) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         input: { text: texto },
-        voice: { languageCode: 'es-US', name: VOCES_GOOGLE[voz] || VOCES_GOOGLE.river },
+        voice: { languageCode: 'es-US', name: VOCES_GOOGLE[voz] || VOCES_GOOGLE.storm },
         audioConfig: {
           audioEncoding: 'MP3',
           speakingRate: velocidad,
@@ -82,7 +84,7 @@ export default async function (req: Request): Promise<Response> {
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { texto, voz = 'river', velocidad = 1.05 } = await req.json();
+    const { texto, voz = 'storm', velocidad = 1.0 } = await req.json();
     if (!texto || !texto.trim()) {
       return Response.json({ error: 'Texto requerido' }, { status: 400 });
     }

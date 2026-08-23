@@ -22,12 +22,12 @@ export default function WelcomeHero({ onPrompt, activo }) {
       {/* Mensaje de apertura */}
       <div className="flex gap-3 mb-5">
         <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 bg-primary">
-          <span className="text-primary-foreground text-[11px] font-bold">O</span>
+          <span className="text-primary-foreground text-[11px] font-bold">GO</span>
         </div>
         <div className="rounded-2xl rounded-tl-md px-4 sm:px-5 py-4 bg-surface border border-hairline">
           <p className="text-sm leading-relaxed text-foreground">
-            Hola, soy Orion. Acá el asistente no acompaña la obra: el asistente <strong>opera</strong> la obra.
-            Dime qué te preocupa y te muestro la obra en vivo.
+            Soy GO, tu jefe técnico digital. Acá el asistente no acompaña la obra: el asistente <strong>opera</strong> la obra.
+            Dime qué te preocupa y te muestro la obra en vivo, con la norma y la página citada.
           </p>
         </div>
       </div>
@@ -35,7 +35,7 @@ export default function WelcomeHero({ onPrompt, activo }) {
       {/* Ciclo agéntico */}
       <div className="rounded-2xl p-4 sm:p-5 mb-6 bg-surface border border-hairline">
         <div className="flex items-center justify-between mb-1.5">
-          <div className="text-[10px] font-mono tracking-widest text-primary">CICLO 1 · CÓMO OPERA ORION</div>
+          <div className="text-[10px] font-mono tracking-widest text-primary">CICLO 1 · CÓMO OPERA GO</div>
           <div className="flex gap-1">
             {ETAPAS.map((e, i) => (
               <span key={e} className={`w-5 h-0.5 rounded-full ${activo && i <= 2 ? 'bg-primary' : 'bg-hairline'}`} />
@@ -46,7 +46,7 @@ export default function WelcomeHero({ onPrompt, activo }) {
           Tu obra deja de ser un reporte y pasa a ser una conversación
         </h2>
         <p className="text-sm leading-relaxed mb-4 text-muted-foreground">
-          Orion vigila las partidas, bloquea el pago sin calidad y escala la alerta sola.
+          GO vigila las partidas, bloquea el pago sin calidad y escala la alerta solo.
         </p>
         <div className="flex flex-wrap gap-x-6 gap-y-2 mb-4">
           {ETAPAS.map((e, i) => (

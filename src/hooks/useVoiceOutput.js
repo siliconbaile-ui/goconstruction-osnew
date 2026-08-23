@@ -29,10 +29,10 @@ function limpiarTexto(contenido) {
     .slice(0, 900);
 }
 
-// Lee en voz alta la última respuesta de Orion con voz neuronal Chirp3-HD
-// (español latino, registro de obra). Espera a que el streaming termine,
-// usa un elemento de audio desbloqueado y cae a la voz nativa si Google falla.
-function useVoiceOutput(messages, activo, voz = 'river') {
+// Lee en voz alta la última respuesta de GO con voz masculina técnica
+// (ElevenLabs multilingüe, registro de arquitecto/ITO chileno). Espera a que el
+// streaming termine y cae a la voz nativa es-CL si el servicio falla.
+function useVoiceOutput(messages, activo, voz = 'storm') {
   const ultimoLeido = useRef(null);
   const textosLeidos = useRef([]); // últimos textos ya hablados: evita repetir lo mismo
   const timerRef = useRef(null);
@@ -98,7 +98,12 @@ function useVoiceOutput(messages, activo, voz = 'river') {
         try {
           const u = new SpeechSynthesisUtterance(limpiarTexto(contenido));
           u.lang = 'es-CL';
-          u.rate = 1.05;
+          u.rate = 1.0;
+          u.pitch = 0.9;
+          const voces = window.speechSynthesis.getVoices() || [];
+          const masculina = voces.find(v => /es(-|_)(CL|419|MX|US)/i.test(v.lang) && /jorge|diego|juan|carlos|male|hombre/i.test(v.name))
+            || voces.find(v => /es(-|_)(CL|419|MX)/i.test(v.lang));
+          if (masculina) u.voice = masculina;
           u.onend = () => setHablando(false);
           window.speechSynthesis.cancel();
           window.speechSynthesis.speak(u);
