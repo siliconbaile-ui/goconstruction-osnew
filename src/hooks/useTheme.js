@@ -1,21 +1,8 @@
-import { useCallback, useEffect, useState } from 'react';
+import useTemaMarca from '@/hooks/useTemaMarca';
 
-const KEY = 'orion-theme';
-
-// Tema global: 'dark' (command center, por defecto) o 'light'.
+// Compatibilidad: el modo claro/oscuro vive ahora en el sistema de temas de
+// marca, que aplica la variante clara u oscura de la paleta activa.
 export default function useTheme() {
-  const [theme, setTheme] = useState(() => localStorage.getItem(KEY) || 'dark');
-
-  useEffect(() => {
-    const root = document.documentElement;
-    root.classList.toggle('light', theme === 'light');
-    root.classList.toggle('dark', theme === 'dark');
-    localStorage.setItem(KEY, theme);
-    const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', theme === 'light' ? '#F7F6F3' : '#05070D');
-  }, [theme]);
-
-  const toggle = useCallback(() => setTheme(t => (t === 'dark' ? 'light' : 'dark')), []);
-
-  return { theme, setTheme, toggle };
+  const { modo, setModo, alternarModo } = useTemaMarca();
+  return { theme: modo, setTheme: setModo, toggle: alternarModo };
 }

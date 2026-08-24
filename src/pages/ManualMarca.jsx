@@ -1,4 +1,4 @@
-import { HardHat, Palette, MessageSquare, Ruler, Volume2, ShieldCheck } from 'lucide-react';
+import { HardHat, Palette, MessageSquare, Ruler, Volume2, ShieldCheck, Moon, Sun } from 'lucide-react';
 import useTemaMarca from '@/hooks/useTemaMarca';
 import BloqueManual from '@/components/marca/BloqueManual';
 import TemaCard from '@/components/marca/TemaCard';
@@ -20,7 +20,7 @@ const VOZ = [
 ];
 
 export default function ManualMarca() {
-  const { temaId, aplicar, temas } = useTemaMarca();
+  const { temaId, modo, aplicar, setModo, temas } = useTemaMarca();
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-10 space-y-12 sm:space-y-16">
@@ -62,15 +62,27 @@ export default function ManualMarca() {
 
       {/* 02 Temas */}
       <BloqueManual numero="02" titulo="Seis temas del sistema"
-        bajada="Lectura cromática 2026/27 para software de construcción: oscuro como línea base y no como variante, superficies estratificadas en vez de bordes duros, un único color de marca saturado reservado a la voz del agente y a la acción, y dos temas claros de alto contraste para el sol de terreno y el documento firmado. Toca APLICAR y el cambio recorre todas las pantallas al instante.">
+        bajada="Lectura cromática 2026/27 para software de construcción: oscuro como línea base y no como variante, superficies estratificadas en vez de bordes duros, y un único color de marca saturado reservado a la voz del agente y a la acción. Cada paleta trae variante oscura (sala de control) y clara (terreno a pleno sol): el switch del header cambia la luz sin cambiar la marca.">
+        <div className="flex items-center gap-2 mb-4">
+          <span className="text-[10px] font-mono tracking-widest text-muted-foreground">VARIANTE EN PREVIEW</span>
+          <div className="flex rounded-full overflow-hidden border border-hairline">
+            {[{ id: 'dark', label: 'Oscuro', Icon: Moon }, { id: 'light', label: 'Claro', Icon: Sun }].map(({ id, label, Icon }) => (
+              <button key={id} onClick={() => setModo(id)}
+                className={`flex items-center gap-1.5 h-9 px-3.5 text-[11px] font-semibold tracking-wide ${
+                  modo === id ? 'bg-primary text-primary-foreground' : 'bg-surface text-muted-foreground'}`}>
+                <Icon className="w-3.5 h-3.5" /> {label}
+              </button>
+            ))}
+          </div>
+        </div>
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {temas.map(t => (
-            <TemaCard key={t.id} tema={t} activo={temaId === t.id} onAplicar={aplicar} />
+            <TemaCard key={t.id} tema={t} activo={temaId === t.id} modo={modo} onAplicar={aplicar} />
           ))}
         </div>
         <div className="flex items-center gap-2 mt-4 px-4 py-3 rounded-xl text-xs bg-surface border border-hairline text-muted-foreground">
           <Palette className="w-3.5 h-3.5 flex-shrink-0 text-primary" />
-          El tema queda guardado en el dispositivo: terreno puede trabajar en Cal Terracota mientras la sala de control queda en Faena Nocturna.
+          Paleta y variante quedan guardadas en el dispositivo: terreno puede trabajar en Cal Terracota claro mientras la sala de control queda en Faena Nocturna oscuro.
         </div>
       </BloqueManual>
 
@@ -137,7 +149,7 @@ export default function ManualMarca() {
 
       <footer className="pt-6 border-t border-hairline">
         <div className="text-[10px] font-mono tracking-widest text-muted-foreground">
-          B2BYTES · GOCONSTRUCTION OS · MANUAL DE MARCA · TEMA ACTIVO: {temaId.replace(/_/g, ' ').toUpperCase()}
+          B2BYTES · GOCONSTRUCTION OS · MANUAL DE MARCA · PALETA ACTIVA: {temaId.replace(/_/g, ' ').toUpperCase()} · {modo.toUpperCase()}
         </div>
       </footer>
     </div>
