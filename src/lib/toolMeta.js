@@ -1,11 +1,12 @@
 import {
   AlertTriangle, TrendingUp, FileQuestion, ClipboardCheck, CreditCard,
-  Building2, FileBarChart, BookOpen, Search, ArrowUpCircle, Wrench,
+  Building2, FileBarChart, BookOpen, Search, ArrowUpCircle, Wrench, Network,
 } from 'lucide-react';
 
 // Identidad visual por tarea: cada herramienta del agente se ve distinta
 // para que en terreno se reconozca de un vistazo qué está haciendo GO.
 const MAPA = [
+  { re: /subagente/i, icon: Network, titulo: 'Subagente de análisis', accent: 'primary' },
   { re: /alerta/i, icon: AlertTriangle, titulo: 'Alertas', accent: 'danger' },
   { re: /escalar/i, icon: ArrowUpCircle, titulo: 'Escalamiento', accent: 'danger' },
   { re: /partida|desviacion|avance/i, icon: TrendingUp, titulo: 'Avance de partidas', accent: 'warn' },
