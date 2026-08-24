@@ -29,8 +29,12 @@ export default async function clasificarConversacion(conversacionId, messages, m
     response_json_schema: ESQUEMA,
   });
 
+  // Ata cada conversación a la obra activa para que el historial quede por proyecto.
+  const proyectos = await base44.entities.ProyectoObra.list('-updated_date', 1);
+
   const datos = {
     conversacion_id: conversacionId,
+    proyecto_id: metaExistente?.proyecto_id || proyectos[0]?.id || '',
     titulo: (r.titulo || '').slice(0, 80),
     categoria: r.categoria || 'general',
     etiquetas: (r.etiquetas || []).slice(0, 4),
