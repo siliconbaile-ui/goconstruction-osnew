@@ -1,5 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 import { scrapeUrl, embeddings, upsertVectores, grafo, trocearTexto } from '../../shared/conocimiento.ts';
+import { paginasPorTramo, codigosNormativos } from '../../shared/hibrido.ts';
 
 // Ingesta automática de archivos que llegan por WhatsApp o chat:
 // - foto  → InspeccionCalidad con evidencia_foto_url y GPS
@@ -22,7 +23,20 @@ export default async function (req: Request): Promise<Response> {
     const urls = file_urls.length > 0 ? file_urls : (file_url ? [file_url] : []);
     if (urls.length === 0) return Response.json({ error: 'Falta file_url' }, { status: 400 });
 
+    // El proyecto puede llegar como id o como nombre/código dicho por WhatsApp.
     let proyecto = proyecto_id;
+    if (proyecto) {
+      const porId = await base44.asServiceRole.entities.ProyectoObra.filter({ id: proyecto }, '-updated_date', 1);
+      if (porId.length === 0) {
+        const todos = await base44.asServiceRole.entities.ProyectoObra.list('-updated_date', 100);
+        const clave = String(proyecto).toLowerCase().trim();
+        const match = todos.find(p =>
+          (p.codigo || '').toLowerCase() === clave ||
+          (p.nombre || '').toLowerCase().includes(clave)
+        );
+        proyecto = match?.id || null;
+      }
+    }
     if (!proyecto) {
       const activos = await base44.asServiceRole.entities.ProyectoObra.filter({ estado: 'activo' }, '-updated_date', 1);
       const cualquiera = activos.length ? activos : await base44.asServiceRole.entities.ProyectoObra.list('-updated_date', 1);
@@ -69,6 +83,7 @@ export default async function (req: Request): Promise<Response> {
         const tramos = trocearTexto(data.markdown || '').slice(0, 120);
         if (tramos.length === 0) throw new Error('Sin texto extraíble');
         const paginas = data.metadata?.numPages || null;
+        const paginacion = paginasPorTramo(tramos, paginas || 0);
         for (let i = 0; i < tramos.length; i += 40) {
           const lote = tramos.slice(i, i + 40);
           const vectores = await embeddings(lote, 'passage');
@@ -82,7 +97,10 @@ export default async function (req: Request): Promise<Response> {
               especialidad,
               tipo: doc.tipo,
               tramo: i + j,
-              pagina_aprox: paginas ? Math.max(1, Math.round(((i + j + 1) / tramos.length) * paginas)) : 0,
+              pagina: paginacion[i + j].pagina,
+              pagina_exacta: paginacion[i + j].exacta,
+              pagina_aprox: paginacion[i + j].pagina,
+              codigos: codigosNormativos(t).slice(0, 12),
               texto: t.slice(0, 3000),
             },
           })), proyecto);

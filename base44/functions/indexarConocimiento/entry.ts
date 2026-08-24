@@ -1,5 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 import { scrapeUrl, embeddings, upsertVectores, grafo, trocearTexto } from '../../shared/conocimiento.ts';
+import { paginasPorTramo, codigosNormativos } from '../../shared/hibrido.ts';
 
 // Indexa un documento técnico (PDF de EETT, plano, normativa, ficha) en el
 // cerebro de GO: vectores en Pinecone para búsqueda semántica + nodos en el
@@ -31,6 +32,8 @@ export default async function (req: Request): Promise<Response> {
 
     const tramos = trocearTexto(contenido).slice(0, 120);
     const base = documento_id || `doc-${Date.now()}`;
+    // Página real por tramo (marcador del PDF) y códigos normativos citables.
+    const paginacion = paginasPorTramo(tramos, paginas || 0);
 
     // Vectores por lotes de 40
     let indexados = 0;
@@ -47,7 +50,10 @@ export default async function (req: Request): Promise<Response> {
           especialidad,
           tipo,
           tramo: i + j,
-          pagina_aprox: paginas ? Math.max(1, Math.round(((i + j + 1) / tramos.length) * paginas)) : 0,
+          pagina: paginacion[i + j].pagina,
+          pagina_exacta: paginacion[i + j].exacta,
+          pagina_aprox: paginacion[i + j].pagina,
+          codigos: codigosNormativos(t).slice(0, 12),
           texto: t.slice(0, 3000),
         },
       })), proyecto_id || 'obra');
