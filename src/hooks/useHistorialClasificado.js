@@ -1,26 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { base44 } from '@/api/base44Client';
+import clasificarConversacion from '@/lib/clasificarConversacion';
 
-const ESQUEMA = {
-  type: 'object',
-  properties: {
-    titulo: { type: 'string' },
-    categoria: {
-      type: 'string',
-      enum: ['calidad', 'avance', 'rdi', 'pagos', 'alertas', 'normativa', 'documentos', 'producto', 'general'],
-    },
-    etiquetas: { type: 'array', items: { type: 'string' } },
-    resumen: { type: 'string' },
-  },
-  required: ['titulo', 'categoria', 'etiquetas'],
-};
-
-// Historial persistente de GO: cada conversación queda guardada y la IA le pone
-// título, categoría y etiquetas según lo que se conversó. Nunca se elimina.
+// Historial persistente de GO: TODA conversación queda guardada y clasificada.
+// 1) La sesión activa se clasifica/reclasifica en vivo mientras crece.
+// 2) Un barrido de fondo clasifica las sesiones que quedaron sin meta
+//    (sesiones antiguas, de otros dispositivos o de WhatsApp).
 export default function useHistorialClasificado(conversations, activeId, messages) {
   const [metas, setMetas] = useState({});
   const clasificando = useRef(new Set());
   const timerRef = useRef(null);
+  const barrido = useRef(false);
 
   const cargar = useCallback(async () => {
     const registros = await base44.entities.ConversacionMeta.list('-ultima_actividad', 200);
@@ -32,6 +22,34 @@ export default function useHistorialClasificado(conversations, activeId, message
 
   useEffect(() => { cargar(); }, [cargar]);
 
+  // Barrido de fondo: clasifica sesiones existentes sin meta (una sola vez por carga).
+  useEffect(() => {
+    if (barrido.current || conversations.length === 0) return;
+    barrido.current = true;
+    (async () => {
+      const mapa = await cargar();
+      const pendientes = conversations.filter(c => !mapa[c.id] && c.id !== activeId).slice(0, 6);
+      for (const c of pendientes) {
+        if (clasificando.current.has(c.id)) continue;
+        clasificando.current.add(c.id);
+        try {
+          const conv = await base44.agents.getConversation(c.id);
+          const msgs = conv?.messages || [];
+          if (msgs.length >= 2) {
+            const guardado = await clasificarConversacion(c.id, msgs, null);
+            if (guardado) setMetas(prev => ({ ...prev, [c.id]: guardado }));
+          }
+        } catch (e) {
+          console.error('clasificación pendiente falló', e);
+        } finally {
+          clasificando.current.delete(c.id);
+        }
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [conversations.length]);
+
+  // Clasificación en vivo de la sesión activa.
   useEffect(() => {
     if (!activeId || messages.length < 2) return;
     const meta = metas[activeId];
@@ -43,31 +61,10 @@ export default function useHistorialClasificado(conversations, activeId, message
     timerRef.current = setTimeout(async () => {
       clasificando.current.add(activeId);
       try {
-        const transcripcion = messages
-          .filter(m => m.content)
-          .slice(-14)
-          .map(m => `${m.role === 'user' ? 'USUARIO' : 'GO'}: ${String(m.content).slice(0, 500)}`)
-          .join('\n');
-
-        const r = await base44.integrations.Core.InvokeLLM({
-          prompt: `Clasifica esta conversación de un asistente de gestión de obras de construcción en Chile.\n\nDevuelve:\n- titulo: máximo 6 palabras, en español, específico y técnico (ej: "NC enfierradura losa 3", "EDP bloqueado subcontrato Pinto"). Sin comillas.\n- categoria: la más representativa.\n- etiquetas: 2 a 4 etiquetas cortas en minúscula (partida, especialidad, tipo de gestión).\n- resumen: una sola frase con lo resuelto o pendiente.\n\nCONVERSACIÓN:\n${transcripcion}`,
-          response_json_schema: ESQUEMA,
-        });
-
-        const datos = {
-          conversacion_id: activeId,
-          titulo: (r.titulo || '').slice(0, 80),
-          categoria: r.categoria || 'general',
-          etiquetas: (r.etiquetas || []).slice(0, 4),
-          resumen: (r.resumen || '').slice(0, 300),
-          mensajes_clasificados: messages.length,
-          ultima_actividad: new Date().toISOString(),
-        };
-
-        const guardado = meta
-          ? await base44.entities.ConversacionMeta.update(meta.id, datos)
-          : await base44.entities.ConversacionMeta.create(datos);
-        setMetas(prev => ({ ...prev, [activeId]: guardado || { ...meta, ...datos } }));
+        const guardado = await clasificarConversacion(activeId, messages, meta);
+        if (guardado) setMetas(prev => ({ ...prev, [activeId]: guardado }));
+      } catch (e) {
+        console.error('clasificación en vivo falló', e);
       } finally {
         clasificando.current.delete(activeId);
       }

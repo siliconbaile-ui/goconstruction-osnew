@@ -123,14 +123,22 @@ export default function ObraLivePanel({
                       <MessageSquare className="w-3.5 h-3.5 flex-shrink-0 text-muted-foreground" />
                       <span className="truncate flex-1">{meta?.titulo || c.metadata?.name || 'Sesión sin clasificar'}</span>
                     </div>
-                    {meta?.etiquetas?.length > 0 && (
+                    {(meta?.categoria || meta?.etiquetas?.length > 0) && (
                       <div className="flex flex-wrap gap-1 pl-5">
-                        {meta.etiquetas.slice(0, 3).map(e => (
+                        {meta?.categoria && (
+                          <span className="px-1.5 py-0.5 rounded text-[9px] font-mono uppercase tracking-wider bg-primary/15 text-primary">
+                            {meta.categoria}
+                          </span>
+                        )}
+                        {(meta?.etiquetas || []).slice(0, 3).map(e => (
                           <span key={e} className="px-1.5 py-0.5 rounded text-[9px] font-mono uppercase tracking-wider bg-surface-raised text-primary">
                             {e}
                           </span>
                         ))}
                       </div>
+                    )}
+                    {meta?.resumen && (
+                      <p className="pl-5 text-[11px] leading-snug line-clamp-2 text-muted-foreground">{meta.resumen}</p>
                     )}
                   </div>
                 );
