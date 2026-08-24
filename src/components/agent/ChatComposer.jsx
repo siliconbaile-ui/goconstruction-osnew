@@ -57,7 +57,7 @@ export default function ChatComposer({ value, onChange, onSend, sending, onVoice
           className="flex-1 bg-transparent outline-none text-base sm:text-sm px-2 sm:px-0 py-3 sm:py-2.5 min-w-0 text-foreground placeholder:text-muted-foreground"
         />
         <div className="flex items-center gap-1.5 sm:gap-2">
-          <VoiceRecorder onTranscript={onVoice} disabled={sending || uploading} />
+          <VoiceRecorder onTranscript={onVoice} onPartial={onChange} disabled={sending || uploading} />
           <button onClick={() => setVoiceMode(!voiceMode)}
             className={`w-11 h-11 sm:w-9 sm:h-9 rounded-full flex items-center justify-center ${hablando ? 'animate-pulse' : ''} ${voiceMode ? 'bg-surface-raised' : ''}`}
             style={voiceMode ? { color: 'hsl(var(--ok))' } : { color: 'hsl(var(--muted-foreground))' }}

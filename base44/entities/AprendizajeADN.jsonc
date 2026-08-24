@@ -1,0 +1,40 @@
+{
+  "name": "AprendizajeADN",
+  "type": "object",
+  "properties": {
+    "proyecto_id": {
+      "type": "string"
+    },
+    "conversacion_id": {
+      "type": "string"
+    },
+    "contenido": {
+      "type": "string"
+    },
+    "resumen": {
+      "type": "string"
+    },
+    "tipo": {
+      "type": "string",
+      "enum": [
+        "guardado",
+        "validado",
+        "corregido"
+      ],
+      "default": "guardado"
+    },
+    "nota_experto": {
+      "type": "string"
+    },
+    "validado_por": {
+      "type": "string"
+    },
+    "fecha_validacion": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "contenido"
+  ]
+}

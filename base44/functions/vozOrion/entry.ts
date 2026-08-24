@@ -5,9 +5,9 @@ import { secrets } from 'base44:runtime';
 // disponible en español. Respaldo: Google Cloud Chirp3-HD si ElevenLabs falla.
 // GO habla con voz MASCULINA, técnica y serena: registro de arquitecto/ITO chileno.
 const VOCES_11L = {
-  storm: 'onwK4e9ZLuTAKqWW03F9',  // Daniel · masculina, grave y técnica (GO por defecto)
+  storm: 'qJ7AXEAnU37CmLmqaMIL',  // voz oficial de GO · masculina, técnica
   spark: 'JBFqnCBsd6RMkjVDRZzb',  // George · masculina, autoridad de mando
-  river: 'onwK4e9ZLuTAKqWW03F9',  // alias legado → voz de GO
+  river: 'qJ7AXEAnU37CmLmqaMIL',  // alias legado → voz de GO
   honey: 'TX3LPaxmHKxFdv7VOQHJ',  // Liam · masculina, más joven
 };
 

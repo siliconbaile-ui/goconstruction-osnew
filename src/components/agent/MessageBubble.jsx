@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import MarkdownContent from './MarkdownContent';
 import {
-  ChevronDown, ChevronRight, Check, X, Loader2, AlertTriangle, Wrench, FileText
+  ChevronDown, ChevronRight, Check, X, Loader2, AlertTriangle, FileText
 } from 'lucide-react';
 import SmartDataCard from './SmartDataCard';
+import MessageActions from './MessageActions';
+import toolMeta from '@/lib/toolMeta';
 
 const STATUS_META = {
   pending: { icon: Loader2, label: 'Pendiente', color: 'hsl(var(--muted-foreground))', spin: true },
@@ -45,6 +47,8 @@ function ToolCallDisplay({ toolCall }) {
   try { args = toolCall.arguments_string ? JSON.parse(toolCall.arguments_string) : null; }
   catch { args = toolCall.arguments_string; }
 
+  const tarea = toolMeta(toolCall.name || '');
+  const TareaIcon = tarea.icon;
   const friendlyName = (toolCall.name || 'herramienta').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 
   const records = Array.isArray(parsedResults) ? parsedResults
@@ -55,7 +59,8 @@ function ToolCallDisplay({ toolCall }) {
     typeof records[0] === 'object' && records[0] !== null;
 
   return (
-    <div className="mt-2 text-xs rounded-lg bg-surface-raised border border-hairline">
+    <div className="mt-2 text-xs rounded-xl overflow-hidden bg-surface-raised border border-hairline"
+      style={{ borderLeft: `3px solid ${effectiveFailed ? 'hsl(var(--danger))' : tarea.color}` }}>
       <button
         onClick={() => !hideDetails && setExpanded(!expanded)}
         className="w-full flex items-center gap-2 px-3 py-2 text-left"
@@ -65,8 +70,14 @@ function ToolCallDisplay({ toolCall }) {
           ? <ChevronDown className="w-3 h-3 text-muted-foreground" />
           : <ChevronRight className="w-3 h-3 text-muted-foreground" />
         )}
-        <Wrench className="w-3 h-3 text-muted-foreground" />
-        <span className="font-mono text-muted-foreground">{friendlyName}</span>
+        <span className="w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0"
+          style={{ background: tarea.colorSuave }}>
+          <TareaIcon className="w-3 h-3" style={{ color: tarea.color }} />
+        </span>
+        <span className="min-w-0">
+          <span className="block text-[11px] font-semibold truncate text-foreground/85">{tarea.titulo}</span>
+          <span className="block font-mono text-[9px] truncate text-muted-foreground">{friendlyName}</span>
+        </span>
         <span className="ml-auto flex items-center gap-1.5 font-mono" style={{ color: effectiveFailed ? 'hsl(var(--danger))' : meta.color }}>
           <Icon className={`w-3 h-3 ${meta.spin ? 'animate-spin' : ''}`} />
           {label}
@@ -99,7 +110,7 @@ function ToolCallDisplay({ toolCall }) {
   );
 }
 
-export default function MessageBubble({ message }) {
+export default function MessageBubble({ message, conversacionId }) {
   const isUser = message.role === 'user';
   return (
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
@@ -107,9 +118,9 @@ export default function MessageBubble({ message }) {
         {!isUser && (
           <div className="flex items-center gap-2 mb-1.5">
             <div className="w-5 h-5 rounded-full flex items-center justify-center bg-primary">
-              <span className="text-primary-foreground text-[10px] font-bold">O</span>
+              <span className="text-primary-foreground text-[9px] font-bold">GO</span>
             </div>
-            <span className="text-[11px] font-mono text-muted-foreground">ORION</span>
+            <span className="text-[11px] font-mono text-muted-foreground">GO</span>
           </div>
         )}
         <div
@@ -134,6 +145,9 @@ export default function MessageBubble({ message }) {
           )}
           {message.tool_calls?.map((tc, i) => <ToolCallDisplay key={i} toolCall={tc} />)}
         </div>
+        {!isUser && message.content && (
+          <MessageActions content={message.content} conversacionId={conversacionId} />
+        )}
       </div>
     </div>
   );

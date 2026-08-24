@@ -224,7 +224,9 @@ criterio técnico con los datos reales de tu obra
               <WelcomeHero onPrompt={send} activo={sending} />
             ) : (
               <div className="max-w-3xl mx-auto space-y-4">
-                {agruparMensajes(messages).map(m => <MessageBubble key={m.id || m.created_date} message={m} />)}
+                {agruparMensajes(messages).map(m => (
+                  <MessageBubble key={m.id || m.created_date} message={m} conversacionId={activeId} />
+                ))}
                 {sending && (
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <Loader2 className="w-3.5 h-3.5 animate-spin text-primary" />
