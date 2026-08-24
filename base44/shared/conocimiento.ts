@@ -77,11 +77,50 @@ export async function hostIndice() {
   const data = await res.json();
   const indices = data?.indexes || [];
   const compatible = indices.find(i => i.dimension === 1024);
-  if (!compatible?.host) {
-    const detalle = indices.map(i => `${i.name} (dim ${i.dimension})`).join(', ') || 'ninguno';
-    throw new Error(`Pinecone necesita un índice de dimensión 1024 y métrica cosine (modelo multilingual-e5-large). Índices actuales: ${detalle}. Crea uno de 1024 dimensiones o define PINECONE_INDEX_HOST.`);
+  if (compatible?.host) return compatible.host;
+  return await crearIndice();
+}
+
+// El modelo multilingual-e5-large entrega 1024 dimensiones: si el proyecto no
+// tiene un índice compatible, GO lo crea solo y usa el host de la respuesta.
+const INDICE = 'goconstruction-conocimiento';
+
+async function crearIndice() {
+  const res = await fetch(`${PINECONE_API}/indexes`, {
+    method: 'POST',
+    headers: { 'Api-Key': pineconeKey(), 'Content-Type': 'application/json', 'X-Pinecone-Api-Version': '2025-04' },
+    body: JSON.stringify({
+      name: INDICE,
+      vector_type: 'dense',
+      dimension: 1024,
+      metric: 'cosine',
+      spec: { serverless: { cloud: 'aws', region: 'us-east-1' } },
+      deletion_protection: 'disabled',
+    }),
+  });
+  const data = await res.json();
+  if (res.ok && data.host) {
+    // El índice recién creado tarda unos segundos en quedar operativo.
+    await esperarListo(data.host);
+    return data.host;
   }
-  return compatible.host;
+  if (res.status === 409) {
+    const desc = await fetch(`${PINECONE_API}/indexes/${INDICE}`, {
+      headers: { 'Api-Key': pineconeKey(), 'X-Pinecone-Api-Version': '2025-04' },
+    }).then(r => r.json());
+    if (desc?.host) return desc.host;
+  }
+  throw new Error(data?.error?.message || data?.message || `No se pudo crear el índice en Pinecone (${res.status})`);
+}
+
+async function esperarListo(host) {
+  for (let i = 0; i < 10; i++) {
+    const desc = await fetch(`${PINECONE_API}/indexes/${INDICE}`, {
+      headers: { 'Api-Key': pineconeKey(), 'X-Pinecone-Api-Version': '2025-04' },
+    }).then(r => r.json()).catch(() => null);
+    if (desc?.status?.ready) return;
+    await new Promise(r => setTimeout(r, 2000));
+  }
 }
 
 export async function embeddings(textos, tipo = 'passage') {
