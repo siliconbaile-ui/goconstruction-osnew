@@ -114,7 +114,7 @@ export default function MessageBubble({ message, conversacionId }) {
   const isUser = message.role === 'user';
   return (
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
-      <div className={`max-w-[85%] ${isUser ? '' : 'w-full md:max-w-[80%]'}`}>
+      <div className={`min-w-0 ${isUser ? 'max-w-[88%]' : 'w-full md:max-w-[80%]'}`}>
         {!isUser && (
           <div className="flex items-center gap-2 mb-1.5">
             <div className="w-5 h-5 rounded-full flex items-center justify-center bg-primary">
@@ -130,7 +130,7 @@ export default function MessageBubble({ message, conversacionId }) {
         >
           {message.content && (
             isUser
-              ? <p className="text-sm whitespace-pre-wrap leading-relaxed">{message.content}</p>
+              ? <p className="text-sm whitespace-pre-wrap break-words leading-relaxed">{message.content}</p>
               : <MarkdownContent content={message.content} />
           )}
           {message.file_urls?.length > 0 && (

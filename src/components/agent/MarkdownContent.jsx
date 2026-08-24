@@ -1,4 +1,5 @@
 import ReactMarkdown from 'react-markdown';
+import TablaMarkdown from './TablaMarkdown';
 
 // Orion suele escribir tablas markdown en una sola línea ("| a | b | |---|---| | 1 | 2 |").
 // Sin esto se veían como texto plano con pipes. Aquí se reconstruyen las filas
@@ -19,31 +20,7 @@ function Tabla({ filas }) {
   const cuerpo = filas.filter(f => !esSeparador(f));
   if (cuerpo.length === 0) return null;
   const [head, ...rows] = cuerpo;
-
-  return (
-    <div className="my-2 -mx-1 overflow-x-auto">
-      <table className="w-full text-xs border-collapse">
-        <thead>
-          <tr>
-            {celdas(head).map((c, i) => (
-              <th key={i} className="text-left font-mono text-[10px] uppercase tracking-wider text-muted-foreground px-2 py-1.5 whitespace-nowrap">{c}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((fila, i) => (
-            <tr key={i}>
-              {celdas(fila).map((c, j) => (
-                <td key={j} className="px-2 py-1.5 border-t border-hairline align-top text-foreground/90">
-                  <ReactMarkdown components={{ p: ({ children }) => <span>{children}</span> }}>{c}</ReactMarkdown>
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
+  return <TablaMarkdown head={celdas(head)} rows={rows.map(celdas)} />;
 }
 
 export default function MarkdownContent({ content }) {
@@ -60,7 +37,7 @@ export default function MarkdownContent({ content }) {
   }
 
   return (
-    <div className="text-sm leading-relaxed text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ul]:list-disc [&_ul]:pl-4 [&_ol]:my-1 [&_ol]:list-decimal [&_ol]:pl-4 [&_li]:my-0.5 [&_strong]:font-semibold [&_code]:px-1 [&_code]:rounded [&_code]:bg-surface-raised [&_code]:text-[12px]">
+    <div className="text-sm leading-relaxed text-foreground min-w-0 break-words [&_pre]:overflow-x-auto [&_p]:my-1 [&_ul]:my-1 [&_ul]:list-disc [&_ul]:pl-4 [&_ol]:my-1 [&_ol]:list-decimal [&_ol]:pl-4 [&_li]:my-0.5 [&_strong]:font-semibold [&_code]:px-1 [&_code]:rounded [&_code]:bg-surface-raised [&_code]:text-[12px]">
       {bloques.map((b, i) => b.tipo === 'tabla'
         ? <Tabla key={i} filas={b.lineas} />
         : <ReactMarkdown key={i}>{b.lineas.join('\n')}</ReactMarkdown>
