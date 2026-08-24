@@ -4,6 +4,7 @@ import {
   ChevronDown, ChevronRight, Check, X, Loader2, AlertTriangle, FileText
 } from 'lucide-react';
 import SmartDataCard from './SmartDataCard';
+import InformeSubagente from './InformeSubagente';
 import MessageActions from './MessageActions';
 import toolMeta from '@/lib/toolMeta';
 
@@ -58,6 +59,10 @@ function ToolCallDisplay({ toolCall }) {
   const showCards = !hideDetails && !effectiveFailed && records && records.length > 0 &&
     typeof records[0] === 'object' && records[0] !== null;
 
+  const informe = !hideDetails && !effectiveFailed
+    ? (parsedResults?.informe || parsedResults?.data?.informe)
+    : null;
+
   return (
     <div className="mt-2 text-xs rounded-xl overflow-hidden bg-surface-raised border border-hairline"
       style={{ borderLeft: `3px solid ${effectiveFailed ? 'hsl(var(--danger))' : tarea.color}` }}>
@@ -83,7 +88,12 @@ function ToolCallDisplay({ toolCall }) {
           {label}
         </span>
       </button>
-      {showCards && !expanded && (
+      {informe && !expanded && (
+        <div className="px-3 pb-3">
+          <InformeSubagente informe={informe} />
+        </div>
+      )}
+      {showCards && !informe && !expanded && (
         <div className="px-3 pb-3">
           <SmartDataCard records={records} />
         </div>
