@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Settings, Plus, CheckCircle, Upload, Building2 } from 'lucide-react';
 import OrionCard from '@/components/OrionCard';
+import WhatsAppConnect from '@/components/agent/WhatsAppConnect';
 
 const CHECKLIST_ITEMS = [
   { key: 'nombre', label: 'Nombre de obra configurado' },
@@ -109,6 +110,8 @@ export default function Configuracion() {
           <Plus className="w-4 h-4" /> Nueva Obra
         </button>
       </div>
+
+      <WhatsAppConnect />
 
       {/* Selector de obra */}
       {proyectos.length > 1 && (
