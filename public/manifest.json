@@ -1,28 +1,30 @@
 {
-  "name": "GoConstruction OS · Command center de obra",
-  "short_name": "GoConstruction",
-  "description": "GO, el jefe técnico digital de tu obra: avance, calidad, RDIs, alertas y estados de pago en terreno.",
+  "name": "GoConstruction OS",
+  "short_name": "GO",
+  "description": "Command center de obra: avance, calidad, RDIs, alertas y estados de pago, operados por GO.",
+  "lang": "es-CL",
+  "dir": "ltr",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#0A0908",
   "theme_color": "#0A0908",
-  "orientation": "portrait",
-  "lang": "es-CL",
   "icons": [
     {
-      "src": "https://media.base44.com/images/public/6a8536b631a67708e1537e3c/1f75b8545_generated_image.png",
+      "src": "https://media.base44.com/images/public/6a8536b631a67708e1537e3c/08dbc115f_generated_image.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "https://media.base44.com/images/public/6a8536b631a67708e1537e3c/1f75b8545_generated_image.png",
+      "src": "https://media.base44.com/images/public/6a8536b631a67708e1537e3c/08dbc115f_generated_image.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "https://media.base44.com/images/public/6a8536b631a67708e1537e3c/1f75b8545_generated_image.png",
+      "src": "https://media.base44.com/images/public/6a8536b631a67708e1537e3c/08dbc115f_generated_image.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"

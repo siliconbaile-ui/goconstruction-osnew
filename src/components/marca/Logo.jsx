@@ -1,4 +1,4 @@
-const MARCA_URL = 'https://media.base44.com/images/public/6a8536b631a67708e1537e3c/1f75b8545_generated_image.png';
+const MARCA_URL = 'https://media.base44.com/images/public/6a8536b631a67708e1537e3c/08dbc115f_generated_image.png';
 
 // Marca oficial GoConstruction OS: isotipo GO + wordmark.
 // tamaño: 'sm' (headers móviles) | 'md' (sidebar).
