@@ -90,9 +90,14 @@ PREGUNTA DEL CAPATAZ: ${pregunta}`,
       contradiccion_detectada: !!resultado?.contradiccion_detectada,
       citas,
       citas_con_pagina_exacta: exactas.length,
+      // Línea de cierre lista para pegar: nombre del documento + página. GO debe
+      // reproducirla textualmente al final de toda respuesta técnica.
+      cita_obligatoria: citas.length
+        ? `Fuente: ${[...new Set(citas.map(c => c.cita))].join(' · ')}`
+        : null,
       codigos_detectados: codigosNormativos(pregunta),
       documentos_consultados: [...new Map(tramos.map(t => [t.documento_id, { id: t.documento_id, titulo: t.documento }])).values()],
-      nota: 'Cada cita fue verificada literalmente contra el texto indexado. Cita como exacta SOLO las citas con pagina_exacta = true; si es false, di "página aproximada".',
+      nota: 'OBLIGATORIO: termina la respuesta reproduciendo textualmente cita_obligatoria (nombre del documento + página). Cada cita fue verificada literalmente contra el texto indexado. Cita como exacta SOLO las citas con pagina_exacta = true; si es false, di "página aproximada". Sin cita_obligatoria no entregues el dato: responde "No lo sé, consulte al ingeniero."',
     });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });

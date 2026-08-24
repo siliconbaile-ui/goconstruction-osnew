@@ -38,7 +38,11 @@ export default async function (req: Request): Promise<Response> {
       encontrados: tramos.length,
       tramos,
       relaciones,
-      nota: 'Cita SOLO páginas marcadas como pagina_exacta. Si pagina_exacta es false, indica que la página es aproximada o responde "No lo sé, consulte al ingeniero."',
+      // Cita lista para pegar (documento + página) de los tramos con página real.
+      cita_obligatoria: tramos.some(t => t.pagina)
+        ? `Fuente: ${[...new Set(tramos.filter(t => t.pagina).map(t => t.cita))].slice(0, 3).join(' · ')}`
+        : null,
+      nota: 'OBLIGATORIO: toda respuesta técnica cierra con el nombre del documento y la página (usa cita_obligatoria o la cita del tramo empleado). Cita SOLO páginas marcadas como pagina_exacta; si pagina_exacta es false, di "página aproximada". Sin documento y página no entregues el dato: responde "No lo sé, consulte al ingeniero."',
     });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
