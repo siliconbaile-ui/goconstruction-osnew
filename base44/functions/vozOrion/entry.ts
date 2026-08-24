@@ -28,7 +28,7 @@ function aBase64(buf) {
   return btoa(bin);
 }
 
-async function sintetizarElevenLabs(texto, voz) {
+async function sintetizarElevenLabs(texto, voz, antes = '', despues = '') {
   const apiKey = secrets.get('ELEVENLABS_API_KEY');
   const voiceId = VOCES_11L[voz] || VOCES_11L.storm;
   const res = await fetch(
@@ -40,6 +40,11 @@ async function sintetizarElevenLabs(texto, voz) {
         text: texto,
         model_id: 'eleven_multilingual_v2',
         language_code: 'es',
+        // Contexto de continuidad: ElevenLabs entona el tramo como parte del
+        // discurso completo, sin el quiebre de prosodia entre tramos.
+        ...(antes ? { previous_text: antes.slice(-600) } : {}),
+        ...(despues ? { next_text: despues.slice(0, 600) } : {}),
+        apply_text_normalization: 'auto',
         // Locución sobria y estable: informe técnico de terreno, sin dramatismo.
         voice_settings: { stability: 0.7, similarity_boost: 0.85, style: 0.1, use_speaker_boost: true },
       }),
@@ -84,14 +89,14 @@ export default async function (req: Request): Promise<Response> {
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { texto, voz = 'storm', velocidad = 1.0 } = await req.json();
+    const { texto, voz = 'storm', velocidad = 1.0, antes = '', despues = '' } = await req.json();
     if (!texto || !texto.trim()) {
       return Response.json({ error: 'Texto requerido' }, { status: 400 });
     }
-    const limpio = texto.slice(0, 2500);
+    const limpio = texto.slice(0, 4500);
 
     try {
-      const audio = await sintetizarElevenLabs(limpio, voz);
+      const audio = await sintetizarElevenLabs(limpio, voz, antes, despues);
       return Response.json({ audio_base64: audio, motor: 'elevenlabs' });
     } catch (e) {
       console.warn('ElevenLabs falló, usando respaldo Google:', e.message);

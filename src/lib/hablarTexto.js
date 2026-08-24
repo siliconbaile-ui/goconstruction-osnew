@@ -30,8 +30,9 @@ export function limpiarParaVoz(texto) {
     .slice(0, 4000);
 }
 
-// Corta en tramos de ~450 caracteres respetando el fin de frase.
-function trocear(texto, max = 450) {
+// Corta en tramos largos respetando el fin de frase. Menos tramos = menos
+// costuras entre audios.
+function trocear(texto, max = 1200) {
   const frases = texto.match(/[^.!?;]+[.!?;]?/g) || [texto];
   const tramos = [];
   let actual = '';
@@ -52,9 +53,9 @@ export function detenerAudio() {
   window.speechSynthesis?.cancel();
 }
 
-async function sintetizar(texto, voz) {
+async function sintetizar(texto, voz, antes = '', despues = '') {
   try {
-    const { data } = await base44.functions.invoke('vozOrion', { texto, voz });
+    const { data } = await base44.functions.invoke('vozOrion', { texto, voz, antes, despues });
     if (data?.audio_base64) return `data:audio/mp3;base64,${data.audio_base64}`;
   } catch { /* respaldo abajo */ }
   return null;
@@ -96,10 +97,16 @@ export async function reproducirTexto(contenido, onFin, voz = 'storm') {
   const miTurno = ++turno;
   const tramos = trocear(texto);
 
+  // El siguiente tramo se sintetiza MIENTRAS suena el actual: al terminar uno,
+  // el otro ya está listo y la lectura no se interrumpe.
+  let siguiente = sintetizar(tramos[0], voz, '', tramos[1] || '');
   for (let i = 0; i < tramos.length; i++) {
     if (miTurno !== turno) return;
-    const src = await sintetizar(tramos[i], voz);
+    const src = await siguiente;
     if (miTurno !== turno) return;
+    siguiente = i + 1 < tramos.length
+      ? sintetizar(tramos[i + 1], voz, tramos[i], tramos[i + 2] || '')
+      : Promise.resolve(null);
     if (src) await reproducirSrc(src);
     else await hablarNativo(tramos[i]);
   }
