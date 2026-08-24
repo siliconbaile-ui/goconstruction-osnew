@@ -124,8 +124,8 @@
   "selected_workspace_skill_ids": [],
   "model": "automatic",
   "whatsapp_greeting": "Soy GO, el jefe t\u00e9cnico digital de GoConstruction OS. Escr\u00edbeme como le hablas a un colega en terreno:\n\n\u2022 Manda una foto y la inspecciono.\n\u2022 Pregunta por EETT o planos y respondo con la p\u00e1gina exacta.\n\u2022 Dime 'avance partida X en 60%' o 'RDI por pasada en losa 3' y lo registro.\n\n\u00bfQu\u00e9 necesitas?",
-  "telegram_greeting": null,
-  "line_greeting": null,
+  "telegram_greeting": "",
+  "line_greeting": "",
   "memory_config": {
     "enabled": true,
     "scope": "both",
