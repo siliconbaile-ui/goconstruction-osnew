@@ -20,6 +20,7 @@ import InformeEjecutivo from '@/pages/InformeEjecutivo';
 import BaseConocimiento from '@/pages/BaseConocimiento';
 import EvidenciaTerreno from '@/pages/EvidenciaTerreno';
 import VisionUrgente from '@/pages/VisionUrgente';
+import ManualMarca from '@/pages/ManualMarca';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -61,6 +62,7 @@ const AuthenticatedApp = () => {
         <Route path="/informe-ejecutivo" element={<InformeEjecutivo />} />
         <Route path="/base-conocimiento" element={<BaseConocimiento />} />
         <Route path="/evidencia-terreno" element={<EvidenciaTerreno />} />
+        <Route path="/manual-marca" element={<ManualMarca />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

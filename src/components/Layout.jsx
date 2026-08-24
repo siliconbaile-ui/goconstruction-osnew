@@ -3,7 +3,7 @@ import { Outlet, Link, useLocation } from 'react-router-dom';
 import {
   Gauge, TrendingUp, ShieldCheck, ClipboardList, Wallet,
   Settings2, Bell, ChevronRight, Menu, X, Radio, Bot, DatabaseZap,
-  FileBarChart, BookOpen, Camera, HardHat, Zap
+  FileBarChart, BookOpen, Camera, HardHat, Zap, Palette
 } from 'lucide-react';
 import MobileTabBar from '@/components/MobileTabBar';
 import ThemeToggle from '@/components/ThemeToggle';
@@ -41,6 +41,7 @@ const NAV_GROUPS = [
     items: [
       { label: 'Base Conocimiento', path: '/base-conocimiento', icon: BookOpen },
       { label: 'Sincronización', path: '/sincronizacion', icon: DatabaseZap },
+      { label: 'Manual de Marca', path: '/manual-marca', icon: Palette },
       { label: 'Configuración', path: '/configuracion', icon: Settings2 },
     ],
   },
