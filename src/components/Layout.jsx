@@ -3,7 +3,7 @@ import { Outlet, Link, useLocation } from 'react-router-dom';
 import {
   Gauge, TrendingUp, ShieldCheck, ClipboardList, Wallet,
   Settings2, Bell, ChevronRight, Menu, X, Radio, Bot, DatabaseZap,
-  FileBarChart, BookOpen, Camera, HardHat
+  FileBarChart, BookOpen, Camera, HardHat, Zap
 } from 'lucide-react';
 import MobileTabBar from '@/components/MobileTabBar';
 import ThemeToggle from '@/components/ThemeToggle';
@@ -14,7 +14,8 @@ const NAV_GROUPS = [
   {
     titulo: 'OPERACIÓN',
     items: [
-      { label: 'Asistente Orion', path: '/', icon: Bot },
+      { label: 'Asistente GO', path: '/', icon: Bot },
+      { label: 'Visión Urgente', path: '/vision-urgente', icon: Zap },
       { label: 'Dashboard', path: '/dashboard', icon: Gauge },
       { label: 'Monitor Avance', path: '/monitor-avance', icon: TrendingUp },
     ],

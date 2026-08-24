@@ -19,6 +19,7 @@ import SincronizacionDatos from '@/pages/SincronizacionDatos';
 import InformeEjecutivo from '@/pages/InformeEjecutivo';
 import BaseConocimiento from '@/pages/BaseConocimiento';
 import EvidenciaTerreno from '@/pages/EvidenciaTerreno';
+import VisionUrgente from '@/pages/VisionUrgente';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -47,6 +48,7 @@ const AuthenticatedApp = () => {
     <Routes>
       <Route element={<Layout />}>
         <Route path="/" element={<AsistenteOrion />} />
+        <Route path="/vision-urgente" element={<VisionUrgente />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/monitor-avance" element={<MonitorAvance />} />
         <Route path="/qa-terreno" element={<QATerreno />} />
