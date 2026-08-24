@@ -25,7 +25,7 @@ export default function AccionesTerreno() {
         <Link
           key={path}
           to={path}
-          className="min-w-0 flex items-center gap-3 rounded-2xl px-3.5 py-4 min-h-[64px] sm:min-h-[56px] bg-surface border border-hairline active:scale-[0.98] transition-transform"
+          className="min-w-0 max-w-full overflow-hidden flex items-center gap-2.5 sm:gap-3 rounded-2xl px-3 sm:px-3.5 py-4 min-h-[72px] sm:min-h-[56px] bg-surface border border-hairline active:scale-[0.98] transition-transform"
         >
           <span className="w-11 h-11 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center flex-shrink-0"
             style={{ background: 'hsl(var(--primary) / 0.14)' }}>

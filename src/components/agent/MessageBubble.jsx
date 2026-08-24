@@ -90,7 +90,7 @@ function ToolCallDisplay({ toolCall }) {
       </button>
       {informe && !expanded && (
         <div className="px-3 pb-3">
-          <InformeSubagente informe={informe} />
+          <InformeSubagente informe={informe} subagente={parsedResults?.subagente || parsedResults?.data?.subagente} />
         </div>
       )}
       {showCards && !informe && !expanded && (

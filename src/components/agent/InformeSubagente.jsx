@@ -9,14 +9,16 @@ const SEV = {
 // Tarjeta de informe de subagente: el resultado de una delegación se lee
 // como un parte de obra, no como un JSON. Patrón 2027: cada agente
 // delegado devuelve su propia unidad visual auditable dentro del hilo.
-export default function InformeSubagente({ informe }) {
+export default function InformeSubagente({ informe, subagente }) {
   const { titulo, sintesis, hallazgos = [], acciones = [], fuentes = [] } = informe;
 
   return (
     <div className="min-w-0 rounded-xl overflow-hidden bg-surface border border-hairline">
       <div className="flex items-center gap-2 px-3 py-2 border-b border-hairline bg-surface-raised">
         <Network className="w-3.5 h-3.5 flex-shrink-0 text-primary" />
-        <span className="text-[10px] font-mono tracking-widest text-muted-foreground truncate">SUBAGENTE · INFORME</span>
+        <span className="text-[10px] font-mono tracking-widest text-muted-foreground truncate">
+          {(subagente || 'Subagente · informe').toUpperCase()}
+        </span>
       </div>
 
       <div className="p-3 space-y-3">
