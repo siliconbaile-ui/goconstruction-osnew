@@ -10,6 +10,9 @@ export default function MessageActions({ content, conversacionId }) {
   const [guardado, setGuardado] = useState(false);
   const [validado, setValidado] = useState(false);
   const [cargando, setCargando] = useState(null);
+  // Id del registro ADN de esta respuesta: guardar y validar operan sobre el MISMO
+  // registro (validar actualiza, no duplica).
+  const [adnId, setAdnId] = useState(null);
 
   const escuchar = async () => {
     if (hablando) { detenerAudio(); setHablando(false); return; }
@@ -25,15 +28,29 @@ export default function MessageActions({ content, conversacionId }) {
     setCargando(tipo);
     try {
       const me = await base44.auth.me().catch(() => null);
-      await base44.entities.AprendizajeADN.create({
+      const datos = {
         contenido: content.slice(0, 4000),
         resumen: content.split('\n').find(l => l.trim())?.slice(0, 140) || '',
         conversacion_id: conversacionId || '',
         tipo,
         validado_por: tipo === 'validado' ? (me?.full_name || me?.email || '') : '',
-        fecha_validacion: tipo === 'validado' ? new Date().toISOString() : undefined,
-      });
-      if (tipo === 'validado') setValidado(true); else setGuardado(true);
+        fecha_validacion: tipo === 'validado' ? new Date().toISOString() : null,
+      };
+
+      let id = adnId;
+      if (!id) {
+        // Reutiliza el registro si esta respuesta ya fue guardada antes (otra sesión).
+        const previos = await base44.entities.AprendizajeADN.filter({ contenido: datos.contenido }, '-created_date', 1);
+        id = previos[0]?.id || null;
+      }
+
+      const registro = id
+        ? await base44.entities.AprendizajeADN.update(id, datos)
+        : await base44.entities.AprendizajeADN.create(datos);
+      setAdnId(registro?.id || id);
+
+      if (tipo === 'validado') { setValidado(true); setGuardado(true); }
+      else setGuardado(true);
     } finally {
       setCargando(null);
     }
