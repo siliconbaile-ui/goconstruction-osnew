@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { LayoutDashboard, ChevronDown, ChevronUp, Loader2 } from 'lucide-react';
+import AccionesTerreno from './panel/AccionesTerreno';
 import TarjetaPartidas from './panel/TarjetaPartidas';
 import TarjetaPagos from './panel/TarjetaPagos';
 import TarjetaAlertas from './panel/TarjetaAlertas';
@@ -44,10 +45,13 @@ export default function PanelControlRio({ onPrompt }) {
             <Loader2 className="w-3.5 h-3.5 animate-spin text-primary" /> Leyendo la obra...
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            <TarjetaPartidas partidas={datos.partidas} onPrompt={onPrompt} />
-            <TarjetaPagos edps={datos.edps} onPrompt={onPrompt} />
-            <TarjetaAlertas alertas={datos.alertas} onPrompt={onPrompt} />
+          <div className="min-w-0 space-y-3">
+            <AccionesTerreno />
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              <TarjetaPartidas partidas={datos.partidas} onPrompt={onPrompt} />
+              <TarjetaPagos edps={datos.edps} onPrompt={onPrompt} />
+              <TarjetaAlertas alertas={datos.alertas} onPrompt={onPrompt} />
+            </div>
           </div>
         )
       )}
