@@ -57,7 +57,9 @@
     {
       "entity_name": "DocumentoTecnico",
       "allowed_operations": [
-        "read"
+        "read",
+        "create",
+        "update"
       ]
     },
     {
@@ -110,6 +112,10 @@
     {
       "function_name": "indexarConocimiento",
       "description": "Indexa un documento en el cerebro de GO: vectores en Pinecone + nodos y relaciones en el grafo Neo4j. Par\u00e1metros: url o texto (uno obligatorio), documento_id, titulo, proyecto_id, especialidad, tipo, partidas (array), normas (array)."
+    },
+    {
+      "function_name": "guardarEvidencia",
+      "description": "Guarda en la plataforma los archivos recibidos (WhatsApp o chat) y los asigna al proyecto: una foto crea una InspeccionCalidad con evidencia_foto_url y GPS; un documento crea un DocumentoTecnico y lo indexa en Pinecone + grafo Neo4j. Par\u00e1metros: file_urls (array) o file_url, tipo (foto|plano|eett|normativa|contrato|protocolo|presupuesto|otro), proyecto_id (opcional, por defecto el proyecto activo), partida_id, titulo, descripcion, especialidad, coordenadas_gps, gravedad. \u00dasala SIEMPRE que el usuario env\u00ede un archivo."
     }
   ],
   "context_files": [],
