@@ -1,11 +1,22 @@
 import { base44 } from '@/api/base44Client';
 
-// Reproduce un texto con la voz de GO (ElevenLabs vía vozOrion).
-// Un solo audio compartido: al pedir otro, se corta el anterior.
+// Reproductor de voz de GO (ElevenLabs vía vozOrion).
+// Un solo audio compartido y reproducción por tramos secuenciales: los mensajes
+// largos ya no se cortan a mitad de camino.
 let audio = null;
+let turno = 0; // cancela la reproducción anterior al iniciar una nueva
 
-function limpiar(texto) {
-  return texto
+const SILENCIO = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEAIlYAAESsAAACABAAZGF0YQQAAAAAAA==';
+
+// Llamar dentro de un click/toque para habilitar audio en móvil.
+export function desbloquearAudio() {
+  if (!audio) audio = new Audio();
+  audio.src = SILENCIO;
+  audio.play().then(() => audio.pause()).catch(() => {});
+}
+
+export function limpiarParaVoz(texto) {
+  return (texto || '')
     .split('\n')
     .filter(l => !/^\s*\|?[-:| ]+\|?\s*$/.test(l))
     .join('. ')
@@ -13,38 +24,84 @@ function limpiar(texto) {
     .replace(/[*_#`>~]/g, '')
     .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
     .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu, '')
+    .replace(/🟢/g, 'verde').replace(/🟡/g, 'amarillo').replace(/🔴/g, 'rojo')
     .replace(/\s+/g, ' ')
     .trim()
-    .slice(0, 900);
+    .slice(0, 4000);
+}
+
+// Corta en tramos de ~450 caracteres respetando el fin de frase.
+function trocear(texto, max = 450) {
+  const frases = texto.match(/[^.!?;]+[.!?;]?/g) || [texto];
+  const tramos = [];
+  let actual = '';
+  for (const f of frases) {
+    if ((actual + f).length > max && actual) {
+      tramos.push(actual.trim());
+      actual = '';
+    }
+    actual += f;
+  }
+  if (actual.trim()) tramos.push(actual.trim());
+  return tramos;
 }
 
 export function detenerAudio() {
-  audio?.pause();
+  turno++;
+  if (audio) { audio.pause(); audio.onended = null; }
   window.speechSynthesis?.cancel();
 }
 
-export async function reproducirTexto(contenido, onFin) {
-  const texto = limpiar(contenido || '');
-  if (!texto) return;
-  detenerAudio();
-  let src = null;
+async function sintetizar(texto, voz) {
   try {
-    const { data } = await base44.functions.invoke('vozOrion', { texto, voz: 'storm' });
-    if (data?.audio_base64) src = `data:audio/mp3;base64,${data.audio_base64}`;
-  } catch { src = null; }
+    const { data } = await base44.functions.invoke('vozOrion', { texto, voz });
+    if (data?.audio_base64) return `data:audio/mp3;base64,${data.audio_base64}`;
+  } catch { /* respaldo abajo */ }
+  return null;
+}
 
-  if (!src) {
-    const u = new SpeechSynthesisUtterance(texto);
-    u.lang = 'es-CL';
-    u.pitch = 0.9;
-    u.onend = () => onFin?.();
-    window.speechSynthesis.speak(u);
-    return;
+function reproducirSrc(src) {
+  return new Promise((resolve) => {
+    if (!audio) audio = new Audio();
+    audio.src = src;
+    audio.onended = resolve;
+    audio.onerror = resolve;
+    audio.play().catch(resolve);
+  });
+}
+
+function hablarNativo(texto) {
+  return new Promise((resolve) => {
+    try {
+      const u = new SpeechSynthesisUtterance(texto);
+      u.lang = 'es-CL';
+      u.rate = 1.0;
+      u.pitch = 0.9;
+      const voces = window.speechSynthesis.getVoices() || [];
+      const masculina = voces.find(v => /es(-|_)(CL|419|MX|US)/i.test(v.lang) && /jorge|diego|juan|carlos|male|hombre/i.test(v.name))
+        || voces.find(v => /es(-|_)(CL|419|MX)/i.test(v.lang));
+      if (masculina) u.voice = masculina;
+      u.onend = resolve;
+      u.onerror = resolve;
+      window.speechSynthesis.speak(u);
+    } catch { resolve(); }
+  });
+}
+
+// Lee el texto completo, tramo por tramo, sin cortes.
+export async function reproducirTexto(contenido, onFin, voz = 'storm') {
+  const texto = limpiarParaVoz(contenido);
+  if (!texto) { onFin?.(); return; }
+  detenerAudio();
+  const miTurno = ++turno;
+  const tramos = trocear(texto);
+
+  for (let i = 0; i < tramos.length; i++) {
+    if (miTurno !== turno) return;
+    const src = await sintetizar(tramos[i], voz);
+    if (miTurno !== turno) return;
+    if (src) await reproducirSrc(src);
+    else await hablarNativo(tramos[i]);
   }
-
-  if (!audio) audio = new Audio();
-  audio.src = src;
-  audio.onended = () => onFin?.();
-  audio.onerror = () => onFin?.();
-  await audio.play();
+  if (miTurno === turno) onFin?.();
 }

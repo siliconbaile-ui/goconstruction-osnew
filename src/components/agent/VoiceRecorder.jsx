@@ -6,29 +6,33 @@ const Reconocimiento = typeof window !== 'undefined'
   ? (window.SpeechRecognition || window.webkitSpeechRecognition)
   : null;
 
-// Dictado en vivo: mientras hablas, el texto aparece en el campo palabra por
-// palabra (Web Speech). Si el navegador no lo soporta, graba y transcribe al final.
+// Dictado en vivo: el texto aparece en el campo palabra por palabra mientras
+// hablas. El reconocimiento se reinicia solo cuando el navegador lo corta por
+// silencio, así puedes dictar párrafos largos sin perder nada. El mensaje se
+// envía únicamente cuando TÚ detienes el micrófono.
 export default function VoiceRecorder({ onTranscript, onPartial, disabled }) {
   const recorderRef = useRef(null);
   const recognitionRef = useRef(null);
   const chunksRef = useRef([]);
   const finalRef = useRef('');
+  const detenidoRef = useRef(false);
   const [estado, setEstado] = useState('idle');
 
   const detener = () => {
     if (recognitionRef.current) {
+      detenidoRef.current = true;
       recognitionRef.current.stop();
       return;
     }
     recorderRef.current?.stop();
   };
 
-  const iniciarVivo = () => {
+  const crearReconocimiento = () => {
     const rec = new Reconocimiento();
     rec.lang = 'es-CL';
     rec.continuous = true;
     rec.interimResults = true;
-    finalRef.current = '';
+    rec.maxAlternatives = 1;
     rec.onresult = (e) => {
       let interim = '';
       for (let i = e.resultIndex; i < e.results.length; i++) {
@@ -38,13 +42,34 @@ export default function VoiceRecorder({ onTranscript, onPartial, disabled }) {
       }
       onPartial?.((finalRef.current + interim).trimStart());
     };
-    rec.onerror = () => { recognitionRef.current = null; setEstado('idle'); };
+    rec.onerror = (e) => {
+      // 'no-speech' / 'aborted' son cortes normales: se reintenta en onend.
+      if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+        detenidoRef.current = true;
+      }
+    };
     rec.onend = () => {
+      // Reinicio automático mientras el usuario siga dictando.
+      if (!detenidoRef.current) {
+        try {
+          const nuevo = crearReconocimiento();
+          recognitionRef.current = nuevo;
+          nuevo.start();
+          return;
+        } catch { /* cae al cierre */ }
+      }
       recognitionRef.current = null;
       setEstado('idle');
       const texto = finalRef.current.trim();
       if (texto) onTranscript(texto);
     };
+    return rec;
+  };
+
+  const iniciarVivo = () => {
+    finalRef.current = '';
+    detenidoRef.current = false;
+    const rec = crearReconocimiento();
     recognitionRef.current = rec;
     rec.start();
     setEstado('grabando');
@@ -80,7 +105,7 @@ export default function VoiceRecorder({ onTranscript, onPartial, disabled }) {
     <button
       onClick={grabando ? detener : iniciar}
       disabled={disabled || ocupado}
-      title={grabando ? 'Detener y enviar' : 'Dictar a GO'}
+      title={grabando ? 'Detener y enviar' : 'Dictar a GO (transcripción en vivo)'}
       className={`relative w-11 h-11 sm:w-9 sm:h-9 rounded-full flex items-center justify-center disabled:opacity-50 ${grabando ? 'bg-surface-raised' : ''}`}
       style={{ color: grabando ? 'hsl(var(--danger))' : 'hsl(var(--muted-foreground))' }}
     >

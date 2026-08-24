@@ -1,45 +1,21 @@
 import { useEffect, useRef, useState } from 'react';
-import { base44 } from '@/api/base44Client';
-
-// WAV silencioso para desbloquear el audio en el mismo gesto del usuario
-// (los navegadores móviles bloquean audio que no nace de un toque).
-const SILENCIO = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEAIlYAAESsAAACABAAZGF0YQQAAAAAAA==';
-
-let audioCompartido = null;
+import { reproducirTexto, detenerAudio, desbloquearAudio, limpiarParaVoz } from '@/lib/hablarTexto';
 
 // Llamar SIEMPRE dentro de un click/toque del usuario (activar voz, enviar nota de voz).
 export function desbloquearVoz() {
-  if (!audioCompartido) audioCompartido = new Audio();
-  audioCompartido.src = SILENCIO;
-  audioCompartido.play().then(() => audioCompartido.pause()).catch(() => {});
+  desbloquearAudio();
 }
 
-function limpiarTexto(contenido) {
-  return contenido
-    .split('\n')
-    .filter(l => !/^\s*\|?[-:| ]+\|?\s*$/.test(l)) // separadores de tabla
-    .join('. ')
-    .replace(/\|/g, ', ')
-    .replace(/[*_#`>~]/g, '')
-    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
-    .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu, '')
-    .replace(/🟢/g, 'verde').replace(/🟡/g, 'amarillo').replace(/🔴/g, 'rojo')
-    .replace(/\s+/g, ' ')
-    .trim()
-    .slice(0, 900);
-}
-
-// Lee en voz alta la última respuesta de GO con voz masculina técnica
-// (ElevenLabs multilingüe, registro de arquitecto/ITO chileno). Espera a que el
-// streaming termine y cae a la voz nativa es-CL si el servicio falla.
+// Lee en voz alta la última respuesta de GO con voz masculina técnica.
+// Espera a que el streaming se estabilice (el texto deja de crecer) para no
+// hablar sobre una respuesta a medio escribir, y nunca repite lo ya leído.
 function useVoiceOutput(messages, activo, voz = 'storm') {
   const ultimoLeido = useRef(null);
-  const textosLeidos = useRef([]); // últimos textos ya hablados: evita repetir lo mismo
+  const textosLeidos = useRef([]);
   const timerRef = useRef(null);
   const activadoRef = useRef(false);
   const [hablando, setHablando] = useState(false);
 
-  // Al activar el modo voz no releemos el historial: solo lo que llegue después.
   useEffect(() => {
     if (activo && !activadoRef.current) {
       activadoRef.current = true;
@@ -59,74 +35,33 @@ function useVoiceOutput(messages, activo, voz = 'storm') {
     const key = ultimo.id || ultimo.created_date;
     if (!key || ultimoLeido.current === key) return;
 
-    // La respuesta llega en streaming: hablamos solo cuando el texto
-    // lleva 1.2s sin cambiar (respuesta completa).
+    // El texto llega en streaming: hablamos recién cuando lleva 2.5s sin cambiar,
+    // así se lee el mensaje completo y no las primeras palabras.
     clearTimeout(timerRef.current);
     const contenido = ultimo.content;
     timerRef.current = setTimeout(async () => {
       if (ultimoLeido.current === key) return;
-      ultimoLeido.current = key;
-      const texto = limpiarTexto(contenido);
+      const texto = limpiarParaVoz(contenido);
       if (!texto) return;
-      // Nunca repetir un texto ya leído (mensajes duplicados del mismo turno).
       if (textosLeidos.current.includes(texto)) return;
+      ultimoLeido.current = key;
       textosLeidos.current = [...textosLeidos.current.slice(-4), texto];
-
       setHablando(true);
-      try {
-        let src = null;
-        try {
-          const { data } = await base44.functions.invoke('vozOrion', { texto, voz });
-          if (data?.audio_base64) src = `data:audio/mp3;base64,${data.audio_base64}`;
-        } catch { src = null; }
-        if (!src) {
-          const { url } = await base44.integrations.Core.GenerateSpeech({
-            text: texto, voice: voz, language_code: 'es',
-          });
-          src = url;
-        }
-        if (!src) throw new Error('sin audio');
-
-        if (!audioCompartido) audioCompartido = new Audio();
-        audioCompartido.pause();
-        audioCompartido.src = src;
-        audioCompartido.onended = () => setHablando(false);
-        audioCompartido.onerror = () => setHablando(false);
-        await audioCompartido.play();
-      } catch {
-        // Último recurso: voz nativa del navegador en español.
-        try {
-          const u = new SpeechSynthesisUtterance(limpiarTexto(contenido));
-          u.lang = 'es-CL';
-          u.rate = 1.0;
-          u.pitch = 0.9;
-          const voces = window.speechSynthesis.getVoices() || [];
-          const masculina = voces.find(v => /es(-|_)(CL|419|MX|US)/i.test(v.lang) && /jorge|diego|juan|carlos|male|hombre/i.test(v.name))
-            || voces.find(v => /es(-|_)(CL|419|MX)/i.test(v.lang));
-          if (masculina) u.voice = masculina;
-          u.onend = () => setHablando(false);
-          window.speechSynthesis.cancel();
-          window.speechSynthesis.speak(u);
-        } catch {
-          setHablando(false);
-        }
-      }
-    }, 1200);
+      await reproducirTexto(texto, () => setHablando(false), voz);
+    }, 2500);
 
     return () => clearTimeout(timerRef.current);
   }, [messages, activo, voz]);
 
   useEffect(() => {
     if (!activo) {
-      audioCompartido?.pause();
-      window.speechSynthesis?.cancel();
+      detenerAudio();
       setHablando(false);
     }
   }, [activo]);
 
   const detener = () => {
-    audioCompartido?.pause();
-    window.speechSynthesis?.cancel();
+    detenerAudio();
     setHablando(false);
   };
 
