@@ -1,0 +1,50 @@
+{
+  "name": "ConversacionMeta",
+  "type": "object",
+  "properties": {
+    "conversacion_id": {
+      "type": "string"
+    },
+    "proyecto_id": {
+      "type": "string"
+    },
+    "titulo": {
+      "type": "string"
+    },
+    "etiquetas": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "categoria": {
+      "type": "string",
+      "enum": [
+        "calidad",
+        "avance",
+        "rdi",
+        "pagos",
+        "alertas",
+        "normativa",
+        "documentos",
+        "producto",
+        "general"
+      ],
+      "default": "general"
+    },
+    "resumen": {
+      "type": "string"
+    },
+    "mensajes_clasificados": {
+      "type": "number",
+      "default": 0
+    },
+    "ultima_actividad": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "conversacion_id"
+  ]
+}

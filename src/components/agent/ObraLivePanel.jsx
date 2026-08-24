@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { MessageSquare, Trash2, Loader2, ArrowRight, Plus, X } from 'lucide-react';
+import { MessageSquare, Loader2, ArrowRight, Plus, X } from 'lucide-react';
 
 const NIVEL_COLOR = {
   critica: 'hsl(var(--danger))',
@@ -9,7 +9,7 @@ const NIVEL_COLOR = {
 
 export default function ObraLivePanel({
   tab, setTab, stats, topAlerts, conversations, activeId, setActiveId,
-  onDelete, onPrompt, loadingConvs, onNueva, movil = false, onCerrar,
+  metas = {}, onPrompt, loadingConvs, onNueva, movil = false, onCerrar,
 }) {
   return (
     <aside className={movil
@@ -111,20 +111,30 @@ export default function ObraLivePanel({
               </button>
               {loadingConvs ? (
                 <div className="text-center py-4"><Loader2 className="w-4 h-4 animate-spin mx-auto text-muted-foreground" /></div>
-              ) : conversations.map(c => (
-                <div key={c.id} onClick={() => setActiveId(c.id)}
-                  className={`group flex items-center gap-2 rounded-xl px-3 py-3.5 min-h-12 cursor-pointer text-sm border transition-colors ${
-                    activeId === c.id
-                      ? 'bg-surface-raised border-primary/40 text-foreground'
-                      : 'border-hairline text-muted-foreground'}`}>
-                  <MessageSquare className="w-3.5 h-3.5 flex-shrink-0 text-muted-foreground" />
-                  <span className="truncate flex-1">{c.metadata?.name || 'Sin título'}</span>
-                  <button onClick={(e) => { e.stopPropagation(); onDelete(c.id); }}
-                    className="p-2 -m-1 rounded-full text-muted-foreground sm:opacity-0 sm:group-hover:opacity-100">
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              ))}
+              ) : conversations.map(c => {
+                const meta = metas[c.id];
+                return (
+                  <div key={c.id} onClick={() => setActiveId(c.id)}
+                    className={`flex flex-col gap-1.5 rounded-xl px-3 py-3 cursor-pointer text-sm border transition-colors ${
+                      activeId === c.id
+                        ? 'bg-surface-raised border-primary/40 text-foreground'
+                        : 'border-hairline text-muted-foreground'}`}>
+                    <div className="flex items-center gap-2">
+                      <MessageSquare className="w-3.5 h-3.5 flex-shrink-0 text-muted-foreground" />
+                      <span className="truncate flex-1">{meta?.titulo || c.metadata?.name || 'Sesión sin clasificar'}</span>
+                    </div>
+                    {meta?.etiquetas?.length > 0 && (
+                      <div className="flex flex-wrap gap-1 pl-5">
+                        {meta.etiquetas.slice(0, 3).map(e => (
+                          <span key={e} className="px-1.5 py-0.5 rounded text-[9px] font-mono uppercase tracking-wider bg-surface-raised text-primary">
+                            {e}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </>
           )}
         </div>

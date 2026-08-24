@@ -8,6 +8,7 @@ import ChatComposer from './ChatComposer';
 import WelcomeHero from './WelcomeHero';
 import { WhatsAppButton } from './WhatsAppConnect';
 import useVoiceOutput, { desbloquearVoz } from '@/hooks/useVoiceOutput';
+import useHistorialClasificado from '@/hooks/useHistorialClasificado';
 import agruparMensajes from '@/lib/agruparMensajes';
 
 const AGENT_NAME = 'orion_asistente';
@@ -30,6 +31,7 @@ export default function ConversationPanel() {
   const scrollRef = useRef(null);
 
   const { hablando, detener: detenerVoz } = useVoiceOutput(messages, voiceMode);
+  const metas = useHistorialClasificado(conversations, activeId, messages);
 
   const loadConversations = useCallback(async () => {
     try {
@@ -140,16 +142,6 @@ export default function ConversationPanel() {
     const { content, file_urls } = errorEnvio;
     setErrorEnvio(null);
     send(content, file_urls || []);
-  };
-
-  const deleteConversation = async (id) => {
-    try { await base44.agents.deleteConversation?.(id); } catch {}
-    const remaining = conversations.filter(c => c.id !== id);
-    setConversations(remaining);
-    if (activeId === id) {
-      if (remaining.length > 0) setActiveId(remaining[0].id);
-      else startNewConversation();
-    }
   };
 
   const ficha = {
@@ -274,7 +266,7 @@ criterio técnico con los datos reales de tu obra
             conversations={conversations}
             activeId={activeId}
             setActiveId={(id) => { setActiveId(id); setPanelMovil(false); }}
-            onDelete={deleteConversation}
+            metas={metas}
             onPrompt={(p) => { setPanelMovil(false); send(p); }}
             loadingConvs={loadingConvs}
             onNueva={() => { setPanelMovil(false); startNewConversation(); }}
@@ -290,7 +282,7 @@ criterio técnico con los datos reales de tu obra
         conversations={conversations}
         activeId={activeId}
         setActiveId={setActiveId}
-        onDelete={deleteConversation}
+        metas={metas}
         onPrompt={send}
         loadingConvs={loadingConvs}
         onNueva={startNewConversation}
