@@ -1,18 +1,31 @@
 {
-  "name": "GoConstruction OS · Command Center",
+  "name": "GoConstruction OS · Command center de obra",
   "short_name": "GoConstruction",
-  "description": "Command Center de obra: alertas, calidad, RDIs y estados de pago en terreno, operados por el asistente Orion.",
+  "description": "GO, el jefe técnico digital de tu obra: avance, calidad, RDIs, alertas y estados de pago en terreno.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#070D1A",
-  "theme_color": "#0A1E4D",
+  "background_color": "#0A0908",
+  "theme_color": "#0A0908",
   "orientation": "portrait",
+  "lang": "es-CL",
   "icons": [
     {
-      "src": "https://media.base44.com/images/public/6a8536b631a67708e1537e3c/c566cb856_generated_image.png",
+      "src": "https://media.base44.com/images/public/6a8536b631a67708e1537e3c/1f75b8545_generated_image.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://media.base44.com/images/public/6a8536b631a67708e1537e3c/1f75b8545_generated_image.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "https://media.base44.com/images/public/6a8536b631a67708e1537e3c/1f75b8545_generated_image.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }

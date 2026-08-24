@@ -3,8 +3,9 @@ import { Outlet, Link, useLocation } from 'react-router-dom';
 import {
   Gauge, TrendingUp, ShieldCheck, ClipboardList, Wallet,
   Settings2, Bell, ChevronRight, Menu, X, Radio, Bot, DatabaseZap,
-  FileBarChart, BookOpen, Camera, HardHat, Zap, Palette
+  FileBarChart, BookOpen, Camera, Zap, Palette
 } from 'lucide-react';
+import Logo from '@/components/marca/Logo';
 import MobileTabBar from '@/components/MobileTabBar';
 import ThemeToggle from '@/components/ThemeToggle';
 import NotificacionesMovil from '@/components/pwa/NotificacionesMovil';
@@ -66,15 +67,7 @@ export default function Layout() {
 
         {/* Logo */}
         <div className="px-5 py-5 flex items-center justify-between" style={{ borderBottom: '1px solid hsl(var(--hairline))' }}>
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: 'hsl(var(--primary))' }}>
-              <HardHat className="w-4 h-4 text-white" strokeWidth={2.2} />
-            </div>
-            <div>
-              <div className="font-bold text-sm leading-tight tracking-wide text-foreground">GoConstruction <span style={{ color: 'hsl(var(--primary))' }}>OS</span></div>
-              <div className="font-mono text-[10px] leading-tight text-muted-foreground">COMMAND CENTER · BESALCO</div>
-            </div>
-          </div>
+          <Logo />
           <button onClick={() => setSidebarOpen(false)} className="lg:hidden text-muted-foreground hover:text-foreground">
             <X className="w-4 h-4" />
           </button>
@@ -138,7 +131,7 @@ export default function Layout() {
             <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-1 text-muted-foreground hover:text-foreground">
               <Menu className="w-5 h-5" />
             </button>
-            <span className="lg:hidden font-bold text-sm tracking-wide text-foreground">GoConstruction <span style={{ color: 'hsl(var(--primary))' }}>OS</span></span>
+            <span className="lg:hidden min-w-0"><Logo tamano="sm" conBajada={false} /></span>
             <div className="hidden lg:block font-mono text-xs text-muted-foreground">
               GOCONSTRUCTION OS · COMMAND CENTER · <span style={{ color: 'hsl(var(--ok))' }}>OBRA PILOTO ACTIVA</span>
             </div>

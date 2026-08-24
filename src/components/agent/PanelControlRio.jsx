@@ -44,7 +44,7 @@ export default function PanelControlRio({ onPrompt }) {
             <Loader2 className="w-3.5 h-3.5 animate-spin text-primary" /> Leyendo la obra...
           </div>
         ) : (
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             <TarjetaPartidas partidas={datos.partidas} onPrompt={onPrompt} />
             <TarjetaPagos edps={datos.edps} onPrompt={onPrompt} />
             <TarjetaAlertas alertas={datos.alertas} onPrompt={onPrompt} />

@@ -16,7 +16,7 @@ export default function TarjetaPagos({ edps, onPrompt }) {
   const montoBloqueado = bloqueados.reduce((s, e) => s + (e.monto_usd || 0), 0);
 
   return (
-    <div className="rounded-2xl p-4 bg-surface border border-hairline flex flex-col">
+    <div className="min-w-0 overflow-hidden rounded-2xl p-4 bg-surface border border-hairline flex flex-col">
       <div className="flex items-center gap-2 mb-3">
         <Wallet className="w-3.5 h-3.5 text-primary" />
         <span className="text-[10px] font-mono tracking-widest text-muted-foreground">ESTADOS DE PAGO</span>
@@ -24,7 +24,7 @@ export default function TarjetaPagos({ edps, onPrompt }) {
       </div>
 
       <div className="flex items-end gap-2 mb-1">
-        <span className="text-3xl font-semibold leading-none"
+        <span className="text-2xl sm:text-3xl font-semibold leading-none truncate"
           style={{ color: montoBloqueado > 0 ? 'hsl(var(--danger))' : 'hsl(var(--ok))' }}>
           {usd(montoBloqueado)}
         </span>

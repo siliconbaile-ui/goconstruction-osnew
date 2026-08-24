@@ -22,7 +22,7 @@ export default function TarjetaPartidas({ partidas, onPrompt }) {
   const desvGlobal = avanceProg ? ((avanceProg - avanceReal) / avanceProg) * 100 : 0;
 
   return (
-    <div className="rounded-2xl p-4 bg-surface border border-hairline flex flex-col">
+    <div className="min-w-0 overflow-hidden rounded-2xl p-4 bg-surface border border-hairline flex flex-col">
       <div className="flex items-center gap-2 mb-3">
         <TrendingUp className="w-3.5 h-3.5 text-primary" />
         <span className="text-[10px] font-mono tracking-widest text-muted-foreground">AVANCE DE PARTIDAS</span>
