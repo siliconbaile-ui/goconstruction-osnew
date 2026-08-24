@@ -14,62 +14,63 @@
 @layer base {
   /* ---------- DARK (default) ---------- */
   :root {
-    --background: 225 30% 4%;
-    --foreground: 210 40% 99%;
-    --card: 222 32% 8%;
-    --card-foreground: 210 40% 99%;
-    --popover: 222 32% 9%;
-    --popover-foreground: 210 40% 99%;
-    --primary: 220 95% 62%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 222 26% 14%;
-    --secondary-foreground: 210 36% 97%;
-    --muted: 222 24% 12%;
-    --muted-foreground: 214 26% 78%;
-    --accent: 222 26% 16%;
-    --accent-foreground: 210 40% 99%;
-    --destructive: 14 88% 58%;
+    /* Obra nocturna: negro cálido de hormigón + cobre/ámbar de faena */
+    --background: 30 12% 4%;
+    --foreground: 36 30% 95%;
+    --card: 30 12% 7%;
+    --card-foreground: 36 30% 95%;
+    --popover: 30 12% 8%;
+    --popover-foreground: 36 30% 95%;
+    --primary: 34 82% 58%;
+    --primary-foreground: 30 30% 8%;
+    --secondary: 30 10% 13%;
+    --secondary-foreground: 36 24% 92%;
+    --muted: 30 10% 11%;
+    --muted-foreground: 34 14% 68%;
+    --accent: 30 12% 15%;
+    --accent-foreground: 36 30% 95%;
+    --destructive: 8 78% 55%;
     --destructive-foreground: 0 0% 100%;
-    --border: 220 22% 24%;
-    --input: 222 26% 16%;
-    --ring: 220 95% 62%;
+    --border: 32 14% 18%;
+    --input: 30 12% 14%;
+    --ring: 34 82% 58%;
     --radius: 0.625rem;
 
     /* superficies extra */
-    --surface-0: 225 30% 4%;
-    --surface-1: 222 32% 8%;
-    --surface-2: 222 28% 13%;
-    --hairline: 220 22% 24%;
+    --surface-0: 30 12% 4%;
+    --surface-1: 30 12% 7%;
+    --surface-2: 30 11% 11%;
+    --hairline: 32 14% 18%;
 
     /* señales */
-    --ok: 152 62% 50%;
-    --warn: 38 95% 60%;
-    --danger: 14 88% 60%;
-    --info: 220 95% 68%;
+    --ok: 152 52% 46%;
+    --warn: 38 92% 58%;
+    --danger: 8 78% 58%;
+    --info: 34 82% 62%;
 
     --font-heading: 'Inter', ui-sans-serif, system-ui, sans-serif;
     --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
     --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;
 
-    --sidebar-background: 225 32% 5%;
-    --sidebar-foreground: 210 30% 90%;
-    --sidebar-primary: 220 95% 58%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 222 26% 13%;
-    --sidebar-accent-foreground: 210 30% 96%;
-    --sidebar-border: 220 24% 15%;
-    --sidebar-ring: 220 95% 58%;
+    --sidebar-background: 30 12% 5%;
+    --sidebar-foreground: 36 22% 88%;
+    --sidebar-primary: 34 82% 58%;
+    --sidebar-primary-foreground: 30 30% 8%;
+    --sidebar-accent: 30 12% 12%;
+    --sidebar-accent-foreground: 36 26% 94%;
+    --sidebar-border: 32 14% 15%;
+    --sidebar-ring: 34 82% 58%;
   }
 
   /* ---------- LIGHT ---------- */
   .light {
-    --background: 40 22% 98%;
+    --background: 38 24% 98%;
     --foreground: 224 44% 8%;
     --card: 0 0% 100%;
     --card-foreground: 224 44% 8%;
     --popover: 0 0% 100%;
     --popover-foreground: 224 44% 8%;
-    --primary: 222 92% 34%;
+    --primary: 26 78% 34%;
     --primary-foreground: 0 0% 100%;
     --secondary: 38 16% 93%;
     --secondary-foreground: 224 40% 12%;
@@ -224,6 +225,38 @@
 .light .orion-light-surface,
 .light .orion-light-surface * {
   color: inherit;
+}
+
+/* ===========================================================
+   REMAPEO LEGACY · azules en línea → paleta cálida por defecto
+   Vistas antiguas pintadas con hex azul se alinean al tema.
+   =========================================================== */
+[style*="rgb(7, 13, 26)"],
+[style*="rgb(10, 15, 30)"],
+[style*="rgb(4, 10, 21)"] {
+  background-color: hsl(var(--surface-0)) !important;
+}
+[style*="rgb(13, 21, 38)"],
+[style*="rgb(10, 22, 40)"] {
+  background-color: hsl(var(--surface-2)) !important;
+}
+[style*="rgb(30, 45, 74)"],
+[style*="rgb(15, 29, 53)"] {
+  border-color: hsl(var(--hairline)) !important;
+}
+[style*="color: rgb(74, 111, 165)"],
+[style*="color: rgb(45, 74, 110)"],
+[style*="color: rgb(91, 141, 239)"] {
+  color: hsl(var(--muted-foreground)) !important;
+}
+[style*="background: rgb(0, 51, 153)"],
+[style*="background: rgb(10, 30, 77)"],
+[style*="background-color: rgb(0, 51, 153)"] {
+  background-color: hsl(var(--primary)) !important;
+  color: hsl(var(--primary-foreground)) !important;
+}
+[style*="color: rgb(0, 51, 153)"] {
+  color: hsl(var(--primary)) !important;
 }
 
 /* Contenedores premium reutilizables */
