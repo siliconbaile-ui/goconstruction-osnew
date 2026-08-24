@@ -45,8 +45,16 @@ async function sintetizarElevenLabs(texto, voz, antes = '', despues = '') {
         ...(antes ? { previous_text: antes.slice(-600) } : {}),
         ...(despues ? { next_text: despues.slice(0, 600) } : {}),
         apply_text_normalization: 'auto',
-        // Locución sobria y estable: informe técnico de terreno, sin dramatismo.
-        voice_settings: { stability: 0.7, similarity_boost: 0.85, style: 0.1, use_speaker_boost: true },
+        // Hombre chileno de ~42 años, técnico y cercano: habla PAUSADO (speed 0.86),
+        // con stability media para que respire y module como una persona, no como
+        // un lector automático, y un toque de estilo para calidez sin dramatismo.
+        voice_settings: {
+          stability: 0.45,
+          similarity_boost: 0.9,
+          style: 0.32,
+          speed: 0.86,
+          use_speaker_boost: true,
+        },
       }),
     }
   );
@@ -89,7 +97,7 @@ export default async function (req: Request): Promise<Response> {
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { texto, voz = 'storm', velocidad = 1.0, antes = '', despues = '' } = await req.json();
+    const { texto, voz = 'storm', velocidad = 0.9, antes = '', despues = '' } = await req.json();
     if (!texto || !texto.trim()) {
       return Response.json({ error: 'Texto requerido' }, { status: 400 });
     }

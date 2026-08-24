@@ -32,7 +32,7 @@ export default function ChatComposer({ value, onChange, onSend, sending, onVoice
   };
 
   return (
-    <div className="flex-shrink-0 px-3 sm:px-4 lg:px-8 pb-3 sm:pb-5 pt-2">
+    <div className="flex-shrink-0 px-3 sm:px-4 lg:px-8 pt-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:pb-5">
       {files.length > 0 && (
         <div className="max-w-3xl mx-auto flex flex-wrap gap-2 mb-2">
           {files.map(f => (

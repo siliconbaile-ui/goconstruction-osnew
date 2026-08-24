@@ -26,6 +26,11 @@ export function limpiarParaVoz(texto) {
     .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu, '')
     .replace(/🟢/g, 'verde').replace(/🟡/g, 'amarillo').replace(/🔴/g, 'rojo')
     .replace(/\s+/g, ' ')
+    // Pausas naturales de habla: respira en los dos puntos y tras cada cifra con
+    // unidad, y no arrastra los guiones como si fueran parte de la frase.
+    .replace(/\s*[—–]\s*/g, ', ')
+    .replace(/:\s*/g, ': ')
+    .replace(/([0-9]) ?%/g, '$1 por ciento')
     .trim()
     .slice(0, 4000);
 }
@@ -65,6 +70,8 @@ function reproducirSrc(src) {
   return new Promise((resolve) => {
     if (!audio) audio = new Audio();
     audio.src = src;
+    // Último ajuste de ritmo: locución de terreno, sin apuro.
+    audio.playbackRate = 0.96;
     audio.onended = resolve;
     audio.onerror = resolve;
     audio.play().catch(resolve);
@@ -76,8 +83,8 @@ function hablarNativo(texto) {
     try {
       const u = new SpeechSynthesisUtterance(texto);
       u.lang = 'es-CL';
-      u.rate = 1.0;
-      u.pitch = 0.9;
+      u.rate = 0.88;
+      u.pitch = 0.88;
       const voces = window.speechSynthesis.getVoices() || [];
       const masculina = voces.find(v => /es(-|_)(CL|419|MX|US)/i.test(v.lang) && /jorge|diego|juan|carlos|male|hombre/i.test(v.name))
         || voces.find(v => /es(-|_)(CL|419|MX)/i.test(v.lang));
