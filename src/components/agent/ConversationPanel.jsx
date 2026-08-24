@@ -6,6 +6,7 @@ import AgentSidebar from './AgentSidebar';
 import ObraLivePanel from './ObraLivePanel';
 import ChatComposer from './ChatComposer';
 import WelcomeHero from './WelcomeHero';
+import PanelControlRio from './PanelControlRio';
 import { WhatsAppButton } from './WhatsAppConnect';
 import useVoiceOutput, { desbloquearVoz } from '@/hooks/useVoiceOutput';
 import useHistorialClasificado from '@/hooks/useHistorialClasificado';
@@ -213,6 +214,7 @@ criterio técnico con los datos reales de tu obra
           {/* Mensajes */}
           <div ref={scrollRef} data-scroll-area
             className="flex-1 overflow-y-auto min-h-0 px-3 sm:px-4 lg:px-8 py-4 sm:py-6 scroll-smooth">
+            <PanelControlRio onPrompt={send} />
             {!hasMessages ? (
               <WelcomeHero onPrompt={send} activo={sending} />
             ) : (
