@@ -14,7 +14,8 @@
       "entity_name": "PartidaControl",
       "allowed_operations": [
         "read",
-        "update"
+        "update",
+        "create"
       ]
     },
     {
@@ -44,14 +45,17 @@
     {
       "entity_name": "ProyectoObra",
       "allowed_operations": [
-        "read"
+        "read",
+        "create",
+        "update"
       ]
     },
     {
       "entity_name": "InformeEjecutivo",
       "allowed_operations": [
         "read",
-        "create"
+        "create",
+        "update"
       ]
     },
     {
@@ -72,7 +76,9 @@
     {
       "entity_name": "ConversacionMeta",
       "allowed_operations": [
-        "read"
+        "read",
+        "create",
+        "update"
       ]
     },
     {
