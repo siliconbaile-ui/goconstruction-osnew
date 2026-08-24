@@ -98,6 +98,18 @@
     {
       "function_name": "verificarCierreNC",
       "description": "Verifica si una no conformidad cumple los requisitos de cierre (evidencia y responsable) y libera los pagos asociados. Par\u00e1metros: inspeccion_id."
+    },
+    {
+      "function_name": "buscarConocimientoVectorial",
+      "description": "B\u00fasqueda sem\u00e1ntica en el cerebro t\u00e9cnico indexado (Pinecone + grafo Neo4j): devuelve tramos de EETT, planos y normativa con documento, p\u00e1gina aproximada y relevancia, m\u00e1s las relaciones del grafo (documento \u2192 especialidad \u2192 partida \u2192 norma). Par\u00e1metros: pregunta (obligatorio), proyecto_id, especialidad, top_k."
+    },
+    {
+      "function_name": "rasparWeb",
+      "description": "Raspado web con Firecrawl. modo='scrape' (url: lee una p\u00e1gina o PDF completo, incluidos planos y fichas t\u00e9cnicas; opcional prompt o esquema para extracci\u00f3n estructurada), modo='buscar' (consulta: busca en la web y devuelve el contenido de los resultados, \u00fatil para normativa, precios y proveedores chilenos), modo='mapear' (url + consulta: lista las URLs de un sitio). Cita siempre la URL de origen."
+    },
+    {
+      "function_name": "indexarConocimiento",
+      "description": "Indexa un documento en el cerebro de GO: vectores en Pinecone + nodos y relaciones en el grafo Neo4j. Par\u00e1metros: url o texto (uno obligatorio), documento_id, titulo, proyecto_id, especialidad, tipo, partidas (array), normas (array)."
     }
   ],
   "context_files": [],
@@ -117,6 +129,7 @@
   "voice_config": {
     "voice_id": "storm"
   },
+  "emails_settings": null,
   "allow_anonymous_access": false,
   "name": "orion_asistente"
 }
