@@ -1,16 +1,7 @@
 import { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Users, Send, CheckCircle } from 'lucide-react';
-
-export const CARGOS = [
-  { value: 'gerencia', label: 'Gerencia' },
-  { value: 'administrador_obra', label: 'Administrador de Obra' },
-  { value: 'jefe_terreno', label: 'Jefe de Terreno' },
-  { value: 'jefe_calidad', label: 'Jefe de Calidad' },
-  { value: 'oficina_tecnica', label: 'Oficina Técnica' },
-  { value: 'prevencionista', label: 'Prevencionista' },
-  { value: 'capataz', label: 'Capataz' },
-];
+import { CARGOS } from '@/lib/cargos';
 
 export default function PasoEquipo({ miCargo, setMiCargo, onNext, onBack }) {
   const [email, setEmail] = useState('');
@@ -42,15 +33,19 @@ export default function PasoEquipo({ miCargo, setMiCargo, onNext, onBack }) {
       </div>
 
       <div className="mb-5">
-        <label className="text-xs font-mono mb-1 block text-muted-foreground">Tu cargo en la empresa *</label>
-        <select
-          value={miCargo}
-          onChange={e => setMiCargo(e.target.value)}
-          className="w-full sm:w-72 px-3 py-2.5 rounded-lg text-sm bg-surface-raised border border-hairline text-foreground"
-        >
-          <option value="">Selecciona tu cargo...</option>
-          {CARGOS.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
-        </select>
+        <label className="text-xs font-mono mb-2 block text-muted-foreground">Tu cargo en la empresa *</label>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          {CARGOS.map(c => (
+            <button
+              key={c.value}
+              onClick={() => setMiCargo(c.value)}
+              className={`text-left px-3 py-2.5 rounded-xl border transition-colors ${miCargo === c.value ? 'border-primary bg-primary/10' : 'border-hairline bg-surface-raised'}`}
+            >
+              <span className="block text-[13px] font-semibold text-foreground">{c.label}</span>
+              <span className="block text-[10px] text-muted-foreground">{c.desc}</span>
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="mb-2">
@@ -86,7 +81,7 @@ export default function PasoEquipo({ miCargo, setMiCargo, onNext, onBack }) {
           ))}
         </div>
       )}
-      <p className="text-[11px] text-muted-foreground mb-5">Cada invitado define su cargo al ingresar por primera vez.</p>
+      <p className="text-[11px] text-muted-foreground mb-5">Administrador gestiona obras, equipo y configuración. Usuario opera terreno y consultas. Cada invitado elige su cargo al ingresar.</p>
 
       <div className="flex gap-2">
         <button onClick={onBack} className="px-5 py-3 rounded-xl text-sm text-muted-foreground bg-surface-raised border border-hairline">← Atrás</button>

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Settings, Plus, CheckCircle, Upload, Building2, Rocket } from 'lucide-react';
 import OrionCard from '@/components/OrionCard';
 import WhatsAppConnect from '@/components/agent/WhatsAppConnect';
+import GestionEquipo from '@/components/onboarding/GestionEquipo';
 
 const CHECKLIST_ITEMS = [
   { key: 'nombre', label: 'Nombre de obra configurado' },
@@ -118,6 +119,8 @@ export default function Configuracion() {
       </div>
 
       <WhatsAppConnect />
+
+      <GestionEquipo />
 
       {/* Selector de obra */}
       {proyectos.length > 1 && (

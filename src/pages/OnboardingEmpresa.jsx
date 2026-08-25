@@ -7,7 +7,6 @@ import PasoEquipo from '@/components/onboarding/PasoEquipo';
 import PasoObra from '@/components/onboarding/PasoObra';
 
 const PASOS = ['Empresa', 'Equipo', 'Primera obra'];
-const DEMO_ID = '6a8538b131a67708e1537f96';
 
 // Onboarding para incorporar una constructora real: datos de la empresa,
 // equipo con cargos, y primera obra (propia o demo para partir probando).
@@ -69,7 +68,10 @@ export default function OnboardingEmpresa() {
           herramienta_calidad: 'csv',
         });
       } else {
-        await base44.entities.ProyectoObra.update(DEMO_ID, { es_demo: true, estado: 'activo' });
+        const demos = await base44.entities.ProyectoObra.filter({ es_demo: true }, '-created_date', 1);
+        if (demos.length > 0) {
+          await base44.entities.ProyectoObra.update(demos[0].id, { estado: 'activo' });
+        }
       }
       await base44.entities.Empresa.update(empresa.id, {
         estado: modo === 'demo' ? 'demo' : 'activa',
