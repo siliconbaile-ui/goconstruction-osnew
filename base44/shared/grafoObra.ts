@@ -70,14 +70,7 @@ export async function sincronizarGrafo(base44: any, proyecto_id: string) {
     })),
   ];
 
-  // Un solo MERGE masivo por nodos: barato y idempotente.
-  await grafo(
-    `UNWIND $nodos AS n
-     CALL apoc.noop() // placeholder
-     RETURN 0`,
-    {}
-  ).catch(() => null); // apoc puede no existir: se ignora, el merge real va abajo
-
+  // Un solo MERGE masivo por nodos: barato e idempotente.
   await grafo(
     `UNWIND $nodos AS n
      MERGE (x:Nodo {id: n.id})
@@ -90,7 +83,7 @@ export async function sincronizarGrafo(base44: any, proyecto_id: string) {
   const push = (a: string, rel: string, b: string) => { if (a && b) aristas.push({ a, rel, b }); };
 
   for (const p of partidas) push(`obra:${obra.id}`, 'CONTIENE', `partida:${p.id}`);
-  for (const i of inspecciones) push(`nc:${i.id}`, 'AFECTA', `partida:${i.partida_id}` in {} ? '' : `partida:${i.partida_id}`);
+  for (const i of inspecciones) if (i.partida_id) push(`nc:${i.id}`, 'AFECTA', `partida:${i.partida_id}`);
   for (const r of rdis) if (r.partida_id) push(`rdi:${r.id}`, 'CONSULTA', `partida:${r.partida_id}`);
   for (const e of edps) if (e.partida_id) push(`edp:${e.id}`, 'PAGA', `partida:${e.partida_id}`);
   for (const a of alertas) if (a.partida_id) push(`alerta:${a.id}`, 'ALERTA_DE', `partida:${a.partida_id}`);
@@ -108,12 +101,8 @@ export async function sincronizarGrafo(base44: any, proyecto_id: string) {
   await grafo(
     `UNWIND $aristas AS e
      MATCH (a:Nodo {id: e.a}), (b:Nodo {id: e.b})
-     CALL (a, b, e) {
-       WITH a, b, e
-       MERGE (a)-[r:REL {tipo: e.rel}]->(b)
-       RETURN r
-     }
-     RETURN count(*) AS creadas`,
+     MERGE (a)-[r:REL {tipo: e.rel}]->(b)
+     RETURN count(r) AS creadas`,
     { aristas }
   );
 

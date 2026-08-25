@@ -6,6 +6,7 @@ import {
 // Identidad visual por tarea: cada herramienta del agente se ve distinta
 // para que en terreno se reconozca de un vistazo qué está haciendo GO.
 const MAPA = [
+  { re: /grafo/i, icon: Network, titulo: 'Grafo de obra', accent: 'info' },
   { re: /subagente/i, icon: Network, titulo: 'Subagente de análisis', accent: 'primary' },
   { re: /alerta/i, icon: AlertTriangle, titulo: 'Alertas', accent: 'danger' },
   { re: /escalar/i, icon: ArrowUpCircle, titulo: 'Escalamiento', accent: 'danger' },

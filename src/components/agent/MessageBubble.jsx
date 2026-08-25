@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import SmartDataCard from './SmartDataCard';
 import InformeSubagente from './InformeSubagente';
+import GrafoInteractivo from './grafo/GrafoInteractivo';
 import MessageActions from './MessageActions';
 import toolMeta from '@/lib/toolMeta';
 
@@ -63,6 +64,12 @@ function ToolCallDisplay({ toolCall }) {
     ? (parsedResults?.informe || parsedResults?.data?.informe)
     : null;
 
+  const grafoData = !hideDetails && !effectiveFailed
+    ? (parsedResults?.grafo || parsedResults?.data?.grafo)
+    : null;
+  const grafoVisual = grafoData && Array.isArray(grafoData.nodos) && grafoData.nodos.length > 0 ? grafoData : null;
+  const resumenGrafo = parsedResults?.resumen || parsedResults?.data?.resumen;
+
   return (
     <div className="mt-2 text-xs rounded-xl overflow-hidden bg-surface-raised border border-hairline"
       style={{ borderLeft: `3px solid ${effectiveFailed ? 'hsl(var(--danger))' : tarea.color}` }}>
@@ -88,12 +95,17 @@ function ToolCallDisplay({ toolCall }) {
           {label}
         </span>
       </button>
-      {informe && !expanded && (
+      {grafoVisual && !expanded && (
+        <div className="px-3 pb-3">
+          <GrafoInteractivo grafo={grafoVisual} resumen={resumenGrafo} />
+        </div>
+      )}
+      {informe && !grafoVisual && !expanded && (
         <div className="px-3 pb-3">
           <InformeSubagente informe={informe} subagente={parsedResults?.subagente || parsedResults?.data?.subagente} />
         </div>
       )}
-      {showCards && !informe && !expanded && (
+      {showCards && !informe && !grafoVisual && !expanded && (
         <div className="px-3 pb-3">
           <SmartDataCard records={records} />
         </div>
