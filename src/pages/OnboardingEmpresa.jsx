@@ -16,6 +16,7 @@ export default function OnboardingEmpresa() {
   const [empresa, setEmpresa] = useState(null);
   const [form, setForm] = useState({});
   const [miCargo, setMiCargo] = useState('');
+  const [soloCargo, setSoloCargo] = useState(false);
   const [guardando, setGuardando] = useState(false);
   const [cargando, setCargando] = useState(true);
 
@@ -25,8 +26,13 @@ export default function OnboardingEmpresa() {
       if (user.empresa_id) {
         const emps = await base44.entities.Empresa.filter({ id: user.empresa_id });
         const emp = emps[0];
-        if (emp?.onboarding_completado) { navigate('/configuracion'); return; }
-        if (emp) { setEmpresa(emp); setForm(emp); setPaso(emp.onboarding_paso || 1); }
+        if (emp) {
+          setEmpresa(emp);
+          setForm(emp);
+          // Empresa ya operativa (usuario invitado): solo falta declarar su cargo.
+          if (emp.onboarding_completado) { setSoloCargo(true); setPaso(2); }
+          else setPaso(emp.onboarding_paso || 1);
+        }
       }
       if (user.cargo) setMiCargo(user.cargo);
       setCargando(false);
@@ -52,25 +58,43 @@ export default function OnboardingEmpresa() {
   };
 
   const guardarEquipo = async () => {
-    await base44.auth.updateMe({ cargo: miCargo });
-    await base44.entities.Empresa.update(empresa.id, { onboarding_paso: 3 });
-    setPaso(3);
+    setGuardando(true);
+    try {
+      await base44.auth.updateMe({ cargo: miCargo });
+      // Usuario invitado a una empresa ya operativa: con su cargo definido entra directo.
+      if (soloCargo) { navigate('/'); return; }
+      await base44.entities.Empresa.update(empresa.id, { onboarding_paso: 3 });
+      setPaso(3);
+    } finally {
+      setGuardando(false);
+    }
   };
 
   const finalizar = async (modo, obra) => {
     setGuardando(true);
     try {
       if (modo === 'nueva') {
+        // La obra queda activa: la empresa puede operar con GO de inmediato.
         await base44.entities.ProyectoObra.create({
           ...obra,
           empresa_id: empresa.id,
-          estado: 'configuracion',
+          estado: 'activo',
           herramienta_calidad: 'csv',
+          administrador: form.nombre,
         });
       } else {
         const demos = await base44.entities.ProyectoObra.filter({ es_demo: true }, '-created_date', 1);
         if (demos.length > 0) {
-          await base44.entities.ProyectoObra.update(demos[0].id, { estado: 'activo' });
+          await base44.entities.ProyectoObra.update(demos[0].id, { estado: 'activo', empresa_id: empresa.id });
+        } else {
+          await base44.entities.ProyectoObra.create({
+            nombre: 'Obra Demo · Edificio Corporativo',
+            codigo: 'DEMO-01',
+            empresa_id: empresa.id,
+            estado: 'activo',
+            es_demo: true,
+            herramienta_calidad: 'csv',
+          });
         }
       }
       await base44.entities.Empresa.update(empresa.id, {
@@ -91,12 +115,16 @@ export default function OnboardingEmpresa() {
     <div className="max-w-2xl mx-auto p-4 lg:p-6 space-y-5">
       <div className="text-center pt-2">
         <div className="flex justify-center mb-3"><Logo size="md" /></div>
-        <h1 className="text-xl font-bold text-foreground">Incorpora tu constructora</h1>
-        <p className="text-sm text-muted-foreground mt-1">Tres pasos y GO queda operando tu obra.</p>
+        <h1 className="text-xl font-bold text-foreground">
+          {soloCargo ? `Bienvenido a ${empresa?.nombre || 'tu constructora'}` : 'Incorpora tu constructora'}
+        </h1>
+        <p className="text-sm text-muted-foreground mt-1">
+          {soloCargo ? 'Declara tu cargo en obra y entras a operar.' : 'Tres pasos y GO queda operando tu obra.'}
+        </p>
       </div>
 
       {/* Indicador de pasos */}
-      <div className="flex items-center gap-2">
+      <div className={`flex items-center gap-2 ${soloCargo ? 'hidden' : ''}`}>
         {PASOS.map((p, i) => (
           <div key={p} className="flex-1">
             <div className="h-1.5 rounded-full mb-1.5"
@@ -107,7 +135,7 @@ export default function OnboardingEmpresa() {
       </div>
 
       {paso === 1 && <PasoEmpresa form={form} setForm={setForm} onNext={guardarEmpresa} guardando={guardando} />}
-      {paso === 2 && <PasoEquipo miCargo={miCargo} setMiCargo={setMiCargo} onNext={guardarEquipo} onBack={() => setPaso(1)} />}
+      {paso === 2 && <PasoEquipo miCargo={miCargo} setMiCargo={setMiCargo} onNext={guardarEquipo} onBack={soloCargo ? null : () => setPaso(1)} guardando={guardando} soloCargo={soloCargo} />}
       {paso === 3 && <PasoObra onFinish={finalizar} onBack={() => setPaso(2)} guardando={guardando} />}
     </div>
   );

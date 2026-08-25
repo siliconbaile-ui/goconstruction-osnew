@@ -27,6 +27,7 @@ import EvidenciaTerreno from '@/pages/EvidenciaTerreno';
 import VisionUrgente from '@/pages/VisionUrgente';
 import ManualMarca from '@/pages/ManualMarca';
 import OnboardingEmpresa from '@/pages/OnboardingEmpresa';
+import GuardOnboarding from '@/components/onboarding/GuardOnboarding';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -55,6 +56,7 @@ const AuthenticatedApp = () => {
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
+      <Route element={<GuardOnboarding />}>
       <Route element={<Layout />}>
         <Route path="/" element={<AsistenteOrion />} />
         <Route path="/vision-urgente" element={<VisionUrgente />} />
@@ -72,6 +74,7 @@ const AuthenticatedApp = () => {
         <Route path="/evidencia-terreno" element={<EvidenciaTerreno />} />
         <Route path="/manual-marca" element={<ManualMarca />} />
         <Route path="/onboarding" element={<OnboardingEmpresa />} />
+      </Route>
       </Route>
       </Route>
       <Route path="*" element={<PageNotFound />} />

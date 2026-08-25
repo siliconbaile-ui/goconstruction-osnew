@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { Users, Send, CheckCircle } from 'lucide-react';
 import { CARGOS } from '@/lib/cargos';
 
-export default function PasoEquipo({ miCargo, setMiCargo, onNext, onBack }) {
+export default function PasoEquipo({ miCargo, setMiCargo, onNext, onBack, guardando, soloCargo }) {
   const [email, setEmail] = useState('');
   const [rol, setRol] = useState('user');
   const [invitados, setInvitados] = useState([]);
@@ -29,7 +29,9 @@ export default function PasoEquipo({ miCargo, setMiCargo, onNext, onBack }) {
     <div className="orion-panel p-5 sm:p-6">
       <div className="flex items-center gap-2 mb-5">
         <Users className="w-4 h-4 text-primary" />
-        <span className="text-[11px] font-mono tracking-widest text-muted-foreground">PASO 2 · EQUIPO Y PERFILES</span>
+        <span className="text-[11px] font-mono tracking-widest text-muted-foreground">
+          {soloCargo ? 'TU PERFIL EN LA OBRA' : 'PASO 2 · EQUIPO Y PERFILES'}
+        </span>
       </div>
 
       <div className="mb-5">
@@ -48,7 +50,7 @@ export default function PasoEquipo({ miCargo, setMiCargo, onNext, onBack }) {
         </div>
       </div>
 
-      <div className="mb-2">
+      <div className={`mb-2 ${soloCargo ? 'hidden' : ''}`}>
         <label className="text-xs font-mono mb-1 block text-muted-foreground">Invitar al equipo (opcional)</label>
         <div className="flex flex-col sm:flex-row gap-2">
           <input
@@ -81,13 +83,15 @@ export default function PasoEquipo({ miCargo, setMiCargo, onNext, onBack }) {
           ))}
         </div>
       )}
-      <p className="text-[11px] text-muted-foreground mb-5">Administrador gestiona obras, equipo y configuración. Usuario opera terreno y consultas. Cada invitado elige su cargo al ingresar.</p>
+      <p className={`text-[11px] text-muted-foreground mb-5 ${soloCargo ? 'hidden' : ''}`}>Administrador gestiona obras, equipo y configuración. Usuario opera terreno y consultas. Cada invitado elige su cargo al ingresar.</p>
 
       <div className="flex gap-2">
-        <button onClick={onBack} className="px-5 py-3 rounded-xl text-sm text-muted-foreground bg-surface-raised border border-hairline">← Atrás</button>
-        <button onClick={onNext} disabled={!miCargo}
+        {onBack && (
+          <button onClick={onBack} className="px-5 py-3 rounded-xl text-sm text-muted-foreground bg-surface-raised border border-hairline">← Atrás</button>
+        )}
+        <button onClick={onNext} disabled={!miCargo || guardando}
           className="flex-1 sm:flex-none px-6 py-3 rounded-xl text-sm font-semibold bg-primary text-primary-foreground disabled:opacity-40">
-          Continuar → Primera obra
+          {guardando ? 'Guardando...' : soloCargo ? 'Entrar a operar' : 'Continuar → Primera obra'}
         </button>
       </div>
     </div>
