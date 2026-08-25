@@ -7,6 +7,34 @@
         "admin",
         "user"
       ]
+    },
+    "empresa_id": {
+      "type": "string",
+      "description": "Empresa constructora a la que pertenece el usuario"
+    },
+    "cargo": {
+      "type": "string",
+      "description": "Cargo operacional en la obra",
+      "enum": [
+        "gerencia",
+        "administrador_obra",
+        "jefe_terreno",
+        "jefe_calidad",
+        "oficina_tecnica",
+        "prevencionista",
+        "capataz"
+      ]
+    },
+    "telefono": {
+      "type": "string",
+      "description": "Tel\u00e9fono para WhatsApp"
+    },
+    "proyectos_asignados": {
+      "type": "array",
+      "description": "IDs de obras asignadas al usuario",
+      "items": {
+        "type": "string"
+      }
     }
   },
   "required": [

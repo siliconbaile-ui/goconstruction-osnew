@@ -2,6 +2,9 @@
   "name": "ProyectoObra",
   "type": "object",
   "properties": {
+    "empresa_id": {
+      "type": "string"
+    },
     "nombre": {
       "type": "string"
     },
@@ -68,6 +71,10 @@
     },
     "descripcion": {
       "type": "string"
+    },
+    "es_demo": {
+      "type": "boolean",
+      "default": false
     }
   },
   "required": [

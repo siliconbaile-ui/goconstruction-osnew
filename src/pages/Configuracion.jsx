@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Settings, Plus, CheckCircle, Upload, Building2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Settings, Plus, CheckCircle, Upload, Building2, Rocket } from 'lucide-react';
 import OrionCard from '@/components/OrionCard';
 import WhatsAppConnect from '@/components/agent/WhatsAppConnect';
 
@@ -106,9 +107,14 @@ export default function Configuracion() {
           <div className="font-mono text-xs mb-1" style={{ color: '#4A6FA5' }}>MÓDULO P2 · ASISTIDO</div>
           <h1 className="text-xl font-bold text-white">Motor de Onboarding de Obra Piloto</h1>
         </div>
-        <button onClick={() => setShowNew(true)} className="flex items-center gap-2 px-3 py-2 rounded text-sm font-medium text-white" style={{ background: '#003399' }}>
-          <Plus className="w-4 h-4" /> Nueva Obra
-        </button>
+        <div className="flex gap-2">
+          <Link to="/onboarding" className="flex items-center gap-2 px-3 py-2 rounded text-sm font-medium text-slate-300" style={{ background: '#0D1526', border: '1px solid #1E2D4A' }}>
+            <Rocket className="w-4 h-4" /> Incorporar Empresa
+          </Link>
+          <button onClick={() => setShowNew(true)} className="flex items-center gap-2 px-3 py-2 rounded text-sm font-medium text-white" style={{ background: '#003399' }}>
+            <Plus className="w-4 h-4" /> Nueva Obra
+          </button>
+        </div>
       </div>
 
       <WhatsAppConnect />

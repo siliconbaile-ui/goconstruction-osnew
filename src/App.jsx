@@ -26,6 +26,7 @@ import BaseConocimiento from '@/pages/BaseConocimiento';
 import EvidenciaTerreno from '@/pages/EvidenciaTerreno';
 import VisionUrgente from '@/pages/VisionUrgente';
 import ManualMarca from '@/pages/ManualMarca';
+import OnboardingEmpresa from '@/pages/OnboardingEmpresa';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -70,6 +71,7 @@ const AuthenticatedApp = () => {
         <Route path="/base-conocimiento" element={<BaseConocimiento />} />
         <Route path="/evidencia-terreno" element={<EvidenciaTerreno />} />
         <Route path="/manual-marca" element={<ManualMarca />} />
+        <Route path="/onboarding" element={<OnboardingEmpresa />} />
       </Route>
       </Route>
       <Route path="*" element={<PageNotFound />} />

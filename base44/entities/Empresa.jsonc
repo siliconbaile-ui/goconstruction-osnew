@@ -1,0 +1,51 @@
+{
+  "name": "Empresa",
+  "type": "object",
+  "properties": {
+    "nombre": {
+      "type": "string"
+    },
+    "rut": {
+      "type": "string"
+    },
+    "giro": {
+      "type": "string"
+    },
+    "direccion": {
+      "type": "string"
+    },
+    "telefono": {
+      "type": "string"
+    },
+    "email_contacto": {
+      "type": "string"
+    },
+    "logo_url": {
+      "type": "string"
+    },
+    "estado": {
+      "type": "string",
+      "enum": [
+        "onboarding",
+        "activa",
+        "demo",
+        "suspendida"
+      ],
+      "default": "onboarding"
+    },
+    "onboarding_paso": {
+      "type": "number",
+      "default": 1
+    },
+    "onboarding_completado": {
+      "type": "boolean",
+      "default": false
+    },
+    "notas": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "nombre"
+  ]
+}
