@@ -56,7 +56,7 @@ export default async function (req: Request): Promise<Response> {
             impacto: z.string().describe('Impacto en USD y/o días; "sin impacto cuantificable" si no aplica'),
           })).max(6),
           acciones: z.array(z.string()).max(4),
-          fuentes: z.array(z.string()).describe('Documento y página si se usaron documentos; vacío si solo datos de plataforma'),
+          fuentes: z.array(z.string()).describe('Cada fuente en formato "Fuente: <documento>, p. <número>". Obligatorio para todo hallazgo apoyado en un documento; en análisis normativo nunca va vacío (usa "Fuente: memoria normativa (sin documento indexado)" si no hay documento).'),
         }),
         execute: (args) => { informe = args; return { ok: true }; },
       }),

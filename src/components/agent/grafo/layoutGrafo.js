@@ -19,7 +19,8 @@ export function calcularLayout(nodos, aristas, { ancho = 640, alto = 420, pasos 
   const grados = new Array(pos.length).fill(0);
   links.forEach(l => { grados[l.s]++; grados[l.t]++; });
 
-  const distanciaIdeal = Math.max(58, Math.min(120, 520 / Math.sqrt(n)));
+  // Los nodos se dibujan como casillas: la separación ideal es mayor que con círculos.
+  const distanciaIdeal = Math.max(96, Math.min(190, 900 / Math.sqrt(n)));
 
   for (let paso = 0; paso < pasos; paso++) {
     const enfriamiento = 1 - paso / pasos;
@@ -51,8 +52,8 @@ export function calcularLayout(nodos, aristas, { ancho = 640, alto = 420, pasos 
       p.x += p.vx * enfriamiento * 0.55;
       p.y += p.vy * enfriamiento * 0.55;
       p.vx *= 0.82; p.vy *= 0.82;
-      p.x = Math.max(34, Math.min(ancho - 34, p.x));
-      p.y = Math.max(28, Math.min(alto - 28, p.y));
+      p.x = Math.max(100, Math.min(ancho - 100, p.x));
+      p.y = Math.max(26, Math.min(alto - 26, p.y));
     }
   }
 

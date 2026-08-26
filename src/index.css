@@ -273,6 +273,23 @@
 }
 
 /* ===========================================================
+   DENSIDAD · la app al 100% de zoom se ve como al 80%
+   Toda la escala tipográfica y de espaciado de Tailwind usa rem,
+   así que reducir la raíz compacta la interfaz completa sin
+   reescribir vistas. Móvil mantiene ergonomía táctil.
+   =========================================================== */
+@media (min-width: 1024px) {
+  html {
+    font-size: 80%;
+  }
+}
+@media (min-width: 641px) and (max-width: 1023px) {
+  html {
+    font-size: 88%;
+  }
+}
+
+/* ===========================================================
    TERRENO · ergonomía táctil móvil
    =========================================================== */
 button, a, [role="button"] {
