@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import RelatoPaso from '@/components/onboarding/RelatoPaso';
+import PasoTema from '@/components/onboarding/PasoTema';
 import PasoEmpresa from '@/components/onboarding/PasoEmpresa';
 import PasoEquipo from '@/components/onboarding/PasoEquipo';
 import PasoObra from '@/components/onboarding/PasoObra';
@@ -17,6 +18,8 @@ export default function OnboardingEmpresa() {
   const [soloCargo, setSoloCargo] = useState(false);
   const [guardando, setGuardando] = useState(false);
   const [cargando, setCargando] = useState(true);
+  // Antes de pedir datos, la constructora elige su paleta y su luz (una sola vez).
+  const [eligiendoTema, setEligiendoTema] = useState(() => !localStorage.getItem('gco_tema_elegido'));
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -128,6 +131,14 @@ export default function OnboardingEmpresa() {
     return (
       <div className="flex items-center justify-center py-20">
         <div className="w-7 h-7 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (eligiendoTema) {
+    return (
+      <div className="max-w-2xl mx-auto p-4 lg:p-6">
+        <PasoTema onNext={() => { localStorage.setItem('gco_tema_elegido', '1'); setEligiendoTema(false); }} />
       </div>
     );
   }

@@ -47,14 +47,15 @@ export default function ChatComposer({ value, onChange, onSend, sending, onVoice
           ))}
         </div>
       )}
-      {/* Móvil: input arriba, acciones grandes abajo. Desktop: una sola fila. */}
-      <div className="max-w-5xl mx-auto flex flex-col sm:flex-row sm:items-center gap-2 px-3 sm:pl-5 sm:pr-2 py-2 rounded-3xl sm:rounded-full bg-surface border border-hairline">
-        <input
+      {/* Composer amplio: área de escritura de varias líneas y acciones abajo. */}
+      <div className="max-w-5xl mx-auto flex flex-col gap-2 px-3 sm:px-4 pt-3 pb-2.5 rounded-3xl bg-surface border border-hairline orion-elevated">
+        <textarea
           value={value}
           onChange={e => onChange(e.target.value)}
           onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); enviar(); } }}
-          placeholder="habla o escríbele a GO"
-          className="flex-1 bg-transparent outline-none text-base sm:text-sm px-2 sm:px-0 py-3 sm:py-2.5 min-w-0 text-foreground placeholder:text-muted-foreground"
+          rows={3}
+          placeholder="habla o escríbele a GO · pega una consulta, adjunta un plano o dicta desde terreno"
+          className="w-full bg-transparent outline-none resize-none text-base leading-relaxed px-1 min-h-[84px] max-h-56 text-foreground placeholder:text-muted-foreground"
         />
         <div className="flex items-center gap-1.5 sm:gap-2">
           <VoiceRecorder onTranscript={onVoice} onPartial={onChange} disabled={sending || uploading} />
@@ -74,10 +75,10 @@ export default function ChatComposer({ value, onChange, onSend, sending, onVoice
           <button
             onClick={enviar}
             disabled={(!value.trim() && files.length === 0) || sending || uploading}
-            className="flex-1 sm:flex-none h-11 sm:w-10 sm:h-10 px-5 sm:px-0 rounded-full flex items-center justify-center gap-2 flex-shrink-0 disabled:opacity-40 text-sm font-semibold bg-primary text-primary-foreground"
+            className="ml-auto h-11 px-6 rounded-full flex items-center justify-center gap-2 flex-shrink-0 disabled:opacity-40 text-sm font-semibold bg-primary text-primary-foreground"
           >
             {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-            <span className="sm:hidden">Enviar</span>
+            <span>Enviar</span>
           </button>
         </div>
       </div>

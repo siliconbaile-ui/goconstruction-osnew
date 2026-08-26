@@ -34,7 +34,7 @@ export default function AgentSidebar({ onPrompt, ficha }) {
   const [abierto, setAbierto] = useState({ 0: true, 1: false });
 
   return (
-    <aside className="w-72 flex-shrink-0 hidden 2xl:flex flex-col gap-4 overflow-y-auto min-h-0 p-4">
+    <aside className="w-72 flex-shrink-0 hidden lg:flex flex-col gap-4 overflow-y-auto min-h-0 p-4">
       {/* Identidad */}
       <div className="flex items-center gap-3 px-1 pt-1">
         <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-primary">

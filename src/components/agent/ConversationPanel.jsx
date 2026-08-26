@@ -5,6 +5,7 @@ import MessageBubble from './MessageBubble';
 import AgentSidebar from './AgentSidebar';
 import ObraLivePanel from './ObraLivePanel';
 import ChatComposer from './ChatComposer';
+import BotonColumna from './BotonColumna';
 import WelcomeHero from './WelcomeHero';
 import PanelControlRio from './PanelControlRio';
 import { WhatsAppButton } from './WhatsAppConnect';
@@ -29,6 +30,9 @@ export default function ConversationPanel() {
   const [voiceMode, setVoiceMode] = useState(false);
   const [errorEnvio, setErrorEnvio] = useState(null);
   const [panelMovil, setPanelMovil] = useState(false);
+  // Al entrar, el chat manda: ambas columnas parten contraídas.
+  const [colIzq, setColIzq] = useState(false);
+  const [colDer, setColDer] = useState(false);
   const scrollRef = useRef(null);
 
   const { hablando, detener: detenerVoz } = useVoiceOutput(messages, voiceMode);
@@ -174,10 +178,11 @@ export default function ConversationPanel() {
 
   return (
     <div className="flex h-full min-h-0 overflow-hidden bg-surface-base text-foreground">
-      <AgentSidebar onPrompt={send} ficha={ficha} />
+      {colIzq && <AgentSidebar onPrompt={send} ficha={ficha} />}
+      <BotonColumna lado="izquierda" abierta={colIzq} onToggle={() => setColIzq(v => !v)} />
 
       {/* CENTRO */}
-      <div className="flex-1 flex flex-col min-w-0 min-h-0 p-0 sm:p-4 lg:pr-0">
+      <div className="flex-1 flex flex-col min-w-0 min-h-0 p-0 sm:p-4 lg:px-0">
         <div className="flex flex-col min-h-0 flex-1 rounded-none sm:rounded-2xl overflow-hidden bg-surface-base border-0 sm:border border-hairline">
           {/* Header agente */}
           <header className="flex items-center gap-2.5 sm:gap-3 px-3 sm:px-5 lg:px-8 py-2.5 sm:py-4 flex-shrink-0 border-b border-hairline bg-surface">
@@ -277,7 +282,9 @@ criterio técnico con los datos reales de tu obra
         </div>
       )}
 
-      <ObraLivePanel
+      <BotonColumna lado="derecha" abierta={colDer} onToggle={() => setColDer(v => !v)} />
+
+      {colDer && <ObraLivePanel
         tab={rightTab}
         setTab={setRightTab}
         stats={stats}
@@ -289,7 +296,7 @@ criterio técnico con los datos reales de tu obra
         onPrompt={send}
         loadingConvs={loadingConvs}
         onNueva={startNewConversation}
-      />
+      />}
     </div>
   );
 }
