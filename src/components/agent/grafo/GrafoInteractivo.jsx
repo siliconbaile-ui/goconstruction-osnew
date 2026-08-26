@@ -36,21 +36,27 @@ export default function GrafoInteractivo({ grafo, resumen }) {
   const conectados = new Set(vecinos.map(v => v.nodo.id));
   const tiposPresentes = [...new Set(nodos.map(n => n.tipo))];
 
+  // Expandido = pantalla completa sobre la app; la burbuja del chat queda atrás.
+  const contenedor = expandido
+    ? 'fixed inset-0 z-[100] flex flex-col rounded-none bg-surface'
+    : 'min-w-0 rounded-xl overflow-hidden bg-surface border border-hairline';
+
   return (
-    <div className="min-w-0 rounded-xl overflow-hidden bg-surface border border-hairline">
-      <div className="flex items-center gap-2 px-3 py-2 border-b border-hairline bg-surface-raised">
+    <div className={contenedor}>
+      <div className="flex items-center gap-2 px-3 py-2 border-b border-hairline bg-surface-raised flex-shrink-0">
         <Network className="w-3.5 h-3.5 flex-shrink-0 text-primary" />
         <span className="text-[10px] font-mono tracking-widest text-muted-foreground truncate">
           GRAFO DE OBRA · {(foco ? `FOCO ${foco}` : (modo || 'obra')).toString().toUpperCase()} · {nodos.length} NODOS · {aristas.length} RELACIONES
         </span>
-        <button onClick={() => setExpandido(e => !e)} className="ml-auto p-1 flex-shrink-0">
+        <button onClick={() => setExpandido(e => !e)}
+          className="ml-auto flex items-center gap-1.5 px-2 py-1 rounded-md flex-shrink-0 border border-hairline bg-surface text-muted-foreground">
           {expandido
-            ? <Minimize2 className="w-3.5 h-3.5 text-muted-foreground" />
-            : <Maximize2 className="w-3.5 h-3.5 text-muted-foreground" />}
+            ? <><Minimize2 className="w-3.5 h-3.5" /><span className="text-[9px] font-mono">CERRAR</span></>
+            : <><Maximize2 className="w-3.5 h-3.5" /><span className="text-[9px] font-mono hidden sm:inline">EXPANDIR</span></>}
         </button>
       </div>
 
-      <div className="w-full" style={{ height: expandido ? 520 : 300 }}>
+      <div className={`w-full ${expandido ? 'flex-1 min-h-0' : ''}`} style={expandido ? undefined : { height: 300 }}>
         <svg viewBox={`0 0 ${ANCHO} ${ALTO}`} className="w-full h-full" preserveAspectRatio="xMidYMid meet">
           {aristas.map((a, i) => {
             const s = porId.get(a.origen);
@@ -101,7 +107,7 @@ export default function GrafoInteractivo({ grafo, resumen }) {
         </svg>
       </div>
 
-      <div className="px-3 pb-3 space-y-2">
+      <div className="px-3 pb-3 space-y-2 flex-shrink-0">
         {sel
           ? <NodoDetalle nodo={sel} vecinos={vecinos} onCerrar={() => setSelId(null)} onFocar={setSelId} />
           : (
