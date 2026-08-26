@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://gobim.lat/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://gobim.lat/control-calidad</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://gobim.lat/edp-pagos</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://gobim.lat/rdi-automaticos</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://gobim.lat/whatsapp-bim</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://gobim.lat/demo</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://gobim.lat/nosotros</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://gobim.lat/contacto</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://gobim.lat/control-calidad</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://gobim.lat/edp-pagos</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://gobim.lat/rdi-automaticos</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://gobim.lat/whatsapp-bim</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://gobim.lat/demo</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://gobim.lat/blog</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://gobim.lat/blog/nch-430-recubrimiento-minimo-hormigon-armado</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://gobim.lat/blog/como-redactar-un-rdi-en-obra</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://gobim.lat/blog/no-quality-no-pay-estado-de-pago-subcontratista</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://gobim.lat/blog/registro-de-inspeccion-en-terreno-fotografia-trazabilidad</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://gobim.lat/nosotros</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://gobim.lat/contacto</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
   <url><loc>https://gobim.lat/privacidad</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
   <url><loc>https://gobim.lat/terminos</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
 </urlset>

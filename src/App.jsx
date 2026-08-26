@@ -34,6 +34,8 @@ import CasoControlCalidad from '@/pages/CasoControlCalidad';
 import CasoEdpPagos from '@/pages/CasoEdpPagos';
 import CasoRdiAutomaticos from '@/pages/CasoRdiAutomaticos';
 import CasoWhatsappBim from '@/pages/CasoWhatsappBim';
+import Blog from '@/pages/Blog';
+import BlogArticulo from '@/pages/BlogArticulo';
 import Contacto from '@/pages/Contacto';
 import Privacidad from '@/pages/Privacidad';
 import Terminos from '@/pages/Terminos';
@@ -67,6 +69,8 @@ const AuthenticatedApp = () => {
       <Route path="/edp-pagos" element={<CasoEdpPagos />} />
       <Route path="/rdi-automaticos" element={<CasoRdiAutomaticos />} />
       <Route path="/whatsapp-bim" element={<CasoWhatsappBim />} />
+      <Route path="/blog" element={<Blog />} />
+      <Route path="/blog/:slug" element={<BlogArticulo />} />
       <Route path="/nosotros" element={<Nosotros />} />
       <Route path="/contacto" element={<Contacto />} />
       <Route path="/privacidad" element={<Privacidad />} />

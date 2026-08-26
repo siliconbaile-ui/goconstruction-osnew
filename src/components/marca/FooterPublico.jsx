@@ -6,6 +6,7 @@ export default function FooterPublico() {
     <footer className="mt-10 pt-6 border-t border-hairline">
       <nav className="flex flex-wrap items-center gap-x-5 gap-y-2 mb-3 text-xs">
         <Link to="/" className="text-muted-foreground hover:text-primary">Inicio</Link>
+        <Link to="/blog" className="text-muted-foreground hover:text-primary">Blog técnico</Link>
         <Link to="/nosotros" className="text-muted-foreground hover:text-primary">Nosotros</Link>
         <Link to="/contacto" className="text-muted-foreground hover:text-primary">Contacto</Link>
         <Link to="/demo" className="text-muted-foreground hover:text-primary">Demo</Link>
