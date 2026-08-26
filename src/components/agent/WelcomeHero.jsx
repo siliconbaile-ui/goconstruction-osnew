@@ -1,33 +1,37 @@
-import { ArrowRight, AlertTriangle, TrendingUp, FileText, CreditCard } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { ArrowRight } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
+import { sintoniaPorCargo } from '@/lib/sintonia';
+import { labelCargo } from '@/lib/cargos';
 
 const ETAPAS = ['OBSERVA', 'APRENDE', 'ACTÚA', 'VERIFICA', 'MEJORA'];
 
-const TILES = [
-  { label: 'Ver alertas', sub: 'activas ahora', icon: AlertTriangle, prompt: '¿Qué alertas activas tengo ahora?' },
-  { label: 'Resumir avance', sub: 'desviaciones clave', icon: TrendingUp, prompt: 'Resume las desviaciones de avance críticas' },
-  { label: 'Gestionar RDIs', sub: 'abiertos y vencidos', icon: FileText, prompt: 'Lista los RDIs abiertos y vencidos' },
-  { label: 'Revisar pagos', sub: 'EDPs bloqueados', icon: CreditCard, prompt: '¿Qué EDPs están bloqueados y por qué?' },
-];
-
-const CHIPS = [
-  '¿Qué es lo más urgente hoy?',
-  'Tengo atraso en enfierradura',
-  'Escala lo que lleva +24h',
-  '¿Cuánto dinero está retenido?',
-];
-
 export default function WelcomeHero({ onPrompt, activo }) {
+  const [usuario, setUsuario] = useState(null);
+
+  useEffect(() => {
+    base44.auth.me().then(setUsuario).catch(() => {});
+  }, []);
+
+  const s = sintoniaPorCargo(usuario?.cargo);
+  const nombre = usuario?.full_name?.split(' ')[0];
+
   return (
     <div className="max-w-3xl mx-auto">
-      {/* Mensaje de apertura */}
+      {/* Mensaje de apertura · sintonizado al cargo */}
       <div className="flex gap-3 mb-5">
         <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 bg-primary">
           <span className="text-primary-foreground text-[11px] font-bold">GO</span>
         </div>
         <div className="rounded-2xl rounded-tl-md px-4 sm:px-5 py-4 bg-surface border border-hairline">
+          {usuario?.cargo && (
+            <div className="text-[10px] font-mono tracking-widest text-primary mb-1.5">
+              MODO {labelCargo(usuario.cargo).toUpperCase()}
+            </div>
+          )}
           <p className="text-sm leading-relaxed text-foreground">
-            Soy GO, tu jefe técnico digital. Acá el asistente no acompaña la obra: el asistente <strong>opera</strong> la obra.
-            Dime qué te preocupa y te muestro la obra en vivo, con la norma y la página citada.
+            {nombre ? `${nombre}, soy GO, tu jefe técnico digital. ` : 'Soy GO, tu jefe técnico digital. '}
+            {s.saludo}
           </p>
         </div>
       </div>
@@ -62,9 +66,9 @@ export default function WelcomeHero({ onPrompt, activo }) {
         </button>
       </div>
 
-      {/* Tiles */}
+      {/* Tiles según cargo */}
       <div className="grid grid-cols-2 gap-3 mb-4">
-        {TILES.map(({ label, sub, icon: Icon, prompt }) => (
+        {s.tiles.map(({ label, sub, icon: Icon, prompt }) => (
           <button key={label} onClick={() => onPrompt(prompt)}
             className="text-left p-4 min-h-[104px] rounded-2xl bg-surface border border-hairline transition-all hover:border-primary/40 active:scale-[0.98]">
             <div className="w-10 h-10 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center mb-3 bg-surface-raised">
@@ -76,9 +80,9 @@ export default function WelcomeHero({ onPrompt, activo }) {
         ))}
       </div>
 
-      {/* Chips */}
+      {/* Chips según cargo */}
       <div className="flex flex-wrap gap-2">
-        {CHIPS.map(c => (
+        {s.chips.map(c => (
           <button key={c} onClick={() => onPrompt(c)}
             className="px-4 min-h-11 flex items-center rounded-full text-sm sm:text-xs bg-surface border border-hairline text-foreground/80 transition-colors hover:border-primary/40 active:scale-[0.98]">
             {c}

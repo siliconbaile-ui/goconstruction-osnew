@@ -10,12 +10,13 @@ import MobileTabBar from '@/components/MobileTabBar';
 import ThemeToggle from '@/components/ThemeToggle';
 import NotificacionesMovil from '@/components/pwa/NotificacionesMovil';
 import InstalarApp from '@/components/pwa/InstalarApp';
+import CompartirApp from '@/components/CompartirApp';
 
 const NAV_GROUPS = [
   {
     titulo: 'OPERACIÓN',
     items: [
-      { label: 'Asistente GO', path: '/', icon: Bot },
+      { label: 'Asistente GO', path: '/app', icon: Bot },
       { label: 'Visión Urgente', path: '/vision-urgente', icon: Zap },
       { label: 'Dashboard', path: '/dashboard', icon: Gauge },
       { label: 'Monitor Avance', path: '/monitor-avance', icon: TrendingUp },
@@ -144,6 +145,7 @@ export default function Layout() {
             </div>
             <ThemeToggle />
             <NotificacionesMovil />
+            <CompartirApp />
             <Link to="/centro-alertas" title="Centro de Alertas"
               className="relative flex items-center justify-center w-9 h-9 rounded-full text-muted-foreground hover:text-foreground transition-colors"
               style={{ background: 'hsl(var(--surface-2))', border: '1px solid hsl(var(--hairline))' }}>

@@ -23,9 +23,9 @@ export default function NotificacionesMovil() {
     localStorage.setItem(KEY, '1');
     setActivas(true);
     mostrarNotificacion({
-      titulo: 'Orion vigilando tu obra',
+      titulo: 'GO vigilando tu obra',
       cuerpo: 'Te avisaré al celular cuando entre una alerta nueva.',
-      tag: 'orion-bienvenida',
+      tag: 'go-bienvenida',
     });
   };
 
@@ -53,10 +53,8 @@ export default function NotificacionesMovil() {
   return (
     <button onClick={alternar} disabled={bloqueado}
       title={bloqueado ? 'Notificaciones bloqueadas en el navegador' : activas ? 'Notificaciones al celular activas' : 'Activar notificaciones al celular'}
-      className="p-2 rounded flex items-center gap-1.5 disabled:opacity-40"
-      style={activas
-        ? { background: 'rgba(39,174,96,0.12)', color: '#27AE60' }
-        : { color: '#4A6FA5' }}>
+      className="flex items-center justify-center gap-1.5 w-9 h-9 sm:w-auto sm:px-3 rounded-full disabled:opacity-40 bg-surface-raised border border-hairline"
+      style={activas ? { color: 'hsl(var(--ok))' } : { color: 'hsl(var(--muted-foreground))' }}>
       {bloqueado ? <BellOff className="w-4 h-4" /> : activas ? <BellRing className="w-4 h-4" /> : <Bell className="w-4 h-4" />}
       <span className="hidden sm:inline font-mono text-[10px]">{activas ? 'AVISOS ON' : 'AVISOS'}</span>
     </button>

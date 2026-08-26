@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Bot, Camera, ClipboardList, Wallet, BellRing } from 'lucide-react';
 
 const TABS = [
-  { label: 'Orion', path: '/', icon: Bot },
+  { label: 'GO', path: '/app', icon: Bot },
   { label: 'Terreno', path: '/evidencia-terreno', icon: Camera },
   { label: 'RDIs', path: '/gestor-rdi', icon: ClipboardList },
   { label: 'Pagos', path: '/semaforo-pagos', icon: Wallet },

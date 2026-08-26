@@ -1,15 +1,16 @@
 {
-  "name": "GoConstruction OS",
+  "name": "GoConstruction OS · Command center de obra",
   "short_name": "GO",
-  "description": "Command center de obra: avance, calidad, RDIs, alertas y estados de pago, operados por GO.",
-  "lang": "es-CL",
-  "dir": "ltr",
-  "start_url": "/",
+  "description": "GO, tu jefe técnico digital: opera avance, calidad, RDIs, alertas y estados de pago conversando — desde la app o por WhatsApp, citando la página exacta de tus EETT y planos.",
+  "id": "/app",
+  "start_url": "/app",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#0A0908",
-  "theme_color": "#0A0908",
+  "background_color": "#0B0908",
+  "theme_color": "#0B0908",
+  "lang": "es-CL",
+  "categories": ["business", "productivity"],
   "icons": [
     {
       "src": "https://media.base44.com/images/public/6a8536b631a67708e1537e3c/08dbc115f_generated_image.png",
@@ -28,6 +29,23 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Hablar con GO",
+      "url": "/app",
+      "description": "Abrir la conversación con el jefe técnico digital"
+    },
+    {
+      "name": "Evidencia de terreno",
+      "url": "/evidencia-terreno",
+      "description": "Registrar foto o inspección en terreno"
+    },
+    {
+      "name": "Centro de alertas",
+      "url": "/centro-alertas",
+      "description": "Ver las alertas activas de la obra"
     }
   ]
 }
