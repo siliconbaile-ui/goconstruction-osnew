@@ -5,6 +5,7 @@ import { PlayCircle, ArrowRight } from 'lucide-react';
 import Logo from '@/components/marca/Logo';
 import ChatVisitante from '@/components/visitante/ChatVisitante';
 import FooterPublico from '@/components/marca/FooterPublico';
+import PruebaValor from '@/components/visitante/PruebaValor';
 
 // MODO 1 · VISITANTE: primera impresión sin login y sin datos de obra.
 // Si ya hay sesión, se entra directo a operar.
@@ -33,7 +34,7 @@ export default function Visitante() {
 
         <div className="space-y-2">
           <h1 className="text-2xl sm:text-3xl font-semibold leading-tight">
-            El jefe técnico digital de tu obra.
+            El jefe técnico digital de tu obra, hecho para constructoras en Chile.
           </h1>
           <p className="text-sm text-muted-foreground max-w-xl">
             Control de avance, calidad, RDIs y estados de pago con criterio técnico. GO cita la página exacta de tus EETT,
@@ -51,6 +52,8 @@ export default function Visitante() {
             Registrarse <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
+
+        <PruebaValor />
 
         <ChatVisitante />
 
