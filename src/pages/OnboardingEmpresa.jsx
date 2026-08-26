@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import Logo from '@/components/marca/Logo';
+import RelatoPaso from '@/components/onboarding/RelatoPaso';
 import PasoEmpresa from '@/components/onboarding/PasoEmpresa';
 import PasoEquipo from '@/components/onboarding/PasoEquipo';
 import PasoObra from '@/components/onboarding/PasoObra';
@@ -11,7 +10,6 @@ const PASOS = ['Empresa', 'Equipo', 'Primera obra'];
 // Onboarding para incorporar una constructora real: datos de la empresa,
 // equipo con cargos, y primera obra (propia o demo para partir probando).
 export default function OnboardingEmpresa() {
-  const navigate = useNavigate();
   const [paso, setPaso] = useState(1);
   const [empresa, setEmpresa] = useState(null);
   const [form, setForm] = useState({});
@@ -19,39 +17,49 @@ export default function OnboardingEmpresa() {
   const [soloCargo, setSoloCargo] = useState(false);
   const [guardando, setGuardando] = useState(false);
   const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     (async () => {
-      const user = await base44.auth.me();
-      if (user.empresa_id) {
-        const emps = await base44.entities.Empresa.filter({ id: user.empresa_id });
-        const emp = emps[0];
-        if (emp) {
-          setEmpresa(emp);
-          setForm(emp);
-          // Empresa ya operativa (usuario invitado): solo falta declarar su cargo.
-          if (emp.onboarding_completado) { setSoloCargo(true); setPaso(2); }
-          else setPaso(emp.onboarding_paso || 1);
+      try {
+        const user = await base44.auth.me();
+        if (user.empresa_id) {
+          const emps = await base44.entities.Empresa.filter({ id: user.empresa_id });
+          const emp = emps[0];
+          if (emp) {
+            setEmpresa(emp);
+            setForm(emp);
+            // Empresa ya operativa (usuario invitado): solo falta declarar su cargo.
+            if (emp.onboarding_completado) { setSoloCargo(true); setPaso(2); }
+            else setPaso(emp.onboarding_paso || 1);
+          }
         }
+        if (user.cargo) setMiCargo(user.cargo);
+      } catch {
+        setError('No pudimos cargar tu cuenta. Recarga la página para reintentar.');
+      } finally {
+        setCargando(false);
       }
-      if (user.cargo) setMiCargo(user.cargo);
-      setCargando(false);
     })();
-  }, [navigate]);
+  }, []);
+
+  // Recarga completa: la puerta de onboarding vuelve a evaluar el estado real
+  // y deja pasar a operar (con navigate() rebotaba de vuelta al wizard).
+  const entrarAOperar = (destino = '/') => { window.location.href = destino; };
 
   const guardarEmpresa = async () => {
     setGuardando(true);
+    setError('');
     try {
       const datos = { nombre: form.nombre, rut: form.rut, giro: form.giro, direccion: form.direccion, telefono: form.telefono, email_contacto: form.email_contacto, onboarding_paso: 2 };
-      let emp;
-      if (empresa) {
-        emp = await base44.entities.Empresa.update(empresa.id, datos);
-      } else {
-        emp = await base44.entities.Empresa.create(datos);
-        await base44.auth.updateMe({ empresa_id: emp.id });
-      }
+      const emp = empresa
+        ? await base44.entities.Empresa.update(empresa.id, datos)
+        : await base44.entities.Empresa.create(datos);
+      if (!empresa) await base44.auth.updateMe({ empresa_id: emp.id });
       setEmpresa(emp);
       setPaso(2);
+    } catch {
+      setError('No se pudo guardar la empresa. Revisa la razón social e inténtalo otra vez.');
     } finally {
       setGuardando(false);
     }
@@ -59,24 +67,32 @@ export default function OnboardingEmpresa() {
 
   const guardarEquipo = async () => {
     setGuardando(true);
+    setError('');
     try {
       await base44.auth.updateMe({ cargo: miCargo });
       // Usuario invitado a una empresa ya operativa: con su cargo definido entra directo.
-      if (soloCargo) { navigate('/'); return; }
+      if (soloCargo) { entrarAOperar('/'); return; }
       await base44.entities.Empresa.update(empresa.id, { onboarding_paso: 3 });
       setPaso(3);
-    } finally {
+    } catch {
+      setError('No se pudo guardar tu cargo. Inténtalo otra vez.');
       setGuardando(false);
+      return;
     }
+    setGuardando(false);
   };
 
   const finalizar = async (modo, obra) => {
     setGuardando(true);
+    setError('');
     try {
       if (modo === 'nueva') {
-        // La obra queda activa: la empresa puede operar con GO de inmediato.
+        // Los campos vacíos se omiten: una fecha en blanco hacía fallar la creación.
+        const limpios = Object.fromEntries(
+          Object.entries(obra || {}).filter(([, v]) => v !== '' && v !== null && v !== undefined)
+        );
         await base44.entities.ProyectoObra.create({
-          ...obra,
+          ...limpios,
           empresa_id: empresa.id,
           estado: 'activo',
           herramienta_calidad: 'csv',
@@ -101,27 +117,24 @@ export default function OnboardingEmpresa() {
         estado: modo === 'demo' ? 'demo' : 'activa',
         onboarding_completado: true,
       });
-      navigate(modo === 'nueva' ? '/configuracion' : '/');
-    } finally {
+      entrarAOperar('/');
+    } catch {
+      setError('No se pudo activar la obra. Revisa los datos e inténtalo otra vez.');
       setGuardando(false);
     }
   };
 
   if (cargando) {
-    return <div className="p-8 text-center font-mono text-xs text-muted-foreground">CARGANDO...</div>;
+    return (
+      <div className="flex items-center justify-center py-20">
+        <div className="w-7 h-7 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
   }
 
   return (
     <div className="max-w-2xl mx-auto p-4 lg:p-6 space-y-5">
-      <div className="text-center pt-2">
-        <div className="flex justify-center mb-3"><Logo size="md" /></div>
-        <h1 className="text-xl font-bold text-foreground">
-          {soloCargo ? `Bienvenido a ${empresa?.nombre || 'tu constructora'}` : 'Incorpora tu constructora'}
-        </h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          {soloCargo ? 'Declara tu cargo en obra y entras a operar.' : 'Tres pasos y GO queda operando tu obra.'}
-        </p>
-      </div>
+      <RelatoPaso paso={paso} total={PASOS.length} soloCargo={soloCargo} empresa={empresa} />
 
       {/* Indicador de pasos */}
       <div className={`flex items-center gap-2 ${soloCargo ? 'hidden' : ''}`}>
@@ -133,6 +146,13 @@ export default function OnboardingEmpresa() {
           </div>
         ))}
       </div>
+
+      {error && (
+        <div className="px-4 py-3 rounded-xl text-xs border"
+          style={{ borderColor: 'hsl(var(--danger) / 0.4)', background: 'hsl(var(--danger) / 0.08)', color: 'hsl(var(--danger))' }}>
+          {error}
+        </div>
+      )}
 
       {paso === 1 && <PasoEmpresa form={form} setForm={setForm} onNext={guardarEmpresa} guardando={guardando} />}
       {paso === 2 && <PasoEquipo miCargo={miCargo} setMiCargo={setMiCargo} onNext={guardarEquipo} onBack={soloCargo ? null : () => setPaso(1)} guardando={guardando} soloCargo={soloCargo} />}

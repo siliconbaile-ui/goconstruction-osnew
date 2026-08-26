@@ -11,6 +11,7 @@ export default function GuardOnboarding() {
 
   useEffect(() => {
     (async () => {
+      try {
       const me = await base44.auth.me();
       let empresa = null;
 
@@ -27,6 +28,10 @@ export default function GuardOnboarding() {
 
       const listo = !!empresa && empresa.onboarding_completado && !!me.cargo;
       setEstado(listo ? 'ok' : 'onboarding');
+      } catch {
+        // Nunca dejamos la pantalla pegada girando: se manda al onboarding.
+        setEstado('onboarding');
+      }
     })();
   }, []);
 
