@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { PlayCircle, ArrowRight } from 'lucide-react';
 import Logo from '@/components/marca/Logo';
 import ChatVisitante from '@/components/visitante/ChatVisitante';
+import FooterPublico from '@/components/marca/FooterPublico';
 
 // MODO 1 · VISITANTE: primera impresión sin login y sin datos de obra.
 // Si ya hay sesión, se entra directo a operar.
@@ -56,6 +57,8 @@ export default function Visitante() {
         <p className="text-[11px] font-mono text-muted-foreground">
           ¿Ya tienes cuenta? <Link to="/login" className="text-primary">Iniciar sesión</Link>
         </p>
+
+        <FooterPublico />
       </div>
     </div>
   );

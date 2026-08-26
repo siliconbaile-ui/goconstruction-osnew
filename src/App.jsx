@@ -29,6 +29,8 @@ import ManualMarca from '@/pages/ManualMarca';
 import OnboardingEmpresa from '@/pages/OnboardingEmpresa';
 import Visitante from '@/pages/Visitante';
 import Demo from '@/pages/Demo';
+import Nosotros from '@/pages/Nosotros';
+import Contacto from '@/pages/Contacto';
 import GuardOnboarding from '@/components/onboarding/GuardOnboarding';
 
 const AuthenticatedApp = () => {
@@ -55,6 +57,8 @@ const AuthenticatedApp = () => {
     <Routes>
       <Route path="/" element={<Visitante />} />
       <Route path="/demo" element={<Demo />} />
+      <Route path="/nosotros" element={<Nosotros />} />
+      <Route path="/contacto" element={<Contacto />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
