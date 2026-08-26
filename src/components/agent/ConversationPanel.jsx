@@ -218,7 +218,7 @@ criterio técnico con los datos reales de tu obra
             {!hasMessages ? (
               <WelcomeHero onPrompt={send} activo={sending} />
             ) : (
-              <div className="max-w-3xl mx-auto space-y-3 sm:space-y-4">
+              <div className="max-w-5xl mx-auto space-y-3 sm:space-y-4">
                 {agruparMensajes(messages).map(m => (
                   <MessageBubble key={m.id || m.created_date} message={m} conversacionId={activeId} />
                 ))}
@@ -234,7 +234,7 @@ criterio técnico con los datos reales de tu obra
 
           {errorEnvio && (
             <div className="flex-shrink-0 px-3 sm:px-4 lg:px-8 pb-1">
-              <div className="max-w-3xl mx-auto flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs border"
+              <div className="max-w-5xl mx-auto flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs border"
                 style={{ borderColor: 'hsl(var(--danger) / 0.4)', background: 'hsl(var(--danger) / 0.08)', color: 'hsl(var(--danger))' }}>
                 <span className="flex-1">No se pudo enviar el mensaje (problema de red). Revisa tu conexión.</span>
                 <button onClick={reintentar} className="px-3 py-1.5 rounded-full font-semibold text-primary-foreground bg-primary flex-shrink-0">

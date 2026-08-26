@@ -75,7 +75,7 @@ function ToolCallDisplay({ toolCall }) {
     /grafo/i.test(toolCall.name || '') && ['success', 'completed'].includes(status);
 
   return (
-    <div className="mt-2 text-xs rounded-xl overflow-hidden bg-surface-raised border border-hairline"
+    <div className="mt-2 text-xs rounded-xl overflow-hidden bg-surface border border-hairline orion-elevated"
       style={{ borderLeft: `3px solid ${effectiveFailed ? 'hsl(var(--danger))' : tarea.color}` }}>
       <button
         onClick={() => !hideDetails && setExpanded(!expanded)}
@@ -145,7 +145,7 @@ export default function MessageBubble({ message, conversacionId }) {
   const isUser = message.role === 'user';
   return (
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
-      <div className={`min-w-0 ${isUser ? 'max-w-[88%]' : 'w-full md:max-w-[80%]'}`}>
+      <div className={`min-w-0 ${isUser ? 'max-w-[88%]' : 'w-full'}`}>
         {!isUser && (
           <div className="flex items-center gap-2 mb-1.5">
             <div className="w-5 h-5 rounded-full flex items-center justify-center bg-primary">
@@ -174,8 +174,9 @@ export default function MessageBubble({ message, conversacionId }) {
               ))}
             </div>
           )}
-          {message.tool_calls?.map((tc, i) => <ToolCallDisplay key={i} toolCall={tc} />)}
         </div>
+        {/* Las tarjetas de trabajo salen de la burbuja: aprovechan todo el ancho del chat. */}
+        {message.tool_calls?.map((tc, i) => <ToolCallDisplay key={i} toolCall={tc} />)}
         {!isUser && message.content && (
           <MessageActions content={message.content} conversacionId={conversacionId} />
         )}

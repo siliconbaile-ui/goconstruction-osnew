@@ -34,7 +34,7 @@ export default function ChatComposer({ value, onChange, onSend, sending, onVoice
   return (
     <div className="flex-shrink-0 px-3 sm:px-4 lg:px-8 pt-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:pb-5">
       {files.length > 0 && (
-        <div className="max-w-3xl mx-auto flex flex-wrap gap-2 mb-2">
+        <div className="max-w-5xl mx-auto flex flex-wrap gap-2 mb-2">
           {files.map(f => (
             <span key={f.url} className="flex items-center gap-1.5 pl-2.5 pr-1.5 py-1.5 rounded-full text-[11px] bg-surface-raised border border-hairline text-primary">
               <FileText className="w-3 h-3" />
@@ -48,7 +48,7 @@ export default function ChatComposer({ value, onChange, onSend, sending, onVoice
         </div>
       )}
       {/* Móvil: input arriba, acciones grandes abajo. Desktop: una sola fila. */}
-      <div className="max-w-3xl mx-auto flex flex-col sm:flex-row sm:items-center gap-2 px-3 sm:pl-5 sm:pr-2 py-2 rounded-3xl sm:rounded-full bg-surface border border-hairline">
+      <div className="max-w-5xl mx-auto flex flex-col sm:flex-row sm:items-center gap-2 px-3 sm:pl-5 sm:pr-2 py-2 rounded-3xl sm:rounded-full bg-surface border border-hairline">
         <input
           value={value}
           onChange={e => onChange(e.target.value)}
@@ -81,7 +81,7 @@ export default function ChatComposer({ value, onChange, onSend, sending, onVoice
           </button>
         </div>
       </div>
-      <p className="max-w-3xl mx-auto text-[10px] text-center mt-2 hidden sm:block text-muted-foreground">
+      <p className="max-w-5xl mx-auto text-[10px] text-center mt-2 hidden sm:block text-muted-foreground">
         GO opera con los datos reales de tu obra, analiza tus documentos y registra cada acción que ejecuta.
       </p>
     </div>
