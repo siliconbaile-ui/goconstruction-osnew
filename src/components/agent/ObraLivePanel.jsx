@@ -1,11 +1,40 @@
 import { Link } from 'react-router-dom';
 import { MessageSquare, Loader2, ArrowRight, Plus, X } from 'lucide-react';
+import BotonKPI from './panel/BotonKPI';
 
 const NIVEL_COLOR = {
   critica: 'hsl(var(--danger))',
   advertencia: 'hsl(var(--warn))',
   info: 'hsl(var(--info))',
 };
+
+// Cada KPI es un botón que le encarga a GO el análisis de ese frente.
+const KPIS = [
+  {
+    label: 'alertas activas',
+    valor: s => s.alertas,
+    color: s => (s.alertas > 0 ? 'hsl(var(--danger))' : 'hsl(var(--ok))'),
+    prompt: 'Dame las alertas activas priorizadas por criticidad y qué hago con cada una',
+  },
+  {
+    label: 'partidas en rojo',
+    valor: s => s.desviaciones,
+    color: s => (s.desviaciones > 0 ? 'hsl(var(--warn))' : 'hsl(var(--ok))'),
+    prompt: 'Dime las partidas con peor desviación, la causa raíz y el impacto en días',
+  },
+  {
+    label: 'RDIs abiertos',
+    valor: s => s.rdis,
+    color: () => 'hsl(var(--foreground))',
+    prompt: 'Estado de los RDIs abiertos: vencidos, sin especialista y qué destrabar primero',
+  },
+  {
+    label: 'EDPs bloqueados',
+    valor: s => s.pagos,
+    color: s => (s.pagos > 0 ? 'hsl(var(--danger))' : 'hsl(var(--ok))'),
+    prompt: 'Qué EDPs están bloqueados, por qué NC y cuánta plata está retenida',
+  },
+];
 
 export default function ObraLivePanel({
   tab, setTab, stats, topAlerts, conversations, activeId, setActiveId,
@@ -14,55 +43,37 @@ export default function ObraLivePanel({
   return (
     <aside className={movil
       ? 'w-full h-full flex flex-col min-h-0 p-3'
-      : 'w-80 flex-shrink-0 hidden lg:flex flex-col min-h-0 p-4'}>
+      : 'w-72 xl:w-80 flex-shrink-0 hidden lg:flex flex-col min-h-0 p-3'}>
       <div className="flex flex-col min-h-0 flex-1 rounded-2xl overflow-hidden bg-surface border border-hairline">
-        {/* Header */}
-        <div className="px-5 pt-5 pb-4 flex-shrink-0 border-b border-hairline">
-          <div className="flex items-start justify-between gap-2">
-            <div>
-              <div className="text-[10px] font-mono tracking-widest mb-1 text-primary">TU OBRA, EN VIVO</div>
-              <div className="text-lg font-semibold leading-tight text-foreground">Así se ve tu obra ahora</div>
-            </div>
-            <div className="flex items-center gap-2 flex-shrink-0">
-              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono bg-primary text-primary-foreground">
-                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: 'hsl(var(--ok))' }} />
-                EN VIVO
-              </span>
-              {movil && (
-                <button onClick={onCerrar} aria-label="Cerrar panel"
-                  className="w-10 h-10 rounded-full flex items-center justify-center bg-surface-raised text-muted-foreground">
-                  <X className="w-4 h-4" />
-                </button>
-              )}
-            </div>
+        {/* Header compacto: una línea de estado + KPIs accionables */}
+        <div className="px-3 pt-3 pb-3 flex-shrink-0 border-b border-hairline">
+          <div className="flex items-center gap-2 mb-2.5">
+            <span className="w-1.5 h-1.5 rounded-full animate-pulse flex-shrink-0" style={{ background: 'hsl(var(--ok))' }} />
+            <span className="text-[10px] font-mono tracking-widest text-primary truncate">TU OBRA · EN VIVO</span>
+            {movil && (
+              <button onClick={onCerrar} aria-label="Cerrar panel"
+                className="ml-auto w-10 h-10 rounded-full flex items-center justify-center bg-surface-raised text-muted-foreground">
+                <X className="w-4 h-4" />
+              </button>
+            )}
           </div>
-          <p className="text-[11px] mt-2 leading-relaxed text-muted-foreground">
-            Toca cualquier dato o pregúntale a Orion: este panel es tu obra.
-          </p>
 
-          <div className="grid grid-cols-2 gap-2 mt-4">
-            {[
-              { l: 'alertas activas', v: stats.alertas, c: stats.alertas > 0 ? 'hsl(var(--danger))' : 'hsl(var(--ok))' },
-              { l: 'partidas en rojo', v: stats.desviaciones, c: stats.desviaciones > 0 ? 'hsl(var(--warn))' : 'hsl(var(--ok))' },
-              { l: 'RDIs abiertos', v: stats.rdis, c: 'hsl(var(--foreground))' },
-              { l: 'EDPs bloqueados', v: stats.pagos, c: stats.pagos > 0 ? 'hsl(var(--danger))' : 'hsl(var(--ok))' },
-            ].map(k => (
-              <div key={k.l} className="rounded-xl px-4 py-3.5 bg-surface-raised">
-                <div className="text-2xl sm:text-xl font-semibold leading-none" style={{ color: k.c }}>{k.v}</div>
-                <div className="text-[11px] mt-1.5 text-muted-foreground">{k.l}</div>
-              </div>
+          <div className="grid grid-cols-2 gap-1.5">
+            {KPIS.map(k => (
+              <BotonKPI key={k.label} valor={k.valor(stats)} label={k.label}
+                color={k.color(stats)} onClick={() => onPrompt(k.prompt)} />
             ))}
           </div>
 
-          <div className="flex gap-1.5 mt-4">
+          <div className="flex gap-1 mt-2.5 p-0.5 rounded-lg bg-surface-raised">
             {[
               { key: 'alertas', label: 'Alertas' },
               { key: 'acciones', label: 'Acciones' },
               { key: 'sesiones', label: 'Sesiones' },
             ].map(t => (
               <button key={t.key} onClick={() => setTab(t.key)}
-                className={`flex-1 sm:flex-none min-h-10 px-3 py-2 rounded-full text-xs font-medium transition-colors ${
-                  tab === t.key ? 'bg-primary text-primary-foreground' : 'bg-surface-raised text-muted-foreground'}`}>
+                className={`flex-1 py-1.5 rounded-md text-[11px] font-medium transition-colors ${
+                  tab === t.key ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}>
                 {t.label}
               </button>
             ))}
@@ -70,13 +81,13 @@ export default function ObraLivePanel({
         </div>
 
         {/* Body */}
-        <div className="flex-1 overflow-y-auto min-h-0 p-4 space-y-2.5">
+        <div data-scroll-area className="flex-1 overflow-y-auto min-h-0 p-2.5 space-y-2">
           {tab === 'alertas' && (
             topAlerts.length === 0 ? (
               <p className="text-xs text-center py-6 text-muted-foreground">Sin alertas activas. Operación normal.</p>
             ) : topAlerts.map(a => (
               <button key={a.id} onClick={() => onPrompt(`Revisa la alerta "${a.titulo}" y dime qué debo hacer`)}
-                className="w-full text-left rounded-xl p-4 border border-hairline transition-colors hover:border-primary/40 active:opacity-80">
+                className="w-full text-left rounded-lg px-3 py-2.5 border border-hairline transition-colors hover:border-primary/40 active:opacity-80">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="w-1.5 h-1.5 rounded-full" style={{ background: NIVEL_COLOR[a.nivel] || 'hsl(var(--info))' }} />
                   <span className="text-[10px] font-mono uppercase tracking-wider" style={{ color: NIVEL_COLOR[a.nivel] || 'hsl(var(--muted-foreground))' }}>
@@ -97,7 +108,7 @@ export default function ObraLivePanel({
             'Dime las 3 partidas con peor desviación y qué hacer',
           ].map(a => (
             <button key={a} onClick={() => onPrompt(a)}
-              className="w-full text-left rounded-xl p-4 min-h-12 text-sm font-medium border border-hairline text-foreground/85 transition-colors hover:border-primary/40 active:opacity-80 flex items-center gap-2">
+              className="w-full text-left rounded-lg px-3 py-2.5 min-h-11 text-xs font-medium border border-hairline text-foreground/85 transition-colors hover:border-primary/40 active:opacity-80 flex items-center gap-2">
               <span className="flex-1">{a}</span>
               <ArrowRight className="w-3.5 h-3.5 flex-shrink-0 text-primary" />
             </button>
@@ -148,9 +159,9 @@ export default function ObraLivePanel({
         </div>
 
         {/* CTA */}
-        <div className="p-4 flex-shrink-0 border-t border-hairline">
+        <div className="p-2.5 flex-shrink-0 border-t border-hairline">
           <Link to="/informe-ejecutivo"
-            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-semibold tracking-wide bg-primary text-primary-foreground">
+            className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg text-[11px] font-semibold tracking-wide bg-primary text-primary-foreground">
             VER INFORME EJECUTIVO <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
