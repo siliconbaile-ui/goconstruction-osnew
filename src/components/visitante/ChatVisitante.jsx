@@ -12,7 +12,8 @@ const SUGERENCIAS = [
 ];
 
 // Chat efímero de visitante: sin login, sin datos de obra, sin persistencia entre visitas.
-export default function ChatVisitante() {
+export default function ChatVisitante({ sugerencias, saludo }) {
+  const chips = sugerencias?.length ? sugerencias : SUGERENCIAS;
   const [conv, setConv] = useState(null);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
@@ -75,11 +76,11 @@ export default function ChatVisitante() {
                 <Sparkles className="w-3 h-3 text-primary-foreground" />
               </span>
               <p className="text-sm text-foreground/90 leading-relaxed">
-                Soy GO. Te explico cómo funciona o puedes ver un demo con una obra real cargada. ¿Qué prefieres?
+                {saludo || 'Soy GO. Te explico cómo funciona o puedes ver un demo con una obra real cargada. ¿Qué prefieres?'}
               </p>
             </div>
             <div className="flex flex-wrap gap-2 pl-8">
-              {SUGERENCIAS.map(s => (
+              {chips.map(s => (
                 <button key={s} onClick={() => send(s)}
                   className="px-3 py-1.5 rounded-full text-[11px] border border-hairline bg-surface-raised text-foreground/80 hover:border-primary/40">
                   {s}

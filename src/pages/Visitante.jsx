@@ -6,6 +6,7 @@ import Logo from '@/components/marca/Logo';
 import ChatVisitante from '@/components/visitante/ChatVisitante';
 import FooterPublico from '@/components/marca/FooterPublico';
 import PruebaValor from '@/components/visitante/PruebaValor';
+import OtrosCasos from '@/components/landing/OtrosCasos';
 
 // MODO 1 · VISITANTE: primera impresión sin login y sin datos de obra.
 // Si ya hay sesión, se entra directo a operar.
@@ -54,6 +55,8 @@ export default function Visitante() {
         </div>
 
         <PruebaValor />
+
+        <OtrosCasos actual="" />
 
         <ChatVisitante />
 

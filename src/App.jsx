@@ -30,6 +30,10 @@ import OnboardingEmpresa from '@/pages/OnboardingEmpresa';
 import Visitante from '@/pages/Visitante';
 import Demo from '@/pages/Demo';
 import Nosotros from '@/pages/Nosotros';
+import CasoControlCalidad from '@/pages/CasoControlCalidad';
+import CasoEdpPagos from '@/pages/CasoEdpPagos';
+import CasoRdiAutomaticos from '@/pages/CasoRdiAutomaticos';
+import CasoWhatsappBim from '@/pages/CasoWhatsappBim';
 import Contacto from '@/pages/Contacto';
 import Privacidad from '@/pages/Privacidad';
 import Terminos from '@/pages/Terminos';
@@ -59,6 +63,10 @@ const AuthenticatedApp = () => {
     <Routes>
       <Route path="/" element={<Visitante />} />
       <Route path="/demo" element={<Demo />} />
+      <Route path="/control-calidad" element={<CasoControlCalidad />} />
+      <Route path="/edp-pagos" element={<CasoEdpPagos />} />
+      <Route path="/rdi-automaticos" element={<CasoRdiAutomaticos />} />
+      <Route path="/whatsapp-bim" element={<CasoWhatsappBim />} />
       <Route path="/nosotros" element={<Nosotros />} />
       <Route path="/contacto" element={<Contacto />} />
       <Route path="/privacidad" element={<Privacidad />} />
