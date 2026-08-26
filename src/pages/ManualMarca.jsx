@@ -4,6 +4,8 @@ import BloqueManual from '@/components/marca/BloqueManual';
 import TemaCard from '@/components/marca/TemaCard';
 import ChatPreview from '@/components/marca/ChatPreview';
 import TokensGrid from '@/components/marca/TokensGrid';
+import KitDescargas from '@/components/marca/KitDescargas';
+import CopysMarca from '@/components/marca/CopysMarca';
 
 const PRINCIPIOS = [
   { icon: MessageSquare, t: 'La conversación es la interfaz', d: 'El menú es un atajo, no el producto. Todo lo que el OS sabe hacer debe poder pedirse hablando.' },
@@ -145,6 +147,18 @@ export default function ManualMarca() {
             </div>
           ))}
         </div>
+      </BloqueManual>
+
+      {/* 07 Kit de descargas */}
+      <BloqueManual numero="07" titulo="Kit de descargas"
+        bajada="Todas las variantes oficiales del logo en PNG de alta resolución, más la imagen 1200×630 que aparece al compartir el link en WhatsApp, LinkedIn y redes. Cada asset tiene URL pública estable para pegarla donde la necesites.">
+        <KitDescargas />
+      </BloqueManual>
+
+      {/* 08 Relato y copys */}
+      <BloqueManual numero="08" titulo="Relato de marca y copys oficiales"
+        bajada="El pitch, la bio de redes, el mensaje de WhatsApp y la ficha comercial — redactados en la voz de la marca y listos para copiar. Nadie improvisa el relato: se pega.">
+        <CopysMarca />
       </BloqueManual>
 
       <footer className="pt-6 border-t border-hairline">
