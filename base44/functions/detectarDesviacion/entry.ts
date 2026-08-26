@@ -1,4 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
+import { automatizacionPermitida } from '../../shared/gobernanza.ts';
 
 export default async function(req) {
   try {
@@ -8,6 +9,10 @@ export default async function(req) {
 
     const partida = await base44.asServiceRole.entities.PartidaControl.get(partida_id);
     if (!partida) return Response.json({ error: 'Partida no encontrada' }, { status: 404 });
+
+    // G1 · el demo no contamina las alertas reales
+    const permiso = await automatizacionPermitida(base44, partida.proyecto_id);
+    if (!permiso.permitida) return Response.json({ status: 'skip', motivo: permiso.motivo, alerta_creada: false });
 
     const prog = partida.avance_programado || 0;
     const real = partida.avance_real || 0;

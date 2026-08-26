@@ -1,4 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
+import { automatizacionPermitida } from '../../shared/gobernanza.ts';
 
 const DIA_MS = 24 * 60 * 60 * 1000;
 
@@ -14,8 +15,13 @@ export default async function(req) {
 
     let vencidos = 0;
     let alertas = 0;
+    let omitidos = 0;
 
     for (const rdi of abiertos) {
+      // G1 · proyectos demo, pausados o en configuración quedan fuera
+      const permiso = await automatizacionPermitida(base44, rdi.proyecto_id);
+      if (!permiso.permitida) { omitidos++; continue; }
+
       const estaVencido = rdi.fecha_vencimiento && rdi.fecha_vencimiento < hoyStr;
       // Regla: RDI sin especialista asignado no puede superar 2h desde su creación
       const horasSinAsignar = rdi.created_date
@@ -65,6 +71,7 @@ export default async function(req) {
     return Response.json({
       status: 'ok',
       rdis_evaluados: abiertos.length,
+      omitidos_demo: omitidos,
       marcados_vencidos: vencidos,
       alertas_creadas: alertas,
     });

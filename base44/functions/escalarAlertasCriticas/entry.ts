@@ -1,4 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
+import { automatizacionPermitida } from '../../shared/gobernanza.ts';
 
 const ESCALATION_CHAIN = {
   jefe_terreno: 'gerencia_media',
@@ -35,7 +36,12 @@ export default async function(req) {
     });
 
     const escalated = [];
+    let omitidos = 0;
     for (const alert of toEscalate) {
+      // G1 · no se escala nada de un proyecto demo, pausado o en configuración
+      const permiso = await automatizacionPermitida(base44, alert.proyecto_id);
+      if (!permiso.permitida) { omitidos++; continue; }
+
       const newRol = ESCALATION_CHAIN[alert.destinatario_rol] || 'gerencia_media';
       const hours = alert.horas_sin_respuesta && alert.horas_sin_respuesta > 0
         ? alert.horas_sin_respuesta
@@ -75,6 +81,7 @@ export default async function(req) {
       status: 'success',
       evaluated: candidates.length,
       escalated: escalated.length,
+      skipped_demo: omitidos,
       details: escalated,
     });
   } catch (error) {
