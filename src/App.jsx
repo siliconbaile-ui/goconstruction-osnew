@@ -31,6 +31,8 @@ import Visitante from '@/pages/Visitante';
 import Demo from '@/pages/Demo';
 import Nosotros from '@/pages/Nosotros';
 import Contacto from '@/pages/Contacto';
+import Privacidad from '@/pages/Privacidad';
+import Terminos from '@/pages/Terminos';
 import GuardOnboarding from '@/components/onboarding/GuardOnboarding';
 
 const AuthenticatedApp = () => {
@@ -59,6 +61,8 @@ const AuthenticatedApp = () => {
       <Route path="/demo" element={<Demo />} />
       <Route path="/nosotros" element={<Nosotros />} />
       <Route path="/contacto" element={<Contacto />} />
+      <Route path="/privacidad" element={<Privacidad />} />
+      <Route path="/terminos" element={<Terminos />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />

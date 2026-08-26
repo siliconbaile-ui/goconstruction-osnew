@@ -9,6 +9,8 @@ export default function FooterPublico() {
         <Link to="/nosotros" className="text-muted-foreground hover:text-primary">Nosotros</Link>
         <Link to="/contacto" className="text-muted-foreground hover:text-primary">Contacto</Link>
         <Link to="/demo" className="text-muted-foreground hover:text-primary">Demo</Link>
+        <Link to="/privacidad" className="text-muted-foreground hover:text-primary">Privacidad</Link>
+        <Link to="/terminos" className="text-muted-foreground hover:text-primary">Términos</Link>
         <Link to="/login" className="text-muted-foreground hover:text-primary">Iniciar sesión</Link>
       </nav>
       <div className="text-[10px] font-mono tracking-widest text-muted-foreground">
