@@ -27,6 +27,8 @@ import EvidenciaTerreno from '@/pages/EvidenciaTerreno';
 import VisionUrgente from '@/pages/VisionUrgente';
 import ManualMarca from '@/pages/ManualMarca';
 import OnboardingEmpresa from '@/pages/OnboardingEmpresa';
+import Visitante from '@/pages/Visitante';
+import Demo from '@/pages/Demo';
 import GuardOnboarding from '@/components/onboarding/GuardOnboarding';
 
 const AuthenticatedApp = () => {
@@ -51,6 +53,8 @@ const AuthenticatedApp = () => {
 
   return (
     <Routes>
+      <Route path="/" element={<Visitante />} />
+      <Route path="/demo" element={<Demo />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -58,7 +62,7 @@ const AuthenticatedApp = () => {
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
       <Route element={<GuardOnboarding />}>
       <Route element={<Layout />}>
-        <Route path="/" element={<AsistenteOrion />} />
+        <Route path="/app" element={<AsistenteOrion />} />
         <Route path="/vision-urgente" element={<VisionUrgente />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/monitor-avance" element={<MonitorAvance />} />
