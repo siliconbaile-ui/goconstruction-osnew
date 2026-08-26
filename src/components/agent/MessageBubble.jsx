@@ -6,6 +6,7 @@ import {
 import SmartDataCard from './SmartDataCard';
 import InformeSubagente from './InformeSubagente';
 import GrafoInteractivo from './grafo/GrafoInteractivo';
+import GrafoDesdeFuncion from './grafo/GrafoDesdeFuncion';
 import MessageActions from './MessageActions';
 import toolMeta from '@/lib/toolMeta';
 
@@ -37,7 +38,7 @@ function ToolCallDisplay({ toolCall }) {
     }
   })();
   const resultIsError = parsedResults && typeof parsedResults === 'object' &&
-    (parsedResults.success === false || /error|failed/i.test(JSON.stringify(parsedResults)));
+    (parsedResults.success === false || parsedResults.ok === false || !!parsedResults.error);
   const effectiveFailed = failed || resultIsError;
 
   let label = meta.label;
@@ -69,6 +70,9 @@ function ToolCallDisplay({ toolCall }) {
     : null;
   const grafoVisual = grafoData && Array.isArray(grafoData.nodos) && grafoData.nodos.length > 0 ? grafoData : null;
   const resumenGrafo = parsedResults?.resumen || parsedResults?.data?.resumen;
+  // Grafo truncado en la conversación: se re-pide directo a la función para dibujarlo.
+  const grafoRecuperable = !grafoVisual && !hideDetails && !effectiveFailed &&
+    /grafo/i.test(toolCall.name || '') && ['success', 'completed'].includes(status);
 
   return (
     <div className="mt-2 text-xs rounded-xl overflow-hidden bg-surface-raised border border-hairline"
@@ -98,6 +102,11 @@ function ToolCallDisplay({ toolCall }) {
       {grafoVisual && !expanded && (
         <div className="px-3 pb-3">
           <GrafoInteractivo grafo={grafoVisual} resumen={resumenGrafo} />
+        </div>
+      )}
+      {grafoRecuperable && !expanded && (
+        <div className="px-3 pb-3">
+          <GrafoDesdeFuncion args={args} />
         </div>
       )}
       {informe && !grafoVisual && !expanded && (
