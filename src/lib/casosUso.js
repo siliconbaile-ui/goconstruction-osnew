@@ -21,6 +21,8 @@ export const CASOS = {
       { titulo: 'Bloqueo automático de pago', texto: 'Una NC crítica abierta bloquea el EDP de la partida. El control de calidad deja de ser una recomendación.' },
       { titulo: 'Escalamiento por tiempo', texto: 'Si la NC crítica no se mueve, sube sola de jefe de terreno a gerencia. Nada queda esperando un correo.' },
     ],
+    gancho: 'Esta NC crítica bloqueó un pago de $240.000 en la obra demo. Pregúntame qué pasó.',
+    contexto: 'Escenario de demostración cargado. Estás atendiendo a un visitante en la landing de control de calidad. Sitúate en este caso real de la obra demo: en la partida "Losa nivel 3", una inspección detectó recubrimiento de armadura insuficiente respecto de lo exigido por la NCh 430 y las EETT del proyecto. Se levantó una no conformidad crítica, lo que bloqueó automáticamente el estado de pago de esa partida por $240.000, y se escaló a gerencia por falta de respuesta. Abre la conversación en dos o tres frases: presenta el caso concreto con esas cifras, di que puede preguntarte lo que quiera sobre él, e invítalo a probar la demo completa. No listes funcionalidades; conversa como el jefe técnico que vivió el caso.',
     chatSaludo: 'Soy GO. Cuéntame qué problema de calidad tienes hoy en obra y te muestro cómo lo resolvería con tus documentos.',
     chatChips: [
       '¿Cómo registran una no conformidad crítica?',
@@ -51,6 +53,8 @@ export const CASOS = {
       { titulo: 'Trazabilidad contractual', texto: 'Cada EDP guarda monto, porcentaje, subcontratista, quién firmó, cuándo y por qué se rechazó o se bloqueó. El historial existe cuando lo necesitas.' },
       { titulo: 'Semáforo por partida', texto: 'Ves de una sola vista qué está bloqueado, qué espera firma y cuánto dinero está detenido y por qué motivo.' },
     ],
+    gancho: 'Este EDP lleva 18 días retenido en la obra demo. Pregúntame por qué.',
+    contexto: 'Escenario de demostración cargado. Estás atendiendo a un visitante en la landing de estados de pago. Sitúate en este caso real de la obra demo: el EDP-014 del subcontratista de obra gruesa, por $18.400.000 y 62% de avance declarado, lleva 18 días retenido. Tiene avance verificado, pero no calidad verificada, porque la partida asociada arrastra una no conformidad crítica abierta. Bajo el criterio "no quality, no pay", el pago no avanza hasta que la NC se cierre con evidencia. Abre la conversación en dos o tres frases: presenta el caso con esas cifras, invítalo a preguntar lo que quiera y ofrécele ver la demo completa. No listes funcionalidades; conversa como el jefe técnico que revisó ese EDP.',
     chatSaludo: 'Soy GO. Dime cómo revisas hoy los estados de pago y te muestro dónde se te está escapando plata.',
     chatChips: [
       '¿Cómo verifican el avance antes de pagar?',
@@ -81,6 +85,8 @@ export const CASOS = {
       { titulo: 'Vigilancia de vencimientos', texto: 'Los RDIs próximos a vencer y los vencidos generan alerta y escalan solos según prioridad.' },
       { titulo: 'Evidencia georreferenciada', texto: 'El RDI puede nacer de una foto de terreno con coordenadas, así el especialista entiende el contexto real sin ir a la obra.' },
     ],
+    gancho: 'Este RDI ya estaba respondido hace tres meses. Pregúntame si era necesario emitirlo.',
+    contexto: 'Escenario de demostración cargado. Estás atendiendo a un visitante en la landing de RDIs. Sitúate en este caso real de la obra demo: se intentó emitir el RDI-047 sobre el tipo de sello en juntas de dilatación del subterráneo. Al revisar los requerimientos previos del proyecto, resultó que el RDI-019, cerrado tres meses antes, ya tenía la respuesta, con cita del plano A-204 y de la EETT en su página 88. Además hay otro RDI vencido, el RDI-041, que tiene detenida una partida de instalaciones. Abre la conversación en dos o tres frases: presenta el caso concreto, invítalo a preguntar y ofrécele la demo completa. No listes funcionalidades; conversa como el jefe técnico que interceptó ese RDI.',
     chatSaludo: 'Soy GO. Plantéame la duda técnica como se la plantearías al proyectista y te muestro cómo se convierte en un RDI bien fundado.',
     chatChips: [
       '¿Cómo detectan un RDI repetido?',
@@ -111,6 +117,8 @@ export const CASOS = {
       { titulo: 'Cruce con el proyecto', texto: 'GO compara lo que ve con planos y EETT indexados, y responde citando la página cuando hay una desviación.' },
       { titulo: 'Nota de voz transcrita', texto: 'El capataz habla, GO transcribe y registra. En obra hablar es más rápido que escribir con guantes.' },
     ],
+    gancho: 'Descríbeme una foto de tu obra, como si me la mandara el capataz. Te muestro qué pasa después.',
+    contexto: 'Escenario de demostración cargado. Estás atendiendo a un visitante en la landing de terreno por WhatsApp. Sitúate en este caso real de la obra demo: el capataz envió por WhatsApp una foto de una fisura en el muro del eje 7, tercer piso. La imagen quedó registrada con coordenadas, se asoció a la partida de albañilería, se comparó con el plano E-112 y la EETT correspondiente, y se levantó una inspección de calidad con responsable y plazo de cierre. Abre la conversación en dos o tres frases: presenta el caso, pídele que te describa en palabras una foto de su propia obra como si te la mandara el capataz para mostrarle el flujo completo, y ofrécele la demo. No listes funcionalidades; conversa como el jefe técnico que recibió ese mensaje.',
     chatSaludo: 'Soy GO. Cuéntame cómo reporta hoy tu gente en terreno y te muestro cómo se vería ese mismo reporte ordenado.',
     chatChips: [
       '¿Cómo conecto el WhatsApp de la obra?',
