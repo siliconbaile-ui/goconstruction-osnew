@@ -54,11 +54,14 @@ export default function Visitante() {
           </Link>
         </div>
 
+        <div className="space-y-2">
+          <p className="font-mono text-[11px] tracking-wider text-primary">HABLA CON GO AHORA</p>
+          <ChatVisitante />
+        </div>
+
         <PruebaValor />
 
         <OtrosCasos actual="" />
-
-        <ChatVisitante />
 
         <p className="text-[11px] font-mono text-muted-foreground">
           ¿Ya tienes cuenta? <Link to="/login" className="text-primary">Iniciar sesión</Link>

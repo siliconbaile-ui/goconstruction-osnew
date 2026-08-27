@@ -23,6 +23,7 @@ export default function ChatVisitante({ sugerencias, saludo, contexto, alEvento 
   const [sending, setSending] = useState(false);
   const [preparando, setPreparando] = useState(Boolean(contexto));
   const [error, setError] = useState(false);
+  const [intento, setIntento] = useState(0);
   const enviadosRef = useRef(0);
   const scrollRef = useRef(null);
 
@@ -30,26 +31,34 @@ export default function ChatVisitante({ sugerencias, saludo, contexto, alEvento 
     let mounted = true;
     let unsub;
     (async () => {
-      try {
-        const c = await base44.agents.createConversation({ agent_name: AGENT_NAME });
-        if (!mounted) return;
-        setConv(c);
-        unsub = base44.agents.subscribeToConversation(c.id, (data) => {
-          if (mounted && Array.isArray(data?.messages)) {
-            setMessages(data.messages);
-            if (data.messages.some(m => m.role === 'assistant')) setPreparando(false);
+      // Un reintento silencioso: la creación de conversación falla de forma
+      // intermitente y el visitante no debe ver un panel muerto por eso.
+      for (let i = 0; i < 2; i++) {
+        try {
+          const c = await base44.agents.createConversation({ agent_name: AGENT_NAME });
+          if (!mounted) return;
+          setConv(c);
+          setError(false);
+          unsub = base44.agents.subscribeToConversation(c.id, (data) => {
+            if (mounted && Array.isArray(data?.messages)) {
+              setMessages(data.messages);
+              if (data.messages.some(m => m.role === 'assistant')) setPreparando(false);
+            }
+          });
+          if (contexto) {
+            const fresh = await base44.agents.getConversation(c.id);
+            await base44.agents.addMessage(fresh, { role: 'user', content: contexto });
           }
-        });
-        if (contexto) {
-          const fresh = await base44.agents.getConversation(c.id);
-          await base44.agents.addMessage(fresh, { role: 'user', content: contexto });
+          return;
+        } catch {
+          if (!mounted) return;
+          if (i === 0) await new Promise(r => setTimeout(r, 1200));
         }
-      } catch {
-        if (mounted) { setError(true); setPreparando(false); }
       }
+      if (mounted) { setError(true); setPreparando(false); }
     })();
     return () => { mounted = false; if (unsub) unsub(); };
-  }, [contexto]);
+  }, [contexto, intento]);
 
   useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -77,8 +86,18 @@ export default function ChatVisitante({ sugerencias, saludo, contexto, alEvento 
 
   if (error) {
     return (
-      <div className="orion-panel p-5 text-sm text-muted-foreground">
-        El chat de demostración no está disponible en este momento. Puedes ver el demo o registrarte con los botones de arriba.
+      <div className="orion-panel orion-elevated flex flex-col items-center justify-center gap-3 text-center px-6"
+        style={{ height: 'min(64vh, 560px)' }}>
+        <span className="w-9 h-9 rounded-full flex items-center justify-center bg-surface-raised border border-hairline">
+          <Sparkles className="w-4 h-4 text-primary" />
+        </span>
+        <p className="text-sm text-muted-foreground max-w-sm">
+          No pude iniciar la conversación. Vuelve a intentarlo o entra directo a la demo con la obra cargada.
+        </p>
+        <button onClick={() => { setError(false); setPreparando(Boolean(contexto)); setIntento(n => n + 1); }}
+          className="px-4 py-2 rounded-xl text-xs font-semibold bg-primary text-primary-foreground">
+          Reintentar
+        </button>
       </div>
     );
   }
