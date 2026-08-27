@@ -11,7 +11,7 @@ const CAMPOS = [
 
 export default function PasoEmpresa({ form, setForm, onNext, guardando }) {
   return (
-    <div className="orion-panel p-5 sm:p-6">
+    <div className="orion-panel orion-elevated p-5 sm:p-7">
       <div className="flex items-center gap-2 mb-5">
         <Building2 className="w-4 h-4 text-primary" />
         <span className="text-[11px] font-mono tracking-widest text-muted-foreground">PASO 1 · DATOS DE LA EMPRESA</span>
@@ -24,7 +24,7 @@ export default function PasoEmpresa({ form, setForm, onNext, guardando }) {
               value={form[c.key] || ''}
               placeholder={c.placeholder}
               onChange={e => setForm(p => ({ ...p, [c.key]: e.target.value }))}
-              className="w-full px-3 py-2.5 rounded-lg text-sm bg-surface-raised border border-hairline text-foreground"
+              className="w-full px-3 py-2.5 rounded-lg text-sm bg-surface-raised border border-hairline text-foreground transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/25"
             />
           </div>
         ))}
@@ -32,7 +32,7 @@ export default function PasoEmpresa({ form, setForm, onNext, guardando }) {
       <button
         onClick={onNext}
         disabled={!form.nombre?.trim() || guardando}
-        className="w-full sm:w-auto px-6 py-3 rounded-xl text-sm font-semibold bg-primary text-primary-foreground disabled:opacity-40"
+        className="w-full px-6 py-3.5 rounded-xl text-sm font-semibold bg-primary text-primary-foreground disabled:opacity-40 transition-opacity"
       >
         {guardando ? 'Guardando...' : 'Continuar → Equipo'}
       </button>

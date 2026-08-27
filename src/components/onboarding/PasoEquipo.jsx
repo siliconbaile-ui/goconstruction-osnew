@@ -26,7 +26,7 @@ export default function PasoEquipo({ miCargo, setMiCargo, onNext, onBack, guarda
   };
 
   return (
-    <div className="orion-panel p-5 sm:p-6">
+    <div className="orion-panel orion-elevated p-5 sm:p-7">
       <div className="flex items-center gap-2 mb-5">
         <Users className="w-4 h-4 text-primary" />
         <span className="text-[11px] font-mono tracking-widest text-muted-foreground">
@@ -58,7 +58,7 @@ export default function PasoEquipo({ miCargo, setMiCargo, onNext, onBack, guarda
             onChange={e => setEmail(e.target.value)}
             placeholder="correo@empresa.cl"
             type="email"
-            className="flex-1 px-3 py-2.5 rounded-lg text-sm bg-surface-raised border border-hairline text-foreground"
+            className="flex-1 px-3 py-2.5 rounded-lg text-sm bg-surface-raised border border-hairline text-foreground transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/25"
           />
           <select value={rol} onChange={e => setRol(e.target.value)}
             className="px-3 py-2.5 rounded-lg text-sm bg-surface-raised border border-hairline text-foreground">
@@ -90,7 +90,7 @@ export default function PasoEquipo({ miCargo, setMiCargo, onNext, onBack, guarda
           <button onClick={onBack} className="px-5 py-3 rounded-xl text-sm text-muted-foreground bg-surface-raised border border-hairline">← Atrás</button>
         )}
         <button onClick={onNext} disabled={!miCargo || guardando}
-          className="flex-1 sm:flex-none px-6 py-3 rounded-xl text-sm font-semibold bg-primary text-primary-foreground disabled:opacity-40">
+          className="flex-1 px-6 py-3.5 rounded-xl text-sm font-semibold bg-primary text-primary-foreground disabled:opacity-40 transition-opacity">
           {guardando ? 'Guardando...' : soloCargo ? 'Entrar a operar' : 'Continuar → Primera obra'}
         </button>
       </div>

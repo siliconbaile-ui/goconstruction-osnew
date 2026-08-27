@@ -14,9 +14,12 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   // Post-login destination (e.g. the MCP OAuth consent page sends users here
   // with returnTo so the grant flow can resume). Same-origin paths only.
   const returnTo = safeReturnTo();
+  // Sin returnTo explícito se entra directo a operar, sin pasar por la portada.
+  const destino = returnTo === "/" ? "/app" : returnTo;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,7 +27,7 @@ export default function Login() {
     setLoading(true);
     try {
       await base44.auth.loginViaEmailPassword(email, password);
-      window.location.href = returnTo;
+      window.location.href = destino;
     } catch (err) {
       setError(err.message || "Correo o contraseña incorrectos");
     } finally {
@@ -33,7 +36,8 @@ export default function Login() {
   };
 
   const handleGoogle = () => {
-    base44.auth.loginWithProvider("google", returnTo);
+    setGoogleLoading(true);
+    base44.auth.loginWithProvider("google", destino);
   };
 
   return (
@@ -57,9 +61,19 @@ export default function Login() {
         variant="outline"
         className="w-full h-12 text-sm font-medium mb-6"
         onClick={handleGoogle}
+        disabled={googleLoading || loading}
       >
-        <GoogleIcon className="w-5 h-5 mr-2" />
-        Continuar con Google
+        {googleLoading ? (
+          <>
+            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            Conectando con Google...
+          </>
+        ) : (
+          <>
+            <GoogleIcon className="w-5 h-5 mr-2" />
+            Continuar con Google
+          </>
+        )}
       </Button>
 
       <div className="relative mb-6">

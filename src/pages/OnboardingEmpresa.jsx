@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Check } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import Logo from '@/components/marca/Logo';
 import RelatoPaso from '@/components/onboarding/RelatoPaso';
 import PasoTema from '@/components/onboarding/PasoTema';
 import PasoEmpresa from '@/components/onboarding/PasoEmpresa';
@@ -10,6 +13,7 @@ const PASOS = ['Empresa', 'Equipo', 'Primera obra'];
 
 // Onboarding para incorporar una constructora real: datos de la empresa,
 // equipo con cargos, y primera obra (propia o demo para partir probando).
+// Vive a pantalla completa, fuera del shell de la app: sin sidebar ni menús.
 export default function OnboardingEmpresa() {
   const [paso, setPaso] = useState(1);
   const [empresa, setEmpresa] = useState(null);
@@ -48,7 +52,7 @@ export default function OnboardingEmpresa() {
 
   // Recarga completa: la puerta de onboarding vuelve a evaluar el estado real
   // y deja pasar a operar (con navigate() rebotaba de vuelta al wizard).
-  const entrarAOperar = (destino = '/') => { window.location.href = destino; };
+  const entrarAOperar = (destino = '/app') => { window.location.href = destino; };
 
   const guardarEmpresa = async () => {
     setGuardando(true);
@@ -74,7 +78,7 @@ export default function OnboardingEmpresa() {
     try {
       await base44.auth.updateMe({ cargo: miCargo });
       // Usuario invitado a una empresa ya operativa: con su cargo definido entra directo.
-      if (soloCargo) { entrarAOperar('/'); return; }
+      if (soloCargo) { entrarAOperar(); return; }
       await base44.entities.Empresa.update(empresa.id, { onboarding_paso: 3 });
       setPaso(3);
     } catch {
@@ -120,7 +124,7 @@ export default function OnboardingEmpresa() {
         estado: modo === 'demo' ? 'demo' : 'activa',
         onboarding_completado: true,
       });
-      entrarAOperar('/');
+      entrarAOperar();
     } catch {
       setError('No se pudo activar la obra. Revisa los datos e inténtalo otra vez.');
       setGuardando(false);
@@ -129,45 +133,79 @@ export default function OnboardingEmpresa() {
 
   if (cargando) {
     return (
-      <div className="flex items-center justify-center py-20">
+      <div className="fixed inset-0 flex items-center justify-center bg-surface-base">
         <div className="w-7 h-7 border-2 border-primary border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
-  if (eligiendoTema) {
-    return (
-      <div className="max-w-2xl mx-auto p-4 lg:p-6">
-        <PasoTema onNext={() => { localStorage.setItem('gco_tema_elegido', '1'); setEligiendoTema(false); }} />
-      </div>
-    );
-  }
-
   return (
-    <div className="max-w-2xl mx-auto p-4 lg:p-6 space-y-5">
-      <RelatoPaso paso={paso} total={PASOS.length} soloCargo={soloCargo} empresa={empresa} />
+    <div className="min-h-[100dvh] bg-surface-base"
+      style={{ paddingTop: 'max(1.5rem, env(safe-area-inset-top))', paddingBottom: 'max(2rem, env(safe-area-inset-bottom))' }}>
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 space-y-6">
 
-      {/* Indicador de pasos */}
-      <div className={`flex items-center gap-2 ${soloCargo ? 'hidden' : ''}`}>
-        {PASOS.map((p, i) => (
-          <div key={p} className="flex-1">
-            <div className="h-1.5 rounded-full mb-1.5"
-              style={{ background: paso > i ? 'hsl(var(--primary))' : 'hsl(var(--hairline))' }} />
-            <span className={`text-[10px] font-mono ${paso === i + 1 ? 'text-primary' : 'text-muted-foreground'}`}>{i + 1}. {p.toUpperCase()}</span>
-          </div>
-        ))}
+        {eligiendoTema ? (
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }} className="space-y-6">
+            <div className="flex justify-center pt-4"><Logo /></div>
+            <div className="orion-panel orion-elevated p-5 sm:p-7">
+              <PasoTema onNext={() => { localStorage.setItem('gco_tema_elegido', '1'); setEligiendoTema(false); }} />
+            </div>
+          </motion.div>
+        ) : (
+          <>
+            <RelatoPaso paso={paso} total={PASOS.length} soloCargo={soloCargo} empresa={empresa} />
+
+            {/* Indicador de pasos: círculos numerados con conectores */}
+            {!soloCargo && (
+              <div className="flex items-center justify-center gap-0">
+                {PASOS.map((p, i) => {
+                  const completado = paso > i + 1;
+                  const activo = paso === i + 1;
+                  return (
+                    <div key={p} className="flex items-center">
+                      {i > 0 && (
+                        <div className={`w-8 sm:w-14 h-px ${paso > i ? 'bg-primary' : 'bg-hairline'}`} />
+                      )}
+                      <div className="flex flex-col items-center gap-1.5 px-1.5">
+                        <span className={`w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-semibold border transition-colors ${
+                          completado ? 'bg-primary border-primary text-primary-foreground'
+                          : activo ? 'border-primary text-primary bg-primary/10'
+                          : 'border-hairline text-muted-foreground bg-surface'}`}>
+                          {completado ? <Check className="w-3.5 h-3.5" /> : i + 1}
+                        </span>
+                        <span className={`text-[10px] font-mono tracking-wide ${activo ? 'text-primary' : 'text-muted-foreground'}`}>
+                          {p.toUpperCase()}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {error && (
+              <div className="px-4 py-3 rounded-xl text-xs border"
+                style={{ borderColor: 'hsl(var(--danger) / 0.4)', background: 'hsl(var(--danger) / 0.08)', color: 'hsl(var(--danger))' }}>
+                {error}
+              </div>
+            )}
+
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={paso}
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.22 }}
+              >
+                {paso === 1 && <PasoEmpresa form={form} setForm={setForm} onNext={guardarEmpresa} guardando={guardando} />}
+                {paso === 2 && <PasoEquipo miCargo={miCargo} setMiCargo={setMiCargo} onNext={guardarEquipo} onBack={soloCargo ? null : () => setPaso(1)} guardando={guardando} soloCargo={soloCargo} />}
+                {paso === 3 && <PasoObra onFinish={finalizar} onBack={() => setPaso(2)} guardando={guardando} />}
+              </motion.div>
+            </AnimatePresence>
+          </>
+        )}
       </div>
-
-      {error && (
-        <div className="px-4 py-3 rounded-xl text-xs border"
-          style={{ borderColor: 'hsl(var(--danger) / 0.4)', background: 'hsl(var(--danger) / 0.08)', color: 'hsl(var(--danger))' }}>
-          {error}
-        </div>
-      )}
-
-      {paso === 1 && <PasoEmpresa form={form} setForm={setForm} onNext={guardarEmpresa} guardando={guardando} />}
-      {paso === 2 && <PasoEquipo miCargo={miCargo} setMiCargo={setMiCargo} onNext={guardarEquipo} onBack={soloCargo ? null : () => setPaso(1)} guardando={guardando} soloCargo={soloCargo} />}
-      {paso === 3 && <PasoObra onFinish={finalizar} onBack={() => setPaso(2)} guardando={guardando} />}
     </div>
   );
 }

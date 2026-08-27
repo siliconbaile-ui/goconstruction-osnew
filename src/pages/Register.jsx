@@ -19,6 +19,9 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const [showOtp, setShowOtp] = useState(false);
   const [otpCode, setOtpCode] = useState("");
+  const [googleLoading, setGoogleLoading] = useState(false);
+  // Sin returnTo explícito, el registro termina directo en el asistente.
+  const destino = () => { const r = safeReturnTo(); return r === "/" ? "/app" : r; };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -46,7 +49,7 @@ export default function Register() {
       if (result?.access_token) {
         base44.auth.setToken(result.access_token);
       }
-      window.location.href = safeReturnTo();
+      window.location.href = destino();
     } catch (err) {
       setError(err.message || "Código de verificación inválido");
     } finally {
@@ -68,7 +71,8 @@ export default function Register() {
   };
 
   const handleGoogle = () => {
-    base44.auth.loginWithProvider("google", safeReturnTo());
+    setGoogleLoading(true);
+    base44.auth.loginWithProvider("google", destino());
   };
 
   if (showOtp) {
@@ -146,9 +150,19 @@ export default function Register() {
         variant="outline"
         className="w-full h-12 text-sm font-medium mb-6"
         onClick={handleGoogle}
+        disabled={googleLoading || loading}
       >
-        <GoogleIcon className="w-5 h-5 mr-2" />
-        Continuar con Google
+        {googleLoading ? (
+          <>
+            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            Conectando con Google...
+          </>
+        ) : (
+          <>
+            <GoogleIcon className="w-5 h-5 mr-2" />
+            Continuar con Google
+          </>
+        )}
       </Button>
 
       <div className="relative mb-6">

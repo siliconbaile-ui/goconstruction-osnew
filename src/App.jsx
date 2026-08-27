@@ -81,6 +81,7 @@ const AuthenticatedApp = () => {
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
       <Route element={<GuardOnboarding />}>
+      <Route path="/onboarding" element={<OnboardingEmpresa />} />
       <Route element={<Layout />}>
         <Route path="/app" element={<AsistenteOrion />} />
         <Route path="/vision-urgente" element={<VisionUrgente />} />
@@ -97,7 +98,6 @@ const AuthenticatedApp = () => {
         <Route path="/base-conocimiento" element={<BaseConocimiento />} />
         <Route path="/evidencia-terreno" element={<EvidenciaTerreno />} />
         <Route path="/manual-marca" element={<ManualMarca />} />
-        <Route path="/onboarding" element={<OnboardingEmpresa />} />
       </Route>
       </Route>
       </Route>
