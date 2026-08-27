@@ -223,6 +223,216 @@ export const ARTICULOS = [
     ],
     caso: '/whatsapp-bim',
   },
+  {
+    slug: 'inspeccion-tecnica-de-obra-ito-chile',
+    categoria: 'Normativa',
+    titulo: 'Inspección técnica de obra en Chile: qué revisa la ITO y cómo llegar preparado',
+    intencion: 'qué revisa la inspección técnica de obra ITO',
+    keyword: 'inspección técnica de obra chile',
+    seoTitulo: 'Inspección técnica de obra (ITO): qué revisa y cómo prepararse | GoConstruction OS',
+    seoDescripcion: 'Qué revisa la inspección técnica de obra en Chile, qué respaldo exige en cada visita, cómo se documentan las observaciones y cómo evitar que se acumulen hasta la recepción.',
+    fecha: '2026-08-18',
+    lectura: '6 min',
+    resumen: 'La ITO no inventa exigencias: revisa contra el proyecto y la norma. Las obras que sufren en cada visita son las que no pueden mostrar el respaldo de lo que ya ejecutaron.',
+    secciones: [
+      {
+        h: 'Qué mira realmente la inspección técnica',
+        parrafos: [
+          'La ITO verifica correspondencia entre lo ejecutado y lo proyectado: planos vigentes, especificaciones técnicas, normas chilenas aplicables y el plan de calidad comprometido. Su foco no es la opinión sino el respaldo: liberaciones firmadas, ensayos de laboratorio, protocolos de partida y trazabilidad de materiales.',
+          'Las discusiones largas en visita casi siempre nacen de un vacío de registro, no de un vicio de ejecución. Si no existe la liberación previa al hormigonado, la conversación pasa a ser sobre confianza, y ahí la constructora siempre pierde.',
+        ],
+      },
+      {
+        h: 'Los cuatro respaldos que deben estar al día',
+        parrafos: ['Antes de cada visita conviene tener disponible, por partida en ejecución:'],
+        lista: [
+          'Plano y revisión vigente con la que se está construyendo, y confirmación de que no hay una revisión posterior sin difundir.',
+          'Protocolos y liberaciones firmadas de las etapas ya cubiertas por obra posterior.',
+          'Ensayos de laboratorio con resultado y fecha, asociados al elemento hormigonado.',
+          'Estado de las observaciones anteriores: cuáles se cerraron, con qué evidencia y en qué fecha.',
+        ],
+      },
+      {
+        h: 'La observación que no se cierra se paga dos veces',
+        parrafos: [
+          'Toda observación abierta al momento de la recepción se transforma en costo directo con la obra ya desmovilizada. Cerrarla en el mes en que se levantó cuesta una fracción de eso.',
+          'El indicador que importa no es cuántas observaciones hay, sino cuántas llevan más días abiertas que su plazo comprometido. Ese número anticipa el conflicto en recepción con meses de antelación.',
+        ],
+      },
+    ],
+    faq: [
+      {
+        p: '¿La ITO puede exigir algo que no esté en el proyecto?',
+        r: 'No puede crear requisitos nuevos, pero sí exigir el cumplimiento de normas chilenas aplicables aunque el proyecto no las cite expresamente. Si la exigencia altera el alcance, corresponde tramitarla como cambio con su efecto en plazo y costo.',
+      },
+      {
+        p: '¿Qué diferencia hay entre observación y no conformidad?',
+        r: 'La observación es un hallazgo de la inspección; se convierte en no conformidad cuando se verifica el incumplimiento de un requisito del proyecto o de la norma. La clasificación define plazo, responsable y si condiciona el pago.',
+      },
+      {
+        p: '¿Cómo se demuestra que se construyó con el plano vigente?',
+        r: 'Con control de revisiones: registro de qué revisión estaba difundida en terreno en la fecha de ejecución. Sin ese control, cualquier cambio de plano posterior se discute como error de la constructora.',
+      },
+    ],
+    caso: '/control-calidad',
+  },
+  {
+    slug: 'desviacion-de-avance-en-obra-como-detectarla-a-tiempo',
+    categoria: 'Control de gestión',
+    titulo: 'Desviación de avance en obra: cómo detectarla cuando todavía se puede corregir',
+    intencion: 'cómo controlar el avance de obra desviación programa',
+    keyword: 'control de avance de obra',
+    seoTitulo: 'Desviación de avance de obra: detección temprana y umbrales de alerta | GoConstruction OS',
+    seoDescripcion: 'Cómo comparar avance programado y real por partida, qué umbral de desviación conviene fijar, cuándo escalar a gerencia y por qué el informe mensual llega tarde.',
+    fecha: '2026-08-22',
+    lectura: '5 min',
+    resumen: 'Cuando la desviación aparece en el informe mensual, ya lleva tres semanas ocurriendo. El control sirve si la alerta llega el día en que la partida se atrasa.',
+    secciones: [
+      {
+        h: 'El problema no es medir, es la latencia',
+        parrafos: [
+          'Casi todas las obras miden avance. La diferencia entre las que corrigen y las que solo explican es el tiempo entre el hecho y la alerta. Un reporte mensual convierte cualquier desvío en historia: la cuadrilla ya se movió, el material ya se pidió, la partida siguiente ya se comprometió.',
+          'El control útil compara avance programado y real a nivel de partida, con un umbral explícito, y avisa por sí solo cuando lo cruza. Sin umbral declarado, la discusión es sobre percepciones.',
+        ],
+      },
+      {
+        h: 'Qué umbral fijar',
+        parrafos: ['Un esquema simple y defendible por partida:'],
+        lista: [
+          'Hasta 5% de desviación: seguimiento normal del jefe de terreno.',
+          'Entre 5% y 10%: alerta a gerencia media con causa declarada y acción correctiva con fecha.',
+          'Sobre 10% o en partida de ruta crítica: escalamiento a alta dirección con impacto en plazo contractual.',
+        ],
+      },
+      {
+        h: 'Avance declarado versus avance verificado',
+        parrafos: [
+          'El avance que sirve para pagar no es el declarado por el subcontratista, sino el verificado en terreno y con calidad conforme. Cruzar esas tres cifras (programado, declarado y verificado) revela de inmediato dónde se está anticipando pago sobre trabajo no consolidado.',
+          'Ese cruce es también la mejor defensa frente al mandante: permite explicar la desviación con evidencia por partida, no con un promedio global de obra.',
+        ],
+      },
+    ],
+    faq: [
+      {
+        p: '¿Cada cuánto conviene actualizar el avance?',
+        r: 'Semanalmente como mínimo, y diariamente en partidas de ruta crítica. La frecuencia debe ser mayor que el tiempo en que una desviación se vuelve irreversible.',
+      },
+      {
+        p: '¿Sirve la curva S global para controlar?',
+        r: 'Sirve para reportar al mandante, no para corregir. La corrección ocurre a nivel de partida: la curva global esconde compensaciones entre frentes que avanzan y frentes detenidos.',
+      },
+      {
+        p: '¿Qué causas de desviación son más frecuentes?',
+        r: 'RDIs sin respuesta que detienen frentes, no conformidades que obligan a rehacer, quiebres de suministro y dotación insuficiente. Las dos primeras son internas y controlables con seguimiento por vencimiento.',
+      },
+    ],
+    caso: '/edp-pagos',
+  },
+  {
+    slug: 'trazabilidad-documental-planos-vigentes-eett-en-obra',
+    categoria: 'Procedimientos',
+    titulo: 'Trazabilidad documental en obra: cómo asegurar que terreno construye con la revisión vigente',
+    intencion: 'control de revisiones de planos en obra',
+    keyword: 'planos vigentes obra revisión',
+    seoTitulo: 'Control de revisiones de planos y EETT en obra: trazabilidad documental | GoConstruction OS',
+    seoDescripcion: 'Cómo controlar revisiones de planos y especificaciones técnicas en obra, difundir cambios a terreno y citar la página exacta al responder una duda técnica.',
+    fecha: '2026-08-25',
+    lectura: '5 min',
+    resumen: 'Construir con un plano superado es uno de los errores más caros de la industria, y casi nunca es negligencia: es un problema de difusión.',
+    secciones: [
+      {
+        h: 'Dónde se rompe la cadena',
+        parrafos: [
+          'La revisión nueva llega a oficina técnica, se guarda en la carpeta del proyecto y no siempre llega al capataz que ya está ejecutando. El plano impreso en la caseta sigue siendo la fuente real de verdad para terreno, y esa copia rara vez tiene fecha de retiro.',
+          'La consecuencia no es solo rehacer: es que la discusión posterior sobre quién asume el costo depende de si existe registro de la difusión. Sin ese registro, el costo suele quedar en la constructora.',
+        ],
+      },
+      {
+        h: 'Qué exige una trazabilidad que resista revisión',
+        parrafos: ['Tres condiciones mínimas, aplicables a planos, EETT y protocolos:'],
+        lista: [
+          'Documento único vigente por especialidad, con número de revisión y fecha visible.',
+          'Registro de difusión: quién recibió la revisión nueva, cuándo, y retiro explícito de la anterior.',
+          'Respuestas técnicas citando el documento, la revisión y la página, no de memoria.',
+        ],
+      },
+      {
+        h: 'Citar la página cambia la conversación',
+        parrafos: [
+          'Cuando una duda de terreno se responde con "la EETT lo exige en la página 88, párrafo 3", la discusión termina. Cuando se responde con una interpretación sin fuente, se abre un RDI y se pierden días.',
+          'Ese es el estándar que conviene exigir en toda respuesta técnica de obra, incluida la de un asistente digital: fuente, revisión y página. Sin cita, la respuesta es una opinión.',
+        ],
+      },
+    ],
+    faq: [
+      {
+        p: '¿Quién es responsable si terreno construye con un plano superado?',
+        r: 'Depende del registro de difusión. Si la revisión nueva fue emitida y difundida con constancia, el costo es de quien ejecutó; si no hay registro de difusión, la responsabilidad se discute y habitualmente la absorbe la constructora.',
+      },
+      {
+        p: '¿Cómo se maneja la contradicción entre plano y EETT?',
+        r: 'Se resuelve con la jerarquía documental definida en el contrato; si no está definida, prevalece el requisito más exigente y debe consultarse por RDI antes de ejecutar.',
+      },
+      {
+        p: '¿Basta con tener los documentos en una carpeta compartida?',
+        r: 'No. Una carpeta compartida almacena, pero no difunde ni deja constancia de recepción. La trazabilidad exige saber quién estaba usando qué revisión en la fecha de ejecución.',
+      },
+    ],
+    caso: '/rdi-automaticos',
+  },
+  {
+    slug: 'digitalizacion-de-obra-en-chile-por-donde-empezar',
+    categoria: 'Terreno',
+    titulo: 'Digitalización de obra en Chile: por dónde empezar sin que terreno la rechace',
+    intencion: 'cómo digitalizar una obra de construcción',
+    keyword: 'digitalización obra construcción chile',
+    seoTitulo: 'Digitalización de obra en Chile: qué implementar primero y qué falla | GoConstruction OS',
+    seoDescripcion: 'Por qué fracasan los sistemas de gestión de obra en terreno, qué conviene digitalizar primero (calidad, RDIs y pagos) y cómo lograr adopción real del capataz.',
+    fecha: '2026-08-26',
+    lectura: '6 min',
+    resumen: 'La mayoría de los sistemas de obra no fracasan por tecnología: fracasan porque le piden al capataz que abandone WhatsApp y aprenda un formulario.',
+    secciones: [
+      {
+        h: 'Por qué se cae la adopción',
+        parrafos: [
+          'Terreno adopta lo que le ahorra tiempo hoy. Cualquier herramienta que exija doble digitación, conexión estable o entrenamiento largo termina reemplazada por el grupo de WhatsApp, que es gratis, universal y ya está instalado.',
+          'La estrategia que funciona es no cambiar el canal de captura, sino ordenar lo que entra por ese canal: la foto sigue mandándose como siempre, pero queda asociada a la partida, con ubicación, plazo y responsable.',
+        ],
+      },
+      {
+        h: 'Qué digitalizar primero',
+        parrafos: ['El orden importa, porque cada etapa financia la siguiente en credibilidad interna:'],
+        lista: [
+          'Calidad: registro de hallazgos con evidencia y cierre verificable. Es lo que más duele en recepción.',
+          'RDIs: seguimiento por vencimiento y búsqueda en requerimientos cerrados para no repetir preguntas.',
+          'Estados de pago: cruce de avance verificado y calidad conforme antes de firmar.',
+          'Reporte a gerencia: consecuencia automática de los tres anteriores, no una planilla aparte.',
+        ],
+      },
+      {
+        h: 'El criterio para elegir herramienta',
+        parrafos: [
+          'La pregunta útil no es cuántos módulos tiene, sino si permite responder con fuente una consulta concreta de obra: qué exige la EETT para esta partida, qué NC está bloqueando este pago, qué RDI tiene detenido este frente.',
+          'Si el sistema solo almacena y hay que armar la respuesta a mano, el trabajo de la oficina técnica no bajó: solo cambió de lugar.',
+        ],
+      },
+    ],
+    faq: [
+      {
+        p: '¿Conviene partir con BIM para digitalizar la obra?',
+        r: 'BIM aporta en diseño y coordinación, pero no resuelve el control diario de calidad, RDIs y pagos. Para obras en ejecución conviene partir por el registro trazable de terreno y el control contractual.',
+      },
+      {
+        p: '¿Cuánto demora ver resultados?',
+        r: 'El primer efecto medible aparece en semanas y es de trazabilidad: hallazgos con dueño y plazo, y RDIs sin vencimientos perdidos. El efecto económico se ve en el primer ciclo de estados de pago.',
+      },
+      {
+        p: '¿Se puede mantener WhatsApp como canal de terreno?',
+        r: 'Sí, y es recomendable. Lo que debe cambiar no es el canal sino el destino: lo que entra por WhatsApp tiene que quedar asociado a la partida, con evidencia, responsable y plazo de cierre.',
+      },
+    ],
+    caso: '/whatsapp-bim',
+  },
 ];
 
 export const porSlug = (slug) => ARTICULOS.find(a => a.slug === slug);
@@ -243,6 +453,14 @@ export function jsonLdArticulo(a) {
         image: OG_IMAGEN,
         author: { '@type': 'Organization', name: 'B2Bytes · GoConstruction OS' },
         publisher: { '@type': 'Organization', name: 'GoConstruction OS', url: 'https://gobim.lat' },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://gobim.lat/' },
+          { '@type': 'ListItem', position: 2, name: 'Blog técnico', item: 'https://gobim.lat/blog' },
+          { '@type': 'ListItem', position: 3, name: a.titulo, item: url },
+        ],
       },
       {
         '@type': 'FAQPage',
