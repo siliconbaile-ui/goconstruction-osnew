@@ -1,0 +1,45 @@
+{
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "0 17 * * 5",
+      "one_time_date": null,
+      "timezone": "America/Santiago",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "reporte_semanal_automatico",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "generar_informe_semanal": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "generarInformeSemanal",
+            "args": {}
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Generar informe semanal",
+            "description": "Consolida cada obra activa"
+          }
+        }
+      }
+    ]
+  },
+  "name": "Reporte Semanal Autom\u00e1tico",
+  "description": "Cada viernes a las 17:00 consolida avance, NC, RDIs, EDPs y alertas de cada obra activa en un Informe Ejecutivo."
+}
