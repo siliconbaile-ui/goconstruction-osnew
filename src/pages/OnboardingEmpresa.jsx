@@ -1,19 +1,19 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Check } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import Logo from '@/components/marca/Logo';
-import RelatoPaso from '@/components/onboarding/RelatoPaso';
-import PasoTema from '@/components/onboarding/PasoTema';
 import PasoEmpresa from '@/components/onboarding/PasoEmpresa';
 import PasoEquipo from '@/components/onboarding/PasoEquipo';
 import PasoObra from '@/components/onboarding/PasoObra';
 
-const PASOS = ['Empresa', 'Equipo', 'Primera obra'];
+const PASOS = [
+  { nombre: 'Empresa', titulo: 'Incorpora tu constructora', bajada: 'Con la razón social queda creada tu cuenta de empresa.' },
+  { nombre: 'Tu cargo', titulo: '¿Cuál es tu cargo en la obra?', bajada: 'Define cómo te habla GO: terreno recibe qué hacer hoy, gerencia recibe plata y plazo.' },
+  { nombre: 'Primera obra', titulo: 'Tu primera obra', bajada: 'Con una obra activa GO ya puede leer avance, calidad, RDIs y pagos.' },
+];
 
-// Onboarding para incorporar una constructora real: datos de la empresa,
-// equipo con cargos, y primera obra (propia o demo para partir probando).
-// Vive a pantalla completa, fuera del shell de la app: sin sidebar ni menús.
+// Onboarding en 3 pasos, a pantalla completa y sin scroll: empresa, cargo y
+// primera obra. Todo lo demás (tema, equipo, perfil) se ajusta después.
 export default function OnboardingEmpresa() {
   const [paso, setPaso] = useState(1);
   const [empresa, setEmpresa] = useState(null);
@@ -22,8 +22,6 @@ export default function OnboardingEmpresa() {
   const [soloCargo, setSoloCargo] = useState(false);
   const [guardando, setGuardando] = useState(false);
   const [cargando, setCargando] = useState(true);
-  // Antes de pedir datos, la constructora elige su paleta y su luz (una sola vez).
-  const [eligiendoTema, setEligiendoTema] = useState(() => !localStorage.getItem('gco_tema_elegido'));
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -139,73 +137,71 @@ export default function OnboardingEmpresa() {
     );
   }
 
+  const actual = PASOS[paso - 1];
+
   return (
-    <div className="min-h-[100dvh] bg-surface-base"
-      style={{ paddingTop: 'max(1.5rem, env(safe-area-inset-top))', paddingBottom: 'max(2rem, env(safe-area-inset-bottom))' }}>
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 space-y-6">
+    <div className="h-[100dvh] flex flex-col bg-surface-base"
+      style={{ paddingTop: 'max(1.25rem, env(safe-area-inset-top))', paddingBottom: 'env(safe-area-inset-bottom)' }}>
 
-        {eligiendoTema ? (
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }} className="space-y-6">
-            <div className="flex justify-center pt-4"><Logo /></div>
-            <div className="orion-panel orion-elevated p-5 sm:p-7">
-              <PasoTema onNext={() => { localStorage.setItem('gco_tema_elegido', '1'); setEligiendoTema(false); }} />
-            </div>
-          </motion.div>
-        ) : (
-          <>
-            <RelatoPaso paso={paso} total={PASOS.length} soloCargo={soloCargo} empresa={empresa} />
-
-            {/* Indicador de pasos: círculos numerados con conectores */}
-            {!soloCargo && (
-              <div className="flex items-center justify-center gap-0">
-                {PASOS.map((p, i) => {
-                  const completado = paso > i + 1;
-                  const activo = paso === i + 1;
-                  return (
-                    <div key={p} className="flex items-center">
-                      {i > 0 && (
-                        <div className={`w-8 sm:w-14 h-px ${paso > i ? 'bg-primary' : 'bg-hairline'}`} />
-                      )}
-                      <div className="flex flex-col items-center gap-1.5 px-1.5">
-                        <span className={`w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-semibold border transition-colors ${
-                          completado ? 'bg-primary border-primary text-primary-foreground'
-                          : activo ? 'border-primary text-primary bg-primary/10'
-                          : 'border-hairline text-muted-foreground bg-surface'}`}>
-                          {completado ? <Check className="w-3.5 h-3.5" /> : i + 1}
-                        </span>
-                        <span className={`text-[10px] font-mono tracking-wide ${activo ? 'text-primary' : 'text-muted-foreground'}`}>
-                          {p.toUpperCase()}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
+      {/* Cabecera fija: marca + progreso */}
+      <header className="flex-shrink-0 flex flex-col items-center gap-4 px-4 pt-2 pb-4">
+        <Logo conBajada={false} />
+        {!soloCargo && (
+          <div className="flex items-center gap-2 w-full max-w-xs">
+            {PASOS.map((p, i) => (
+              <div key={p.nombre} className="flex-1 h-1 rounded-full overflow-hidden bg-hairline">
+                <motion.div
+                  className="h-full bg-primary"
+                  initial={false}
+                  animate={{ width: paso > i ? '100%' : '0%' }}
+                  transition={{ duration: 0.35, ease: 'easeOut' }}
+                />
               </div>
-            )}
+            ))}
+          </div>
+        )}
+      </header>
 
-            {error && (
-              <div className="px-4 py-3 rounded-xl text-xs border"
-                style={{ borderColor: 'hsl(var(--danger) / 0.4)', background: 'hsl(var(--danger) / 0.08)', color: 'hsl(var(--danger))' }}>
-                {error}
+      {/* Contenido centrado, sin scroll en pantallas normales */}
+      <main className="flex-1 min-h-0 overflow-y-auto flex items-start sm:items-center justify-center px-4">
+        <div className="w-full max-w-lg pb-8">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={soloCargo ? 'solo-cargo' : paso}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.22 }}
+              className="space-y-6"
+            >
+              <div className="text-center">
+                <p className="text-[10px] font-mono tracking-[0.2em] text-primary mb-2">
+                  {soloCargo ? 'ACCESO AL EQUIPO' : `PASO ${paso} DE ${PASOS.length} · ${actual.nombre.toUpperCase()}`}
+                </p>
+                <h1 className="text-xl sm:text-2xl font-bold text-foreground">
+                  {soloCargo ? `Bienvenido a ${empresa?.nombre || 'tu constructora'}` : actual.titulo}
+                </h1>
+                <p className="text-sm text-muted-foreground mt-1.5 max-w-md mx-auto">
+                  {soloCargo ? 'Declara tu cargo en obra y entras a operar de inmediato.' : actual.bajada}
+                </p>
               </div>
-            )}
 
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={paso}
-                initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.22 }}
-              >
+              {error && (
+                <div className="px-4 py-3 rounded-xl text-xs border text-center"
+                  style={{ borderColor: 'hsl(var(--danger) / 0.4)', background: 'hsl(var(--danger) / 0.08)', color: 'hsl(var(--danger))' }}>
+                  {error}
+                </div>
+              )}
+
+              <div className="orion-panel orion-elevated p-5 sm:p-7">
                 {paso === 1 && <PasoEmpresa form={form} setForm={setForm} onNext={guardarEmpresa} guardando={guardando} />}
                 {paso === 2 && <PasoEquipo miCargo={miCargo} setMiCargo={setMiCargo} onNext={guardarEquipo} onBack={soloCargo ? null : () => setPaso(1)} guardando={guardando} soloCargo={soloCargo} />}
                 {paso === 3 && <PasoObra onFinish={finalizar} onBack={() => setPaso(2)} guardando={guardando} />}
-              </motion.div>
-            </AnimatePresence>
-          </>
-        )}
-      </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </main>
     </div>
   );
 }
