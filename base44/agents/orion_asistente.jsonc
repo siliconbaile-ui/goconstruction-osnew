@@ -147,6 +147,10 @@
     {
       "function_name": "generarInformeSemanal",
       "description": "Consolida la semana de una obra (avance vs programado, NC abiertas, RDIs abiertos/vencidos, EDPs bloqueados y monto detenido) y crea el InformeEjecutivo. Acepta {proyecto_id} opcional; sin \u00e9l procesa todas las obras activas."
+    },
+    {
+      "function_name": "exportarInformePDF",
+      "description": "Exporta un informe ejecutivo a PDF y devuelve un link de descarga v\u00e1lido 24 horas. Entregar { informe_id } o { proyecto_id } para tomar el informe m\u00e1s reciente de la obra. Devuelve la url para compartir en el chat."
     }
   ],
   "context_files": [],
