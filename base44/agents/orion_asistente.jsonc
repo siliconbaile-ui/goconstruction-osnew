@@ -143,6 +143,10 @@
     {
       "function_name": "subagenteGO",
       "description": "Deriva la tarea al DEPARTAMENTO especializado de tu oficina t\u00e9cnica, que investiga por su cuenta y devuelve un informe firmado. Par\u00e1metros: tarea (obligatorio, el encargo en una frase), especialidad (normativa = Departamento de Normativa Legal chilena: exigencia aplicable y cumplimiento LGUC/OGUC/NCh/DS 594/Ley 20.123, cita documento y p\u00e1gina exacta en cada hallazgo; costos = plata bloqueada, retenciones, exposici\u00f3n contractual, SPI/CPI; calidad = NCs, PPI, protocolos y liberaciones; programacion = desviaci\u00f3n de avance, causa ra\u00edz y d\u00edas de ruta cr\u00edtica; general = auditor\u00eda integral de obra), proyecto_id (opcional). Devuelve subagente (departamento) e informe con s\u00edntesis, hallazgos con severidad e impacto, acciones y fuentes con documento y p\u00e1gina. \u00dasala para an\u00e1lisis profundo o consulta t\u00e9cnica-legal, nunca para un dato puntual o una acci\u00f3n de gesti\u00f3n."
+    },
+    {
+      "function_name": "generarInformeSemanal",
+      "description": "Consolida la semana de una obra (avance vs programado, NC abiertas, RDIs abiertos/vencidos, EDPs bloqueados y monto detenido) y crea el InformeEjecutivo. Acepta {proyecto_id} opcional; sin \u00e9l procesa todas las obras activas."
     }
   ],
   "context_files": [],
