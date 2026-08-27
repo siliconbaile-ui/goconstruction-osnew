@@ -99,10 +99,14 @@ export default async function (req) {
       ? [await base44.asServiceRole.entities.ProyectoObra.get(body.proyecto_id)].filter(Boolean)
       : await base44.asServiceRole.entities.ProyectoObra.filter({ estado: 'activo' });
 
+    // A pedido explícito de un proyecto se genera igual (incluye el piloto/demo);
+    // el scheduler, en cambio, solo consolida obras reales.
+    const forzado = Boolean(body.proyecto_id);
+
     const generados = [];
     const omitidos = [];
     for (const proyecto of proyectos) {
-      const permiso = await automatizacionPermitida(base44, proyecto.id);
+      const permiso = forzado ? { permitida: true } : await automatizacionPermitida(base44, proyecto.id);
       if (!permiso.permitida) {
         omitidos.push({ proyecto_id: proyecto.id, motivo: permiso.motivo });
         continue;
