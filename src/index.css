@@ -259,6 +259,24 @@
   color: hsl(var(--primary)) !important;
 }
 
+/* ===========================================================
+   REMAPEO LEGACY · clases Tailwind de la paleta azul antigua
+   Vistas aún no migradas a tokens se alinean a la marca actual.
+   =========================================================== */
+[class*="text-slate-3"],
+[class*="text-slate-4"],
+[class*="text-slate-5"],
+[class*="text-slate-6"] {
+  color: hsl(var(--muted-foreground)) !important;
+}
+[class*="text-blue-4"],
+[class*="text-blue-5"] {
+  color: hsl(var(--primary)) !important;
+}
+[class*="border-blue-5"] {
+  border-color: hsl(var(--primary) / 0.4) !important;
+}
+
 /* Contenedores premium reutilizables */
 .orion-panel {
   background-color: hsl(var(--surface-1));

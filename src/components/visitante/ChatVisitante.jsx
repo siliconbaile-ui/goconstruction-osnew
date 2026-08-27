@@ -15,7 +15,7 @@ const SUGERENCIAS = [
 // Con `contexto`, GO se abre ya situado en un escenario de obra concreto: el
 // briefing se envía como primer mensaje y se oculta, así el visitante ve
 // directamente a GO hablando del caso.
-export default function ChatVisitante({ sugerencias, saludo, contexto, alEvento }) {
+export default function ChatVisitante({ sugerencias, saludo, contexto, alEvento, alto }) {
   const chips = sugerencias?.length ? sugerencias : SUGERENCIAS;
   const [conv, setConv] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -87,7 +87,7 @@ export default function ChatVisitante({ sugerencias, saludo, contexto, alEvento 
   if (error) {
     return (
       <div className="orion-panel orion-elevated flex flex-col items-center justify-center gap-3 text-center px-6"
-        style={{ height: 'min(64vh, 560px)' }}>
+        style={{ height: alto || 'min(64vh, 560px)' }}>
         <span className="w-9 h-9 rounded-full flex items-center justify-center bg-surface-raised border border-hairline">
           <Sparkles className="w-4 h-4 text-primary" />
         </span>
@@ -106,7 +106,7 @@ export default function ChatVisitante({ sugerencias, saludo, contexto, alEvento 
   const visibles = contexto ? messages.slice(1) : messages;
 
   return (
-    <div className="orion-panel orion-elevated flex flex-col overflow-hidden" style={{ height: 'min(64vh, 560px)' }}>
+    <div className="orion-panel orion-elevated flex flex-col overflow-hidden" style={{ height: alto || 'min(64vh, 560px)' }}>
       <div ref={scrollRef} data-scroll-area className="flex-1 overflow-y-auto min-h-0 p-4 space-y-3">
         {visibles.length === 0 ? (
           <div className="space-y-3">
