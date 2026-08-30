@@ -12,7 +12,7 @@ import { calcularDesviacion, semaforo, formatTimestamp } from '@/lib/orionUtils'
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 
 // Colores de gráfico alineados a los tokens de marca (recharts requiere valores fijos).
-const CHART = { primario: '#EC9C3C', ok: '#38B27D', grid: 'hsl(var(--hairline))' };
+const CHART = { primario: '#3B6FE8', ok: '#27AE60', grid: 'hsl(var(--hairline))' };
 const SEMAFORO_HEX = { verde: 'hsl(var(--ok))', amarillo: 'hsl(var(--warn))', rojo: 'hsl(var(--danger))' };
 
 export default function Dashboard() {
