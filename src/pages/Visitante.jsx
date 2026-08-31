@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { PlayCircle } from 'lucide-react';
-import Logo from '@/components/marca/Logo';
+import { Sparkles } from 'lucide-react';
 import ChatVisitante from '@/components/visitante/ChatVisitante';
+import PanelIzquierdo from '@/components/visitante/PanelIzquierdo';
+import PanelVistaPrevia from '@/components/visitante/PanelVistaPrevia';
 import FooterPublico from '@/components/marca/FooterPublico';
 import PruebaValor from '@/components/visitante/PruebaValor';
 import OtrosCasos from '@/components/landing/OtrosCasos';
 
-// MODO 1 · VISITANTE: hero a pantalla completa con el chat de GO como
-// protagonista. Sin scroll para lo esencial; el detalle vive bajo el pliegue.
+// Página pública agentic-conversacional estilo youify.lat:
+// el chat de GO ES la página. Layout de tres columnas en desktop,
+// apilado en móvil. Sin scroll para lo esencial.
 export default function Visitante() {
   const [estado, setEstado] = useState('verificando');
 
@@ -29,42 +31,37 @@ export default function Visitante() {
   if (estado === 'autenticado') return <Navigate to="/app" replace />;
 
   return (
-    <div className="min-h-[100dvh] bg-surface-base text-foreground">
-      {/* HERO · cabe completo en el viewport */}
-      <section className="h-[100dvh] flex flex-col"
-        style={{ paddingTop: 'env(safe-area-inset-top)' }}>
-        <header className="flex-shrink-0 w-full max-w-4xl mx-auto px-4 py-3.5 flex items-center justify-between gap-3">
-          <Logo tamano="sm" conBajada={false} />
-          <nav className="flex items-center gap-2">
-            <Link to="/demo"
-              className="hidden sm:flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold text-foreground/80 hover:text-foreground">
-              <PlayCircle className="w-3.5 h-3.5 text-primary" /> Ver demo
-            </Link>
-            <Link to="/login"
-              className="px-3.5 py-2 rounded-lg text-xs font-semibold border border-hairline bg-surface-raised text-foreground">
-              Iniciar sesión
-            </Link>
-            <Link to="/register"
-              className="px-3.5 py-2 rounded-lg text-xs font-semibold bg-primary text-primary-foreground">
-              Registrarse
-            </Link>
-          </nav>
-        </header>
+    <div className="min-h-[100dvh] bg-surface-base text-foreground flex flex-col">
+      {/* LAYOUT AGENTIC · 3 columnas en desktop, apilado en móvil */}
+      <section className="h-[100dvh] flex flex-col lg:flex-row" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+        <PanelIzquierdo etapa={1} />
 
-        <div className="flex-1 min-h-0 w-full max-w-3xl mx-auto px-4 pb-4 flex flex-col gap-4">
-          <div className="flex-shrink-0 text-center pt-2 sm:pt-4">
-            <h1 className="text-xl sm:text-3xl font-bold leading-tight">
-              El jefe técnico digital de tu obra.
-            </h1>
-            <p className="text-xs sm:text-sm text-muted-foreground mt-1.5 max-w-xl mx-auto">
-              Avance, calidad, RDIs y estados de pago con criterio técnico, para constructoras en Chile.
-              Pregúntale a GO ahora — sin registro.
-            </p>
+        {/* Centro · el chat de GO es el protagonista */}
+        <main className="flex-1 min-h-0 flex flex-col">
+          {/* Header del agente */}
+          <div className="flex-shrink-0 px-4 py-3 border-b border-hairline flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <span className="w-8 h-8 rounded-full flex items-center justify-center bg-primary flex-shrink-0">
+                <Sparkles className="w-4 h-4 text-primary-foreground" />
+              </span>
+              <div className="min-w-0">
+                <div className="text-sm font-bold text-foreground">GO · agente técnico</div>
+                <div className="font-mono text-[10px] text-muted-foreground">command center · obra</div>
+              </div>
+            </div>
+            <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono font-semibold bg-ok/10 text-ok border border-ok/20">
+              <span className="w-1.5 h-1.5 rounded-full bg-ok animate-pulse" />
+              EN VIVO · ATENDIENDO
+            </span>
           </div>
-          <div className="flex-1 min-h-0">
+
+          {/* Chat */}
+          <div className="flex-1 min-h-0 p-3 sm:p-4">
             <ChatVisitante alto="100%" />
           </div>
-        </div>
+        </main>
+
+        <PanelVistaPrevia />
       </section>
 
       {/* Bajo el pliegue: prueba de valor y enlazado interno */}
@@ -72,12 +69,10 @@ export default function Visitante() {
         <PruebaValor />
         <OtrosCasos actual="" />
         <div className="flex flex-col sm:flex-row gap-2.5">
-          <Link to="/demo"
-            className="flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl text-sm font-semibold bg-primary text-primary-foreground">
-            <PlayCircle className="w-4 h-4" /> Ver demo con obra cargada
+          <Link to="/demo" className="flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl text-sm font-semibold bg-primary text-primary-foreground">
+            Ver demo con obra cargada
           </Link>
-          <Link to="/register"
-            className="flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl text-sm font-semibold border border-hairline bg-surface-raised text-foreground">
+          <Link to="/register" className="flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl text-sm font-semibold border border-hairline bg-surface-raised text-foreground">
             Crear cuenta
           </Link>
         </div>
