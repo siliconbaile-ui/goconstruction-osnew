@@ -15,7 +15,7 @@ const SUGERENCIAS = [
 // Con `contexto`, GO se abre ya situado en un escenario de obra concreto: el
 // briefing se envía como primer mensaje y se oculta, así el visitante ve
 // directamente a GO hablando del caso.
-export default function ChatVisitante({ sugerencias, saludo, contexto, alEvento, alto }) {
+export default function ChatVisitante({ sugerencias, saludo, contexto, alEvento, alto, consultaExterna, onConsultaConsumida }) {
   const chips = sugerencias?.length ? sugerencias : SUGERENCIAS;
   const [conv, setConv] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -63,6 +63,14 @@ export default function ChatVisitante({ sugerencias, saludo, contexto, alEvento,
   useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   }, [messages, sending]);
+
+  // Consulta externa: cuando el panel derecho envía una pregunta, se inyecta en el chat.
+  useEffect(() => {
+    if (consultaExterna && conv) {
+      send(consultaExterna);
+      onConsultaConsumida?.();
+    }
+  }, [consultaExterna, conv]);
 
   const send = async (texto) => {
     const content = (texto ?? input).trim();
