@@ -1,13 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { Sparkles, BadgeCheck } from 'lucide-react';
 import ChatVisitante from '@/components/visitante/ChatVisitante';
 import PanelBlindaje from '@/components/visitante/PanelBlindaje';
 import PanelComando from '@/components/visitante/PanelComando';
-import FooterPublico from '@/components/marca/FooterPublico';
-import PruebaValor from '@/components/visitante/PruebaValor';
-import OtrosCasos from '@/components/landing/OtrosCasos';
 
 const AMBER = '#E8912E';
 
@@ -18,8 +15,8 @@ const SUGERENCIAS = [
   '¿Qué hago con una foto por WhatsApp?',
 ];
 
-// Página pública · Command Center con glassmorphism de alta fidelidad.
-// Tres columnas: Blindaje (izq) · Chat agéntico (centro) · Comando (der).
+// Landing pública · Command Center completo, sin scroll.
+// 3 columnas: Blindaje (izq) · Chat agéntico (centro) · Comando (der).
 export default function Visitante() {
   const [estado, setEstado] = useState('verificando');
   const [consultaExterna, setConsultaExterna] = useState(null);
@@ -44,18 +41,15 @@ export default function Visitante() {
   if (estado === 'autenticado') return <Navigate to="/app" replace />;
 
   return (
-    <div className="command-center-bg min-h-[100dvh] text-foreground flex flex-col">
-      {/* Elementos 3D de fondo (esferas mármol/mate para profundidad) */}
+    <div className="command-center-bg h-[100dvh] overflow-hidden text-foreground flex flex-col">
       <div className="sphere-1" />
       <div className="sphere-2" />
 
-      {/* Layout · 3 columnas en desktop, stacking en móvil priorizando el chat */}
-      <section className="h-[100dvh] flex flex-col lg:flex-row relative z-10" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+      <section className="h-full flex flex-col lg:flex-row relative z-10">
         <PanelBlindaje data={demoData} />
 
         {/* Centro · Chat agéntico protagonista */}
         <main className="flex-1 min-h-0 flex flex-col relative z-20">
-          {/* Header del agente */}
           <div className="flex-shrink-0 px-4 py-3 border-b border-hairline flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <span className="w-9 h-9 rounded-full flex items-center justify-center bg-primary flex-shrink-0">
@@ -75,7 +69,6 @@ export default function Visitante() {
             </span>
           </div>
 
-          {/* Chat */}
           <div className="flex-1 min-h-0 p-3 sm:p-4">
             <ChatVisitante
               alto="100%"
@@ -89,21 +82,6 @@ export default function Visitante() {
 
         <PanelComando data={demoData} alConsultar={setConsultaExterna} />
       </section>
-
-      {/* Bajo el pliegue */}
-      <div className="max-w-3xl mx-auto px-4 py-10 space-y-8 relative z-10">
-        <PruebaValor />
-        <OtrosCasos actual="" />
-        <div className="flex flex-col sm:flex-row gap-2.5">
-          <Link to="/demo" className="flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl text-sm font-semibold bg-primary text-primary-foreground">
-            Ver demo con obra cargada
-          </Link>
-          <Link to="/register" className="flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl text-sm font-semibold" style={{ background: AMBER, color: '#fff' }}>
-            Crear cuenta
-          </Link>
-        </div>
-        <FooterPublico />
-      </div>
     </div>
   );
 }

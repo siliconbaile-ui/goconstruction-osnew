@@ -6,6 +6,9 @@ const DIA_MS = 24 * 60 * 60 * 1000;
 export default async function(req) {
   try {
     const base44 = createClientFromRequest(req);
+    const user = await base44.auth.me().catch(() => null);
+    if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    if (user.role !== 'admin' && user.role !== 'user') return Response.json({ error: 'Forbidden' }, { status: 403 });
     const hoy = new Date();
     const hoyStr = hoy.toISOString().split('T')[0];
 

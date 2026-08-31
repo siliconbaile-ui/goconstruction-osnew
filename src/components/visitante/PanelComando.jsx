@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { TrendingUp, FileText, CreditCard, Lock, CheckCircle2, AlertTriangle, MessageCircle, Loader2, LogIn } from 'lucide-react';
+import { TrendingUp, FileText, CreditCard, Lock, CheckCircle2, AlertTriangle, MessageCircle, Loader2 } from 'lucide-react';
 
 const AMBER = '#E8912E';
 
