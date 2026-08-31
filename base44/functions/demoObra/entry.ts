@@ -55,7 +55,7 @@ export default async function(req) {
       alertas: alertas.map(a => ({ nivel: a.nivel, titulo: a.titulo, mensaje: a.mensaje, tipo: a.tipo })),
       edps: edps.map(e => ({ numero_edp: e.numero_edp, subcontratista: e.subcontratista, monto_usd: e.monto_usd, estado: e.estado, motivo_bloqueo: e.motivo_bloqueo })),
       rdis: rdis.map(r => ({ numero_rdi: r.numero_rdi, titulo: r.titulo, estado: r.estado, prioridad: r.prioridad, fecha_vencimiento: r.fecha_vencimiento })),
-      inspecciones: inspecciones.map(i => ({ numero_correlativo: i.numero_correlativo, descripcion: i.descripcion || i.observacion, gravedad: i.gravedad, estado: i.estado, es_no_conformidad: i.es_no_conformidad })),
+      inspecciones: inspecciones.map(i => ({ id: i.id, numero_correlativo: i.numero_correlativo, descripcion: i.descripcion || i.observacion, gravedad: i.gravedad, estado: i.estado, es_no_conformidad: i.es_no_conformidad })),
     });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
