@@ -5,9 +5,9 @@ import Logo from '@/components/marca/Logo';
 const AMBER = '#E8912E';
 
 const FEATURES = [
-  { icon: TrendingUp, title: 'Avance y Curva S', desc: 'Programado vs real, vigilia 24/7' },
-  { icon: ShieldCheck, title: 'No Quality, No Pay', desc: 'NC crítica bloquea el pago' },
-  { icon: FileText, title: 'RDIs e Indexación', desc: 'Cita la página exacta del EETT' },
+  { icon: TrendingUp, title: 'Curva S vigente', desc: 'Programado vs real, 24/7 con escalamiento' },
+  { icon: ShieldCheck, title: 'No Quality, No Pay', desc: 'NC crítica abierta bloquea el pago' },
+  { icon: FileText, title: 'EETT indexado', desc: 'Cita la página exacta del documento' },
 ];
 
 // Columna izquierda · Blindaje de margen.
@@ -16,17 +16,17 @@ export default function PanelBlindaje({ data }) {
   const proyecto = data?.proyecto;
 
   const KPI_DATA = [
-    { label: 'USD Retenidos', value: kpis ? `$${(kpis.monto_bloqueado_usd || 0).toLocaleString('es-CL')}` : '—', max: proyecto?.presupuesto_total_usd || 1, raw: kpis?.monto_bloqueado_usd || 0, color: AMBER },
-    { label: 'NC Críticas', value: kpis?.nc_abiertas ?? '—', max: 10, raw: kpis?.nc_abiertas || 0, color: 'hsl(var(--danger))' },
-    { label: 'Componentes Activos', value: data?.partidas?.length ?? '—', max: 20, raw: data?.partidas?.length || 0, color: 'hsl(var(--primary))' },
+    { label: 'USD retenidos', value: kpis ? `$${(kpis.monto_bloqueado_usd || 0).toLocaleString('es-CL')}` : '—', max: proyecto?.presupuesto_total_usd || 1, raw: kpis?.monto_bloqueado_usd || 0, color: AMBER },
+    { label: 'NC críticas', value: kpis?.nc_abiertas ?? '—', max: 10, raw: kpis?.nc_abiertas || 0, color: 'hsl(var(--danger))' },
+    { label: 'Partidas activas', value: data?.partidas?.length ?? '—', max: 20, raw: data?.partidas?.length || 0, color: 'hsl(var(--primary))' },
   ];
 
   return (
     <aside className="hidden lg:flex flex-col w-80 flex-shrink-0 border-r border-hairline bg-surface-base/50 backdrop-blur-xl h-full overflow-y-auto">
       <div className="px-5 py-4 border-b border-hairline flex-shrink-0">
         <Logo tamano="sm" conBajada={false} />
-        <h1 className="text-xl font-bold leading-tight text-foreground mt-3">El command center de tu obra.</h1>
-        <p className="text-xs text-muted-foreground mt-1.5">Blindaje de margen operacional.</p>
+        <h1 className="text-xl font-bold leading-tight text-foreground mt-3">Tu obra, controlada.</h1>
+        <p className="text-xs text-muted-foreground mt-1.5">Avance, calidad y pago. Cero sorpresas.</p>
       </div>
 
       <div className="px-4 py-3 space-y-2 flex-shrink-0">

@@ -6,6 +6,26 @@ import MarkdownContent from '@/components/agent/MarkdownContent';
 const AGENT_NAME = 'go_vendedor';
 const AMBER = '#E8912E';
 
+const GO_INSTRUCTIONS = `Eres GO, jefe técnico digital de GoConstruction OS, presentando la plataforma a un cliente nuevo que llega SIN cuenta y SIN datos cargados.
+
+IDENTIDAD: arquitecto chileno con 20 años de terreno. Español de Chile técnico y sobrio: frases cortas, sustantivo y número. Nada de cortesías, nada de emojis, nada de hablar de ti como IA.
+
+NO TIENES ACCESO A DATOS DE OBRA. No inventes cifras, partidas, NCs, EDPs ni alertas de ningún proyecto. Si preguntan por datos concretos, dilo en una línea y ofrece el demo.
+
+QUÉ VENDES (explica solo lo que pregunten, no recites todo):
+- Control de avance por partida: real vs programado, desviación, curva S, SPI, alertas automáticas.
+- Calidad de terreno: inspecciones, NCs con evidencia y GPS, protocolos y liberaciones antes del vaciado.
+- Regla No Quality No Pay: una NC crítica abierta bloquea el EDP de esa partida.
+- RDIs: emisión, control de vencimiento y bloqueo de RDIs redundantes (cada RDI inútil cuesta ~USD 1.000).
+- Estados de pago: montos bloqueados, retenciones, F30, validación antes de la firma.
+- Cerebro técnico: planos, EETT y normativa indexados; responde citando documento y página exacta.
+- Grafo relacional de la obra: la cadena NC → partida → EDP dibujada, para ver qué bloquea qué.
+- WhatsApp: el capataz manda una foto o un plano y queda registrado e indexado en la obra al tiro.
+
+FORMATO: máximo 4 líneas. Una idea por línea. Cierra SIEMPRE ofreciendo los dos caminos: ver el demo con una obra real cargada, o registrarse para configurar la propia.
+
+Si piden precio o implementación: di que eso lo cierra el equipo comercial y ofrece registrarse.`;
+
 const SUGERENCIAS = [
   '¿Qué hace exactamente la plataforma?',
   '¿Cómo bloquean un pago por calidad?',
@@ -25,10 +45,8 @@ const extraerFuente = (content) => {
   return match ? match[1].trim() : null;
 };
 
-// Chat efímero de visitante: sin login y sin persistencia entre visitas.
-// Con `contexto`, GO se abre ya situado en un escenario de obra concreto: el
-// briefing se envía como primer mensaje y se oculta, así el visitante ve
-// directamente a GO hablando del caso.
+// Chat de visitante con doble motor: agent SDK (primario) + InvokeLLM (fallback).
+// Si el SDK falla (incógnito, sin token), el chat sigue funcionando vía LLM.
 export default function ChatVisitante({ sugerencias, saludo, contexto, alEvento, alto, consultaExterna, onConsultaConsumida }) {
   const chips = sugerencias?.length ? sugerencias : SUGERENCIAS;
   const [conv, setConv] = useState(null);
@@ -37,6 +55,7 @@ export default function ChatVisitante({ sugerencias, saludo, contexto, alEvento,
   const [sending, setSending] = useState(false);
   const [preparando, setPreparando] = useState(Boolean(contexto));
   const [error, setError] = useState(false);
+  const [mode, setMode] = useState('agent');
   const [intento, setIntento] = useState(0);
   const enviadosRef = useRef(0);
   const scrollRef = useRef(null);
@@ -45,14 +64,13 @@ export default function ChatVisitante({ sugerencias, saludo, contexto, alEvento,
     let mounted = true;
     let unsub;
     (async () => {
-      // Un reintento silencioso: la creación de conversación falla de forma
-      // intermitente y el visitante no debe ver un panel muerto por eso.
       for (let i = 0; i < 2; i++) {
         try {
           const c = await base44.agents.createConversation({ agent_name: AGENT_NAME });
           if (!mounted) return;
           setConv(c);
           setError(false);
+          setMode('agent');
           unsub = base44.agents.subscribeToConversation(c.id, (data) => {
             if (mounted && Array.isArray(data?.messages)) {
               setMessages(data.messages);
@@ -69,7 +87,8 @@ export default function ChatVisitante({ sugerencias, saludo, contexto, alEvento,
           if (i === 0) await new Promise(r => setTimeout(r, 1200));
         }
       }
-      if (mounted) { setError(true); setPreparando(false); }
+      // Agent SDK falló (incógnito, sin token) → fallback a InvokeLLM
+      if (mounted) { setMode('llm'); setError(false); setPreparando(false); }
     })();
     return () => { mounted = false; if (unsub) unsub(); };
   }, [contexto, intento]);
@@ -78,17 +97,16 @@ export default function ChatVisitante({ sugerencias, saludo, contexto, alEvento,
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   }, [messages, sending]);
 
-  // Consulta externa: cuando el panel derecho envía una pregunta, se inyecta en el chat.
   useEffect(() => {
-    if (consultaExterna && conv) {
+    if (consultaExterna && (conv || mode === 'llm')) {
       send(consultaExterna);
       onConsultaConsumida?.();
     }
-  }, [consultaExterna, conv]);
+  }, [consultaExterna, conv, mode]);
 
   const send = async (texto) => {
     const content = (texto ?? input).trim();
-    if (!content || !conv || sending) return;
+    if (!content || sending) return;
     setInput('');
     setSending(true);
     enviadosRef.current += 1;
@@ -96,13 +114,35 @@ export default function ChatVisitante({ sugerencias, saludo, contexto, alEvento,
       if (enviadosRef.current === 1) alEvento('conversacion_iniciada');
       if (enviadosRef.current === 4) alEvento('interaccion_profunda');
     }
-    try {
-      const fresh = await base44.agents.getConversation(conv.id);
-      await base44.agents.addMessage(fresh, { role: 'user', content });
-    } catch {
-      setError(true);
-    } finally {
-      setSending(false);
+
+    if (mode === 'agent' && conv) {
+      try {
+        const fresh = await base44.agents.getConversation(conv.id);
+        await base44.agents.addMessage(fresh, { role: 'user', content });
+      } catch {
+        setError(true);
+      } finally {
+        setSending(false);
+      }
+    } else {
+      // Fallback: InvokeLLM con historial de conversación
+      const userMsg = { role: 'user', content, id: Date.now() };
+      const newMessages = [...messages, userMsg];
+      setMessages(newMessages);
+      try {
+        const history = newMessages
+          .map(m => `${m.role === 'user' ? 'Usuario' : 'GO'}: ${m.content}`)
+          .join('\n');
+        const ctxPart = contexto ? `CONTEXTO INICIAL:\n${contexto}\n\n` : '';
+        const prompt = `${GO_INSTRUCTIONS}\n\n${ctxPart}CONVERSACIÓN:\n${history}\n\nResponde como GO:`;
+        const res = await base44.integrations.Core.InvokeLLM({ prompt });
+        const reply = typeof res === 'string' ? res : (res?.response || res?.content || JSON.stringify(res));
+        setMessages(prev => [...prev, { role: 'assistant', content: reply, id: Date.now() + 1 }]);
+      } catch {
+        setError(true);
+      } finally {
+        setSending(false);
+      }
     }
   };
 
@@ -114,9 +154,9 @@ export default function ChatVisitante({ sugerencias, saludo, contexto, alEvento,
           <Sparkles className="w-4 h-4 text-primary" />
         </span>
         <p className="text-sm text-muted-foreground max-w-sm">
-          No pude iniciar la conversación. Vuelve a intentarlo o entra directo a la demo con la obra cargada.
+          No pude responder. Vuelve a intentarlo o entra directo a la demo con la obra cargada.
         </p>
-        <button onClick={() => { setError(false); setPreparando(Boolean(contexto)); setIntento(n => n + 1); }}
+        <button onClick={() => { setError(false); setMessages([]); enviadosRef.current = 0; setIntento(n => n + 1); }}
           className="px-4 py-2 rounded-xl text-xs font-semibold bg-primary text-primary-foreground">
           Reintentar
         </button>
@@ -124,8 +164,7 @@ export default function ChatVisitante({ sugerencias, saludo, contexto, alEvento,
     );
   }
 
-  // El briefing del escenario no se muestra: es contexto, no conversación.
-  const visibles = contexto ? messages.slice(1) : messages;
+  const visibles = mode === 'agent' && contexto ? messages.slice(1) : messages;
 
   return (
     <div className="glass-panel flex flex-col overflow-hidden" style={{ height: alto || 'min(64vh, 560px)' }}>
@@ -222,7 +261,7 @@ export default function ChatVisitante({ sugerencias, saludo, contexto, alEvento,
           onChange={(e) => setInput(e.target.value)}
           placeholder="Pregúntale a GO sobre este caso..."
           className="flex-1 px-3 py-2.5 rounded-xl text-sm glass-input text-foreground" />
-        <button type="submit" disabled={!input.trim() || sending || !conv}
+        <button type="submit" disabled={!input.trim() || sending}
           className="w-10 h-10 rounded-xl flex items-center justify-center disabled:opacity-40" style={{ background: AMBER, color: '#fff' }}>
           <ArrowUp className="w-4 h-4" />
         </button>
