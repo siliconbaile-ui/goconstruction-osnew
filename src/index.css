@@ -357,6 +357,7 @@ button, a, [role="button"] {
   border: 1px solid hsl(var(--foreground) / 0.08);
   border-radius: 1.25rem;
   box-shadow: 0 8px 40px hsl(var(--surface-0) / 0.6), inset 0 1px 0 hsl(var(--foreground) / 0.06);
+  pointer-events: auto;
 }
 .glass-card {
   background: hsl(var(--surface-2) / 0.35);
@@ -374,7 +375,7 @@ button, a, [role="button"] {
 .command-center-bg {
   position: relative;
   background: hsl(var(--surface-0));
-  overflow: hidden;
+  overflow-x: clip;
 }
 .sphere-1 {
   position: absolute;
