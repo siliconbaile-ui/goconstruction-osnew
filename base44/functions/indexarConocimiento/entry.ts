@@ -84,7 +84,11 @@ export default async function (req: Request): Promise<Response> {
     }
 
     if (documento_id) {
-      await base44.asServiceRole.entities.DocumentoTecnico.update(documento_id, {
+      // RLS nativa: usa el SDK de usuario (no asServiceRole) para que las reglas
+      // de propiedad se apliquen — solo el creador o un admin puede actualizar.
+      const doc = await base44.entities.DocumentoTecnico.get(documento_id).catch(() => null);
+      if (!doc) return Response.json({ error: 'Documento no encontrado o sin permisos' }, { status: 404 });
+      await base44.entities.DocumentoTecnico.update(documento_id, {
         estado_indexacion: 'indexado',
         paginas_totales: paginas || undefined,
       });
