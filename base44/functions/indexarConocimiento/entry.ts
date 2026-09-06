@@ -8,13 +8,31 @@ import { paginasPorTramo, codigosNormativos } from '../../shared/hibrido.ts';
 export default async function (req: Request): Promise<Response> {
   try {
     const base44 = createClientFromRequest(req);
-    const user = await base44.auth.me();
+    const user = await base44.auth.me().catch(() => null);
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
     const {
-      documento_id, url, texto, titulo = 'Documento', proyecto_id = null,
+      documento_id, url, texto, titulo = 'Documento', proyecto_id: proyectoSolicitado = null,
       especialidad = 'general', tipo = 'otro', partidas = [], normas = [],
     } = await req.json();
+
+    let proyecto_id = proyectoSolicitado;
+    if (documento_id) {
+      if (typeof documento_id !== 'string') {
+        return Response.json({ error: 'documento_id inválido' }, { status: 400 });
+      }
+      const [documento] = await base44.entities.DocumentoTecnico.filter({ id: documento_id }, undefined, 1);
+      if (!documento) return Response.json({ error: 'Documento no encontrado' }, { status: 404 });
+      // Mismo permiso de edición que DocumentoTecnico: creador o administrador.
+      // Debe comprobarse antes de escribir vectores, grafo o metadatos.
+      if (user.role !== 'admin' && documento.created_by_id !== user.id) {
+        return Response.json({ error: 'Forbidden' }, { status: 403 });
+      }
+      if (proyectoSolicitado && proyectoSolicitado !== documento.proyecto_id) {
+        return Response.json({ error: 'El proyecto no corresponde al documento' }, { status: 400 });
+      }
+      proyecto_id = documento.proyecto_id || null;
+    }
 
     let contenido = texto || '';
     let tituloFinal = titulo;
@@ -84,7 +102,7 @@ export default async function (req: Request): Promise<Response> {
     }
 
     if (documento_id) {
-      await base44.asServiceRole.entities.DocumentoTecnico.update(documento_id, {
+      await base44.entities.DocumentoTecnico.update(documento_id, {
         estado_indexacion: 'indexado',
         paginas_totales: paginas || undefined,
       });
