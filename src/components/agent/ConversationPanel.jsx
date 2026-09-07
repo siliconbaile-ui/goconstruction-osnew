@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
+import { Link } from 'react-router-dom';
 import { Loader2, Plus, Sparkles, Activity } from 'lucide-react';
 import MessageBubble from './MessageBubble';
 import AgentSidebar from './AgentSidebar';
@@ -202,6 +203,7 @@ GO<span className="hidden sm:inline"> · jefe técnico de obra</span>
               <span className="hidden md:inline text-[11px] text-muted-foreground">
 criterio técnico con los datos reales de tu obra
               </span>
+              <Link to="/polpaico-os" className="flex items-center min-h-9 px-3 rounded-full text-[11px] font-semibold bg-surface-raised text-ok">Polpaico OS</Link>
               <WhatsAppButton />
               <button onClick={() => setPanelMovil(true)}
                 className="lg:hidden flex items-center gap-1.5 h-9 px-3 rounded-full text-[11px] font-semibold tracking-wide flex-shrink-0 bg-surface-raised text-foreground/85 active:scale-95 transition-transform">

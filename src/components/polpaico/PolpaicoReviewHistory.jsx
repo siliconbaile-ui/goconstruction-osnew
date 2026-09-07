@@ -1,0 +1,7 @@
+import { useQuery } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
+import { Link } from 'react-router-dom';
+export default function PolpaicoReviewHistory() {
+  const {data,isLoading,error}=useQuery({queryKey:['polpaico-decisiones'],queryFn:async()=>{if(!await base44.auth.isAuthenticated())return null;return (await base44.functions.invoke('operarPilotoPolpaico',{accion:'historial'})).data;},retry:false,refetchInterval:30000});
+  return <div className="bg-card border border-border p-5 rounded-lg mt-5"><h3 className="font-semibold mb-3">Registro HITL del piloto</h3>{isLoading?<p className="text-sm text-muted-foreground">Cargando decisiones…</p>:error?<p className="text-sm text-warn">El historial requiere una sesión de administrador.</p>:!data?<Link to="/login?returnTo=%2Fpolpaico-os" className="text-sm text-ok underline">Inicia sesión para ver el historial</Link>:data.decisiones.length?data.decisiones.map(d=><div key={d.id} className="border-t border-border py-3 text-sm"><p className="font-medium">{d.decision.replaceAll('_',' ')} · demostración</p><p className="text-muted-foreground mt-1">{d.motivo}</p><p className="text-xs text-muted-foreground mt-2">{d.responsable} · {new Date(d.created_date).toLocaleString('es-CL')}</p></div>):<p className="text-sm text-muted-foreground">Aún no se han registrado decisiones humanas.</p>}<p className="text-xs text-muted-foreground mt-4">Las decisiones de demostración no autorizan trabajos reales ni liberan pagos.</p></div>;
+}

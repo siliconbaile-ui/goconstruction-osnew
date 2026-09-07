@@ -1,0 +1,66 @@
+{
+  "name": "DecisionPolpaico",
+  "type": "object",
+  "properties": {
+    "proyecto_id": {
+      "type": "string"
+    },
+    "partida_id": {
+      "type": "string"
+    },
+    "decision": {
+      "type": "string",
+      "enum": [
+        "solicitar_revision",
+        "mantener_bloqueo",
+        "aprobacion_demo"
+      ]
+    },
+    "motivo": {
+      "type": "string"
+    },
+    "responsable": {
+      "type": "string"
+    },
+    "request_id": {
+      "type": "string"
+    },
+    "mpa_registrado": {
+      "type": "number"
+    },
+    "simulacion": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "proyecto_id",
+    "partida_id",
+    "decision",
+    "motivo",
+    "responsable",
+    "request_id"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

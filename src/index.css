@@ -408,6 +408,13 @@ button, a, [role="button"] {
   outline: 2px solid hsl(var(--ring));
   outline-offset: 4px;
 }
+.polpaico-workspace {
+  --surface-0: 0 0% 4%;
+  --surface-1: 0 0% 8%;
+  --surface-2: 0 0% 12%;
+  --hairline: 0 0% 20%;
+}
+.polpaico-workspace a { overflow-wrap: anywhere; }
 .polpaico-portal section { scroll-margin-top: 6rem; }
 .polpaico-portal th, .polpaico-portal td { padding: 1rem; text-align: left; }
 .polpaico-portal th { font-weight: 500; color: hsl(var(--muted-foreground)); }
