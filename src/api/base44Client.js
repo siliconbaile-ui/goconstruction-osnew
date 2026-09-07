@@ -3,12 +3,14 @@ import { appParams } from '@/lib/app-params';
 
 const { appId, token, functionsVersion, appBaseUrl } = appParams;
 
+const serverUrl = import.meta.env.DEV ? '' : (appBaseUrl || 'https://base44.app');
+
 //Create a client with authentication required
 export const base44 = createClient({
   appId,
   token,
   functionsVersion,
-  serverUrl: '',
+  serverUrl,
   requiresAuth: false,
   appBaseUrl
 });
