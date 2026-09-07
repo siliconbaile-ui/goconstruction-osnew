@@ -1,0 +1,12 @@
+{
+  "name": "GoConstruction OS",
+  "description": "Software de gestión de obras para constructoras en Chile: control de avance, calidad, RDIs, alertas y estados de pago.",
+  "requestFramePermissions": [
+    "microphone",
+    "geolocation",
+    "camera"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

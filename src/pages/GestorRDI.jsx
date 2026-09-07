@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { FileText, Plus, Clock, CheckCircle, AlertTriangle, Zap, Sparkles, Loader2, LayoutGrid, List, MapPin } from 'lucide-react';
+import { FileText, Plus, CheckCircle, AlertTriangle, Zap, Sparkles, Loader2, LayoutGrid, List, MapPin } from 'lucide-react';
 import OrionCard from '@/components/OrionCard';
 import RDIKanban from '@/components/rdi/RDIKanban';
 import EvidenciaGeo from '@/components/rdi/EvidenciaGeo';
-import { prioridadColor, formatFecha, bgSemaforo } from '@/lib/orionUtils';
+import { prioridadColor, formatFecha } from '@/lib/orionUtils';
 
 export default function GestorRDI() {
   const [rdis, setRdis] = useState([]);

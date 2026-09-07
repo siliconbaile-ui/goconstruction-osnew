@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { CreditCard, Plus, Lock, CheckCircle, AlertTriangle, XCircle } from 'lucide-react';
+import { CreditCard, Plus, Lock, CheckCircle, XCircle } from 'lucide-react';
 import OrionCard from '@/components/OrionCard';
 import { estadoPagoColor, formatFecha } from '@/lib/orionUtils';
 

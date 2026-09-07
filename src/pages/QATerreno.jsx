@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { CheckSquare, Plus, Camera, AlertTriangle, CheckCircle, XCircle, Clock } from 'lucide-react';
+import { Plus, Camera, AlertTriangle, CheckCircle, XCircle, Clock } from 'lucide-react';
 import OrionCard from '@/components/OrionCard';
-import { gravedadColor, bgSemaforo, formatFecha } from '@/lib/orionUtils';
+import { gravedadColor, formatFecha } from '@/lib/orionUtils';
 
 export default function QATerreno() {
   const [inspecciones, setInspecciones] = useState([]);

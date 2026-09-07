@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
-import { Settings, Plus, CheckCircle, Upload, Building2, Rocket } from 'lucide-react';
+import { Plus, CheckCircle, Building2, Rocket } from 'lucide-react';
 import OrionCard from '@/components/OrionCard';
 import WhatsAppConnect from '@/components/agent/WhatsAppConnect';
 import GestionEquipo from '@/components/onboarding/GestionEquipo';

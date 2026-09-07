@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { TrendingUp, AlertTriangle, CheckCircle, Plus, Upload } from 'lucide-react';
+import { AlertTriangle, Plus } from 'lucide-react';
 import OrionCard from '@/components/OrionCard';
 import SemaforoIndicator from '@/components/SemaforoIndicator';
-import { calcularDesviacion, semaforo, bgSemaforo, formatFecha } from '@/lib/orionUtils';
+import { calcularDesviacion, semaforo, bgSemaforo } from '@/lib/orionUtils';
 
 export default function MonitorAvance() {
   const [partidas, setPartidas] = useState([]);
