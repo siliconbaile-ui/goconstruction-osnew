@@ -377,6 +377,42 @@ button, a, [role="button"] {
   background: hsl(var(--surface-0));
   overflow-x: clip;
 }
+.polpaico-portal, .dark .polpaico-portal {
+  --background: 0 0% 4%;
+  --foreground: 0 0% 98%;
+  --card: 0 0% 10%;
+  --card-foreground: 0 0% 98%;
+  --primary: 124 55% 24%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 170 100% 15%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 0 0% 14%;
+  --muted-foreground: 0 0% 70%;
+  --border: 0 0% 22%;
+  --input: 0 0% 18%;
+  --ok: 131 54% 64%;
+  --warn: 50 100% 50%;
+  --danger: 0 65% 51%;
+  --info: 201 88% 70%;
+  --ring: 131 54% 64%;
+  --radius: 0.5rem;
+  --font-heading: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+.polpaico-portal .polpaico-diploma {
+  --card: 0 0% 100%;
+  --card-foreground: 124 55% 18%;
+  --muted-foreground: 0 0% 32%;
+}
+.polpaico-portal :is(button, a, input, select):focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 4px;
+}
+.polpaico-portal section { scroll-margin-top: 6rem; }
+.polpaico-portal th, .polpaico-portal td { padding: 1rem; text-align: left; }
+.polpaico-portal th { font-weight: 500; color: hsl(var(--muted-foreground)); }
+.polpaico-portal tbody tr { border-top: 1px solid hsl(var(--border)); }
+
 .sphere-1 {
   position: absolute;
   top: -120px;

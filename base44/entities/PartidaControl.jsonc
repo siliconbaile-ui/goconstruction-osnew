@@ -92,6 +92,31 @@
     },
     "notas": {
       "type": "string"
+    },
+    "mpa_lectura_actual": {
+      "type": "number",
+      "default": 0
+    },
+    "mpa_especificado": {
+      "type": "number",
+      "default": 0
+    },
+    "volumen_m3": {
+      "type": "number",
+      "default": 0
+    },
+    "tipo_hormigon": {
+      "type": "string",
+      "enum": [
+        "estandar",
+        "hormipurifica",
+        "hormieco",
+        "especial"
+      ],
+      "default": "estandar"
+    },
+    "sensor_id": {
+      "type": "string"
     }
   },
   "required": [

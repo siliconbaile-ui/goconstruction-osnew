@@ -1,0 +1,126 @@
+{
+  "name": "DespachoMixer",
+  "type": "object",
+  "properties": {
+    "proyecto_id": {
+      "type": "string",
+      "description": "ID de ProyectoObra"
+    },
+    "partida_id": {
+      "type": "string",
+      "description": "ID opcional de PartidaControl"
+    },
+    "chofer_nombre": {
+      "type": "string"
+    },
+    "patente_mixer": {
+      "type": "string"
+    },
+    "guia_despacho": {
+      "type": "string"
+    },
+    "volumen_m3": {
+      "type": "number"
+    },
+    "tipo_hormigon": {
+      "type": "string",
+      "enum": [
+        "estandar",
+        "hormipurifica",
+        "hormieco",
+        "especial"
+      ],
+      "default": "estandar"
+    },
+    "origen_planta": {
+      "type": "string",
+      "default": "Cerro Blanco, Tiltil"
+    },
+    "destino_obra": {
+      "type": "string"
+    },
+    "coordenadas_gps": {
+      "type": "string"
+    },
+    "estado": {
+      "type": "string",
+      "enum": [
+        "en_carga",
+        "en_ruta",
+        "descargado",
+        "cancelado"
+      ],
+      "default": "en_carga"
+    },
+    "fecha_hora_carga": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "fecha_hora_descarga": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "audio_transcripcion": {
+      "type": "string"
+    },
+    "foto_descarga_url": {
+      "type": "string"
+    },
+    "observaciones": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "proyecto_id"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

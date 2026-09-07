@@ -28,6 +28,7 @@ import VisionUrgente from '@/pages/VisionUrgente';
 import ManualMarca from '@/pages/ManualMarca';
 import OnboardingEmpresa from '@/pages/OnboardingEmpresa';
 import Visitante from '@/pages/Visitante';
+import PolpaicoOS from '@/pages/PolpaicoOS';
 import Demo from '@/pages/Demo';
 import Nosotros from '@/pages/Nosotros';
 import CasoControlCalidad from '@/pages/CasoControlCalidad';
@@ -65,6 +66,7 @@ const AuthenticatedApp = () => {
     <Routes>
       <Route path="/" element={<Visitante />} />
       <Route path="/demo" element={<Demo />} />
+      <Route path="/polpaico-os" element={<PolpaicoOS />} />
       <Route path="/control-calidad" element={<CasoControlCalidad />} />
       <Route path="/edp-pagos" element={<CasoEdpPagos />} />
       <Route path="/rdi-automaticos" element={<CasoRdiAutomaticos />} />

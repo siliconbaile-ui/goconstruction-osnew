@@ -1,0 +1,5 @@
+const tones = { en_carga: 'text-warn bg-warn/10', en_ruta: 'text-info bg-info/10', descargado: 'text-ok bg-ok/10', cancelado: 'text-danger bg-danger/10', hormipurifica: 'text-ok bg-ok/10', hormieco: 'text-info bg-info/10', estandar: 'text-foreground bg-muted', especial: 'text-warn bg-warn/10', critica: 'text-danger bg-danger/10', moderada: 'text-warn bg-warn/10', leve: 'text-ok bg-ok/10' };
+const labels = { en_carga: 'En carga', en_ruta: 'En ruta', descargado: 'Descargado', cancelado: 'Cancelado', hormipurifica: 'HormiPurifica', hormieco: 'HormiEco', estandar: 'Estándar', especial: 'Especial', critica: 'Crítica', moderada: 'Moderada', leve: 'Leve' };
+export default function PolpaicoStatus({ value }) {
+  return <span className={`inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded whitespace-nowrap ${tones[value] || 'text-muted-foreground bg-muted'}`}><span className="w-1.5 h-1.5 rounded-full bg-current" />{labels[value] || value}</span>;
+}

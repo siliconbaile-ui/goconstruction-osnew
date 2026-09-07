@@ -1,0 +1,118 @@
+{
+  "name": "CertificadoESG",
+  "type": "object",
+  "properties": {
+    "proyecto_id": {
+      "type": "string",
+      "description": "ID de ProyectoObra"
+    },
+    "partida_id": {
+      "type": "string",
+      "description": "ID de PartidaControl"
+    },
+    "tipo_hormigon": {
+      "type": "string",
+      "enum": [
+        "hormipurifica",
+        "hormieco"
+      ],
+      "default": "hormipurifica"
+    },
+    "volumen_m3": {
+      "type": "number"
+    },
+    "superficie_m2": {
+      "type": "number"
+    },
+    "espesor_m": {
+      "type": "number",
+      "default": 0.15
+    },
+    "arboles_equivalentes": {
+      "type": "number"
+    },
+    "kg_co2_mitigado": {
+      "type": "number",
+      "description": "Estimaci\u00f3n preliminar de demostraci\u00f3n, no certificaci\u00f3n ambiental verificada"
+    },
+    "obra_destinataria": {
+      "type": "string"
+    },
+    "constructora": {
+      "type": "string"
+    },
+    "codigo_certificado": {
+      "type": "string"
+    },
+    "fecha_emision": {
+      "type": "string",
+      "format": "date"
+    },
+    "estado": {
+      "type": "string",
+      "enum": [
+        "borrador",
+        "emitido",
+        "firmado"
+      ],
+      "default": "borrador"
+    },
+    "pdf_url": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "proyecto_id",
+    "partida_id"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

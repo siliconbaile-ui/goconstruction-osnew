@@ -16,7 +16,8 @@
         "rdi_vencido",
         "pago_bloqueado",
         "sincronizacion_falla",
-        "escalamiento"
+        "escalamiento",
+        "resistencia_alcanzada"
       ],
       "default": "desviacion_avance"
     },

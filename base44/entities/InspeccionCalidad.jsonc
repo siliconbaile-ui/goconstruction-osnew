@@ -81,6 +81,13 @@
     "es_no_conformidad": {
       "type": "boolean",
       "default": false
+    },
+    "mpa_lectura": {
+      "type": "number",
+      "default": 0
+    },
+    "sensor_id": {
+      "type": "string"
     }
   },
   "required": [
