@@ -41,6 +41,7 @@ import Contacto from '@/pages/Contacto';
 import Privacidad from '@/pages/Privacidad';
 import Terminos from '@/pages/Terminos';
 import GuardOnboarding from '@/components/onboarding/GuardOnboarding';
+import GoDemoNavigator from '@/components/demo/GoDemoNavigator';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -114,6 +115,7 @@ function App() {
       <QueryClientProvider client={queryClientInstance}>
         <Router>
           <ScrollToTop />
+          <GoDemoNavigator />
           <AuthenticatedApp />
         </Router>
         <Toaster />

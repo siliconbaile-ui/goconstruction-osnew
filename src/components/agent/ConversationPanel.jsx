@@ -14,6 +14,7 @@ import useVoiceOutput, { desbloquearVoz } from '@/hooks/useVoiceOutput';
 import useHistorialClasificado from '@/hooks/useHistorialClasificado';
 import agruparMensajes from '@/lib/agruparMensajes';
 import goSessionContext from '@/components/agent/goSessionContext';
+import useGoDemoPlan from '@/hooks/useGoDemoPlan';
 
 const AGENT_NAME = 'orion_asistente';
 
@@ -39,6 +40,7 @@ export default function ConversationPanel() {
 
   const { hablando, detener: detenerVoz } = useVoiceOutput(messages, voiceMode);
   const metas = useHistorialClasificado(conversations, activeId, messages);
+  useGoDemoPlan(messages);
 
   const loadConversations = useCallback(async () => {
     try {
@@ -125,6 +127,7 @@ export default function ConversationPanel() {
   }, [messages]);
 
   const send = async (text, fileUrls = []) => {
+    desbloquearVoz();
     const content = (text ?? input).trim();
     if ((!content && fileUrls.length === 0) || !activeId || sending) return;
     setInput('');
