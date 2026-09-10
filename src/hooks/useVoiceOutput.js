@@ -60,7 +60,13 @@ function useVoiceOutput(messages, activo, voz = 'storm') {
     }
   }, [activo]);
 
+  useEffect(() => () => {
+    clearTimeout(timerRef.current);
+    detenerAudio();
+  }, []);
+
   const detener = () => {
+    clearTimeout(timerRef.current);
     detenerAudio();
     setHablando(false);
   };

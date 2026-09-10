@@ -45,14 +45,13 @@ async function sintetizarElevenLabs(texto, voz, antes = '', despues = '') {
         ...(antes ? { previous_text: antes.slice(-600) } : {}),
         ...(despues ? { next_text: despues.slice(0, 600) } : {}),
         apply_text_normalization: 'auto',
-        // Hombre chileno de ~42 años, técnico y cercano: habla PAUSADO (speed 0.86),
-        // con stability media para que respire y module como una persona, no como
-        // un lector automático, y un toque de estilo para calidez sin dramatismo.
+        // Jefatura técnica chilena contemporánea: ritmo conversacional, pausas
+        // breves y modulación humana, sin tono publicitario ni lectura solemne.
         voice_settings: {
-          stability: 0.45,
-          similarity_boost: 0.9,
-          style: 0.32,
-          speed: 0.86,
+          stability: 0.38,
+          similarity_boost: 0.86,
+          style: 0.22,
+          speed: 0.94,
           use_speaker_boost: true,
         },
       }),

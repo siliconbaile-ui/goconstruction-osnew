@@ -39,6 +39,14 @@ export default function ConversationPanel() {
   const scrollRef = useRef(null);
 
   const { hablando, detener: detenerVoz } = useVoiceOutput(messages, voiceMode);
+  useEffect(() => {
+    const silenciarParaDemo = () => {
+      detenerVoz();
+      setVoiceMode(false);
+    };
+    window.addEventListener('go:demo-start', silenciarParaDemo);
+    return () => window.removeEventListener('go:demo-start', silenciarParaDemo);
+  }, [detenerVoz]);
   const metas = useHistorialClasificado(conversations, activeId, messages);
   useGoDemoPlan(messages);
 

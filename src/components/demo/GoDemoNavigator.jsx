@@ -9,11 +9,22 @@ export default function GoDemoNavigator() {
   const navigate = useNavigate();
   const run = useRef(0);
   const [state, setState] = useState(null);
-  const stop = () => { run.current += 1; detenerAudio(); setState(null); document.querySelectorAll('.go-demo-focus').forEach(el => el.classList.remove('go-demo-focus')); };
+  const clearVisuals = () => document.querySelectorAll('.go-demo-focus').forEach(el => el.classList.remove('go-demo-focus'));
+  const stop = () => {
+    run.current += 1;
+    detenerAudio();
+    clearVisuals();
+    setState(null);
+    window.dispatchEvent(new Event('go:demo-end'));
+  };
 
   useEffect(() => {
     const start = async event => {
-      stop();
+      run.current += 1;
+      detenerAudio();
+      clearVisuals();
+      setState(null);
+      window.dispatchEvent(new Event('go:demo-start'));
       const plan = event.detail;
       const token = ++run.current;
       for (let index = 0; index < plan.steps.length; index += 1) {
@@ -36,7 +47,10 @@ export default function GoDemoNavigator() {
         await wait(step.hold_ms || 1200);
         target?.classList.remove('go-demo-focus');
       }
-      if (token === run.current) setState(null);
+      if (token === run.current) {
+        setState(null);
+        window.dispatchEvent(new Event('go:demo-end'));
+      }
     };
     window.addEventListener('go:demo-plan', start);
     return () => { window.removeEventListener('go:demo-plan', start); stop(); };

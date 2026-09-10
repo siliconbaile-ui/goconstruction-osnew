@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 // Un solo audio compartido y reproducción por tramos secuenciales: los mensajes
 // largos ya no se cortan a mitad de camino.
 let audio = null;
+let resolverAudio = null;
 let turno = 0; // cancela la reproducción anterior al iniciar una nueva
 
 const SILENCIO = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEAIlYAAESsAAACABAAZGF0YQQAAAAAAA==';
@@ -54,7 +55,9 @@ function trocear(texto, max = 1200) {
 
 export function detenerAudio() {
   turno++;
-  if (audio) { audio.pause(); audio.onended = null; }
+  if (audio) { audio.pause(); audio.onended = null; audio.onerror = null; }
+  resolverAudio?.();
+  resolverAudio = null;
   window.speechSynthesis?.cancel();
 }
 
@@ -69,12 +72,13 @@ async function sintetizar(texto, voz, antes = '', despues = '') {
 function reproducirSrc(src) {
   return new Promise((resolve) => {
     if (!audio) audio = new Audio();
+    const terminar = () => { resolverAudio = null; resolve(); };
+    resolverAudio = terminar;
     audio.src = src;
-    // Último ajuste de ritmo: locución de terreno, sin apuro.
-    audio.playbackRate = 0.96;
-    audio.onended = resolve;
-    audio.onerror = resolve;
-    audio.play().catch(resolve);
+    audio.playbackRate = 1;
+    audio.onended = terminar;
+    audio.onerror = terminar;
+    audio.play().catch(terminar);
   });
 }
 
