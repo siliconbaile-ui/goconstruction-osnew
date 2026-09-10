@@ -151,6 +151,10 @@
     {
       "function_name": "exportarInformePDF",
       "description": "Exporta un informe ejecutivo a PDF y devuelve un link de descarga v\u00e1lido 24 horas. Entregar { informe_id } o { proyecto_id } para tomar el informe m\u00e1s reciente de la obra. Devuelve la url para compartir en el chat."
+    },
+    {
+      "function_name": "crearRecorridoGO",
+      "description": "Prepara un recorrido narrado dentro de GoConstruction OS. \u00dasala cuando el usuario pida demostrar un guion, recorrer la app o mostrar una tarea navegando. Recibe title, voice ('honey' para narraci\u00f3n ejecutiva femenina, 'river' neutral o 'storm' t\u00e9cnica) y steps de 1 a 18. Cada paso: route permitida, narration completa de 12\u2013700 caracteres, target opcional con identificador sem\u00e1ntico, interaction 'focus' o 'click', hold_ms 500\u20135000. El cliente navega y narra cada paso; un click solo ejecuta controles marcados como lectura segura, mientras los dem\u00e1s se se\u00f1alan visualmente. Dise\u00f1a el recorrido con una historia causal, usa rutas reales, no incluyas acciones de escritura y no prometas resultados no verificados."
     }
   ],
   "context_files": [],
