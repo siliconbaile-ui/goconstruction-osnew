@@ -13,6 +13,7 @@ import { WhatsAppButton } from './WhatsAppConnect';
 import useVoiceOutput, { desbloquearVoz } from '@/hooks/useVoiceOutput';
 import useHistorialClasificado from '@/hooks/useHistorialClasificado';
 import agruparMensajes from '@/lib/agruparMensajes';
+import goSessionContext from '@/components/agent/goSessionContext';
 
 const AGENT_NAME = 'orion_asistente';
 
@@ -56,7 +57,7 @@ export default function ConversationPanel() {
     try {
       const conv = await base44.agents.createConversation({
         agent_name: AGENT_NAME,
-        metadata: { name: `Sesión · ${new Date().toLocaleString('es-CL', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}` }
+        metadata: await goSessionContext()
       });
       setConversations(prev => [conv, ...prev]);
       setActiveId(conv.id);
