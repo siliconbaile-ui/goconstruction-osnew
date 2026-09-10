@@ -14,7 +14,6 @@ import useVoiceOutput, { desbloquearVoz } from '@/hooks/useVoiceOutput';
 import useHistorialClasificado from '@/hooks/useHistorialClasificado';
 import agruparMensajes from '@/lib/agruparMensajes';
 import goSessionContext from '@/components/agent/goSessionContext';
-import useGoDemoPlan from '@/hooks/useGoDemoPlan';
 
 const AGENT_NAME = 'orion_asistente';
 
@@ -48,7 +47,6 @@ export default function ConversationPanel() {
     return () => window.removeEventListener('go:demo-start', silenciarParaDemo);
   }, [detenerVoz]);
   const metas = useHistorialClasificado(conversations, activeId, messages);
-  useGoDemoPlan(messages);
 
   const loadConversations = useCallback(async () => {
     try {
