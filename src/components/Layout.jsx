@@ -3,7 +3,7 @@ import { Outlet, Link, useLocation } from 'react-router-dom';
 import {
   Gauge, TrendingUp, ShieldCheck, ClipboardList, Wallet,
   Settings2, Bell, ChevronRight, Menu, X, Radio, Bot, DatabaseZap,
-  FileBarChart, BookOpen, Camera, Zap, Palette
+  FileBarChart, BookOpen, Camera, Zap, Palette, PlayCircle
 } from 'lucide-react';
 import Logo from '@/components/marca/Logo';
 import MobileTabBar from '@/components/MobileTabBar';
@@ -11,6 +11,7 @@ import ThemeToggle from '@/components/ThemeToggle';
 import NotificacionesMovil from '@/components/pwa/NotificacionesMovil';
 import InstalarApp from '@/components/pwa/InstalarApp';
 import CompartirApp from '@/components/CompartirApp';
+import { startGoMasterDemo } from '@/lib/goMasterDemo';
 
 const NAV_GROUPS = [
   {
@@ -140,6 +141,10 @@ export default function Layout() {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <button onClick={startGoMasterDemo} data-go-demo="start-master-demo" data-go-demo-action="read" title="Iniciar recorrido narrado de GO" className="flex items-center gap-2 h-9 px-3 rounded-full bg-primary text-primary-foreground text-[11px] font-semibold">
+              <PlayCircle className="w-4 h-4" />
+              <span className="hidden sm:inline">DEMO GO</span>
+            </button>
             <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full font-mono text-[11px] text-muted-foreground"
               style={{ background: 'hsl(var(--surface-2))', border: '1px solid hsl(var(--hairline))' }}>
               <Radio className="w-3 h-3" style={{ color: 'hsl(var(--ok))' }} />
