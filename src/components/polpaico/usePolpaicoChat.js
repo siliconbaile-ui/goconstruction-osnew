@@ -10,7 +10,7 @@ export default function usePolpaicoChat(onActivity) {
     if(lock.current||(!text.trim()&&!files.length))return false;
     lock.current=true;setBusy(true);setError('');const current=generation.current;
     try {
-      if(!conv.current){const c=await base44.agents.createConversation({agent_name:'polpaico_go',metadata:{name:'Polpaico · Piloto Icafal Colina'}});if(!mounted.current||generation.current!==current)return false;conv.current=c;unsubscribe.current=base44.agents.subscribeToConversation(c.id,receive);}
+      if(!conv.current){const c=await base44.agents.createConversation({agent_name:'polpaico_go',metadata:{name:'Polpaico · Soluciones y operación'}});if(!mounted.current||generation.current!==current)return false;conv.current=c;unsubscribe.current=base44.agents.subscribeToConversation(c.id,receive);}
       const c=await base44.agents.getConversation(conv.current.id);
       const msg={role:'user',content:text,...(files.length?{file_urls:files}:{})};
       setMessages(prev=>[...prev,{...msg,id:`local-${Date.now()}`}]);
