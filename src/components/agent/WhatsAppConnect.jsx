@@ -5,7 +5,7 @@ const url = () => base44.agents.getWhatsAppConnectURL('orion_asistente');
 
 // El enlace se genera AL HACER CLIC (token fresco) y se abre en pestaña nueva;
 // si el navegador bloquea la ventana, navegamos directo.
-const abrirWhatsApp = (e) => {
+export const abrirWhatsApp = (e) => {
   e.preventDefault();
   const destino = url();
   const win = window.open(destino, '_blank', 'noopener');

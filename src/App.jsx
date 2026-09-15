@@ -42,6 +42,7 @@ import Privacidad from '@/pages/Privacidad';
 import Terminos from '@/pages/Terminos';
 import GuardOnboarding from '@/components/onboarding/GuardOnboarding';
 import GoDemoNavigator from '@/components/demo/GoDemoNavigator';
+import WhatsAppOnboarding from '@/components/whatsapp/WhatsAppOnboarding';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -119,6 +120,7 @@ function App() {
           <ScrollToTop />
           <GoDemoNavigator />
           <AuthenticatedApp />
+          <WhatsAppOnboarding />
         </Router>
         <Toaster />
       </QueryClientProvider>
