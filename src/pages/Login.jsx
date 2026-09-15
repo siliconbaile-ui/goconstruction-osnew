@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { LogIn, Mail, Lock, Loader2, UserPlus } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
 import MicrosoftMark from "@/components/MicrosoftMark";
+import GoogleIcon from "@/components/GoogleIcon";
 import { safeReturnTo } from "@/lib/authReturnTo";
 
 export default function Login() {
@@ -15,6 +16,7 @@ export default function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [microsoftLoading, setMicrosoftLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   // Post-login destination (e.g. the MCP OAuth consent page sends users here
   // with returnTo so the grant flow can resume). Same-origin paths only.
   const returnTo = safeReturnTo();
@@ -46,11 +48,22 @@ export default function Login() {
     }
   };
 
+  const handleGoogle = async () => {
+    setError("");
+    setGoogleLoading(true);
+    try {
+      await base44.auth.loginWithProvider("google", destino);
+    } catch (err) {
+      setError(err.message || "No se pudo iniciar sesión con Google. Inténtalo de nuevo.");
+      setGoogleLoading(false);
+    }
+  };
+
   return (
     <AuthLayout
       icon={LogIn}
       title="Ingresa a la demo de GO"
-      subtitle="Crea tu acceso o continúa con tu cuenta Microsoft. Entrarás directamente al agente GO."
+      subtitle="Crea tu acceso o continúa con tu cuenta Microsoft o Google. Entrarás directamente al agente GO."
       footer={<>¿Ya tienes una cuenta por correo? Ingresa tus datos arriba.</>}
     >
       <Button
@@ -60,6 +73,9 @@ export default function Login() {
         disabled={microsoftLoading || loading}
       >
         {microsoftLoading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Conectando con Microsoft...</> : <><MicrosoftMark className="mr-2 h-4 w-4" />Continuar con Microsoft</>}
+      </Button>
+      <Button variant="outline" className="mb-3 h-12 w-full text-sm font-medium" onClick={handleGoogle} disabled={googleLoading || microsoftLoading || loading}>
+        {googleLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Conectando con Google...</> : <><GoogleIcon className="mr-2 h-5 w-5" />Continuar con Google</>}
       </Button>
       <Button asChild className="mb-6 h-12 w-full text-sm font-semibold">
         <Link to={"/register" + (returnTo !== "/" ? "?returnTo=" + encodeURIComponent(returnTo) : "")}><UserPlus className="mr-2 h-4 w-4" />Crear cuenta para la demo</Link>

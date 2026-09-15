@@ -8,6 +8,7 @@ import { UserPlus, Mail, Lock, Loader2 } from "lucide-react";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import AuthLayout from "@/components/AuthLayout";
 import MicrosoftMark from "@/components/MicrosoftMark";
+import GoogleIcon from "@/components/GoogleIcon";
 import { toast } from "@/components/ui/use-toast";
 import { safeReturnTo } from "@/lib/authReturnTo";
 
@@ -20,6 +21,7 @@ export default function Register() {
   const [showOtp, setShowOtp] = useState(false);
   const [otpCode, setOtpCode] = useState("");
   const [microsoftLoading, setMicrosoftLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   // Sin returnTo explícito, el registro termina directo en el asistente.
   const destino = () => { const r = safeReturnTo(); return r === "/" ? "/app" : r; };
 
@@ -80,6 +82,17 @@ export default function Register() {
     } catch (err) {
       setError(err.message || "No se pudo continuar con Microsoft. Inténtalo de nuevo.");
       setMicrosoftLoading(false);
+    }
+  };
+
+  const handleGoogle = async () => {
+    setError("");
+    setGoogleLoading(true);
+    try {
+      await base44.auth.loginWithProvider("google", destino());
+    } catch (err) {
+      setError(err.message || "No se pudo continuar con Google. Inténtalo de nuevo.");
+      setGoogleLoading(false);
     }
   };
 
@@ -161,6 +174,9 @@ export default function Register() {
         disabled={microsoftLoading || loading}
       >
         {microsoftLoading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Conectando con Microsoft...</> : <><MicrosoftMark className="mr-2 h-4 w-4" />Continuar con Microsoft</>}
+      </Button>
+      <Button variant="outline" className="mb-6 h-12 w-full text-sm font-medium" onClick={handleGoogle} disabled={googleLoading || microsoftLoading || loading}>
+        {googleLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Conectando con Google...</> : <><GoogleIcon className="mr-2 h-5 w-5" />Continuar con Google</>}
       </Button>
 
       <div className="relative mb-6">
