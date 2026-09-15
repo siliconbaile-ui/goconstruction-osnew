@@ -27,7 +27,6 @@ import EvidenciaTerreno from '@/pages/EvidenciaTerreno';
 import VisionUrgente from '@/pages/VisionUrgente';
 import ManualMarca from '@/pages/ManualMarca';
 import OnboardingEmpresa from '@/pages/OnboardingEmpresa';
-import GoPublic from '@/pages/GoPublic';
 import PolpaicoOS from '@/pages/PolpaicoOS';
 import Demo from '@/pages/Demo';
 import Nosotros from '@/pages/Nosotros';
@@ -68,7 +67,7 @@ const AuthenticatedApp = () => {
 
   return (
     <Routes>
-      <Route path="/" element={<GoPublic />} />
+      <Route path="/" element={<Navigate to="/app" replace />} />
       <Route path="/demo" element={<Demo />} />
       <Route path="/polpaico-os" element={<PolpaicoOS />} />
       <Route path="/control-calidad" element={<CasoControlCalidad />} />
