@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
@@ -27,7 +27,7 @@ import EvidenciaTerreno from '@/pages/EvidenciaTerreno';
 import VisionUrgente from '@/pages/VisionUrgente';
 import ManualMarca from '@/pages/ManualMarca';
 import OnboardingEmpresa from '@/pages/OnboardingEmpresa';
-import Visitante from '@/pages/Visitante';
+import GoPublic from '@/pages/GoPublic';
 import PolpaicoOS from '@/pages/PolpaicoOS';
 import Demo from '@/pages/Demo';
 import Nosotros from '@/pages/Nosotros';
@@ -45,8 +45,10 @@ import GoDemoNavigator from '@/components/demo/GoDemoNavigator';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
+  const { pathname } = useLocation();
+  const publicEntry = ['/', '/demo', '/login', '/register', '/forgot-password', '/reset-password'].includes(pathname);
 
-  if (isLoadingPublicSettings || isLoadingAuth) {
+  if (!publicEntry && (isLoadingPublicSettings || isLoadingAuth)) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-surface-base">
         <div className="text-center">
@@ -57,7 +59,7 @@ const AuthenticatedApp = () => {
     );
   }
 
-  if (authError) {
+  if (authError && !publicEntry) {
     if (authError.type === 'user_not_registered') {
       return <UserNotRegisteredError />;
     }
@@ -65,7 +67,7 @@ const AuthenticatedApp = () => {
 
   return (
     <Routes>
-      <Route path="/" element={<Visitante />} />
+      <Route path="/" element={<GoPublic />} />
       <Route path="/demo" element={<Demo />} />
       <Route path="/polpaico-os" element={<PolpaicoOS />} />
       <Route path="/control-calidad" element={<CasoControlCalidad />} />

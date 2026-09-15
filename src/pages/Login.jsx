@@ -35,9 +35,15 @@ export default function Login() {
     }
   };
 
-  const handleGoogle = () => {
+  const handleGoogle = async () => {
+    setError("");
     setGoogleLoading(true);
-    base44.auth.loginWithProvider("google", destino);
+    try {
+      await base44.auth.loginWithProvider("google", destino);
+    } catch (err) {
+      setError(err.message || "No se pudo iniciar sesión con Google. Inténtalo de nuevo.");
+      setGoogleLoading(false);
+    }
   };
 
   return (

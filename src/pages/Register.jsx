@@ -46,9 +46,11 @@ export default function Register() {
     setLoading(true);
     try {
       const result = await base44.auth.verifyOtp({ email, otpCode });
-      if (result?.access_token) {
-        base44.auth.setToken(result.access_token);
+      if (!result?.access_token) {
+        setError("No se pudo confirmar la sesión. Revisa el código e inténtalo nuevamente.");
+        return;
       }
+      base44.auth.setToken(result.access_token);
       window.location.href = destino();
     } catch (err) {
       setError(err.message || "Código de verificación inválido");
@@ -70,9 +72,15 @@ export default function Register() {
     }
   };
 
-  const handleGoogle = () => {
+  const handleGoogle = async () => {
+    setError("");
     setGoogleLoading(true);
-    base44.auth.loginWithProvider("google", destino());
+    try {
+      await base44.auth.loginWithProvider("google", destino());
+    } catch (err) {
+      setError(err.message || "No se pudo continuar con Google. Inténtalo de nuevo.");
+      setGoogleLoading(false);
+    }
   };
 
   if (showOtp) {
