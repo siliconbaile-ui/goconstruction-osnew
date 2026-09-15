@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { UserPlus, Mail, Lock, Loader2 } from "lucide-react";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import AuthLayout from "@/components/AuthLayout";
-import GoogleIcon from "@/components/GoogleIcon";
+import MicrosoftMark from "@/components/MicrosoftMark";
 import { toast } from "@/components/ui/use-toast";
 import { safeReturnTo } from "@/lib/authReturnTo";
 
@@ -19,7 +19,7 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const [showOtp, setShowOtp] = useState(false);
   const [otpCode, setOtpCode] = useState("");
-  const [googleLoading, setGoogleLoading] = useState(false);
+  const [microsoftLoading, setMicrosoftLoading] = useState(false);
   // Sin returnTo explícito, el registro termina directo en el asistente.
   const destino = () => { const r = safeReturnTo(); return r === "/" ? "/app" : r; };
 
@@ -72,14 +72,14 @@ export default function Register() {
     }
   };
 
-  const handleGoogle = async () => {
+  const handleMicrosoft = async () => {
     setError("");
-    setGoogleLoading(true);
+    setMicrosoftLoading(true);
     try {
-      await base44.auth.loginWithProvider("google", destino());
+      await base44.auth.loginWithProvider("microsoft", destino());
     } catch (err) {
-      setError(err.message || "No se pudo continuar con Google. Inténtalo de nuevo.");
-      setGoogleLoading(false);
+      setError(err.message || "No se pudo continuar con Microsoft. Inténtalo de nuevo.");
+      setMicrosoftLoading(false);
     }
   };
 
@@ -141,7 +141,7 @@ export default function Register() {
     <AuthLayout
       icon={UserPlus}
       title="Crea tu cuenta"
-      subtitle="Regístrate para operar tu obra con GO"
+      subtitle="Acceso inmediato a la demo después de verificar tu correo"
       footer={
         <>
           ¿Ya tienes cuenta?{" "}
@@ -157,20 +157,10 @@ export default function Register() {
       <Button
         variant="outline"
         className="w-full h-12 text-sm font-medium mb-6"
-        onClick={handleGoogle}
-        disabled={googleLoading || loading}
+        onClick={handleMicrosoft}
+        disabled={microsoftLoading || loading}
       >
-        {googleLoading ? (
-          <>
-            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-            Conectando con Google...
-          </>
-        ) : (
-          <>
-            <GoogleIcon className="w-5 h-5 mr-2" />
-            Continuar con Google
-          </>
-        )}
+        {microsoftLoading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Conectando con Microsoft...</> : <><MicrosoftMark className="mr-2 h-4 w-4" />Continuar con Microsoft</>}
       </Button>
 
       <div className="relative mb-6">
@@ -245,7 +235,7 @@ export default function Register() {
               Creando cuenta...
             </>
           ) : (
-            "Crear cuenta"
+            "Crear cuenta y entrar a la demo"
           )}
         </Button>
       </form>

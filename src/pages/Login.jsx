@@ -4,9 +4,9 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { LogIn, Mail, Lock, Loader2 } from "lucide-react";
+import { LogIn, Mail, Lock, Loader2, UserPlus } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
-import GoogleIcon from "@/components/GoogleIcon";
+import MicrosoftMark from "@/components/MicrosoftMark";
 import { safeReturnTo } from "@/lib/authReturnTo";
 
 export default function Login() {
@@ -14,7 +14,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(false);
+  const [microsoftLoading, setMicrosoftLoading] = useState(false);
   // Post-login destination (e.g. the MCP OAuth consent page sends users here
   // with returnTo so the grant flow can resume). Same-origin paths only.
   const returnTo = safeReturnTo();
@@ -35,51 +35,34 @@ export default function Login() {
     }
   };
 
-  const handleGoogle = async () => {
+  const handleMicrosoft = async () => {
     setError("");
-    setGoogleLoading(true);
+    setMicrosoftLoading(true);
     try {
-      await base44.auth.loginWithProvider("google", destino);
+      await base44.auth.loginWithProvider("microsoft", destino);
     } catch (err) {
-      setError(err.message || "No se pudo iniciar sesión con Google. Inténtalo de nuevo.");
-      setGoogleLoading(false);
+      setError(err.message || "No se pudo iniciar sesión con Microsoft. Inténtalo de nuevo.");
+      setMicrosoftLoading(false);
     }
   };
 
   return (
     <AuthLayout
       icon={LogIn}
-      title="GoConstruction OS"
-      subtitle="Entra para operar tu obra con GO"
-      footer={
-        <>
-          ¿No tienes cuenta?{" "}
-          <Link
-            to={"/register" + (returnTo !== "/" ? "?returnTo=" + encodeURIComponent(returnTo) : "")}
-            className="text-primary font-medium hover:underline"
-          >
-            Créala aquí
-          </Link>
-        </>
-      }
+      title="Ingresa a la demo de GO"
+      subtitle="Crea tu acceso o continúa con tu cuenta Microsoft. Entrarás directamente al agente GO."
+      footer={<>¿Ya tienes una cuenta por correo? Ingresa tus datos arriba.</>}
     >
       <Button
         variant="outline"
         className="w-full h-12 text-sm font-medium mb-6"
-        onClick={handleGoogle}
-        disabled={googleLoading || loading}
+        onClick={handleMicrosoft}
+        disabled={microsoftLoading || loading}
       >
-        {googleLoading ? (
-          <>
-            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-            Conectando con Google...
-          </>
-        ) : (
-          <>
-            <GoogleIcon className="w-5 h-5 mr-2" />
-            Continuar con Google
-          </>
-        )}
+        {microsoftLoading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Conectando con Microsoft...</> : <><MicrosoftMark className="mr-2 h-4 w-4" />Continuar con Microsoft</>}
+      </Button>
+      <Button asChild className="mb-6 h-12 w-full text-sm font-semibold">
+        <Link to={"/register" + (returnTo !== "/" ? "?returnTo=" + encodeURIComponent(returnTo) : "")}><UserPlus className="mr-2 h-4 w-4" />Crear cuenta para la demo</Link>
       </Button>
 
       <div className="relative mb-6">
