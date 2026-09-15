@@ -1,0 +1,70 @@
+{
+  "name": "CicloGO",
+  "type": "object",
+  "properties": {
+    "proyecto_id": {
+      "type": "string"
+    },
+    "especialidad": {
+      "type": "string"
+    },
+    "tarea": {
+      "type": "string"
+    },
+    "anterior_id": {
+      "type": "string"
+    },
+    "estado": {
+      "type": "string",
+      "enum": [
+        "revision_completada",
+        "requiere_revision_humana",
+        "fallido"
+      ]
+    },
+    "informe": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "revision": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "evidencias": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "aprendizaje_propuesto": {
+      "type": "string"
+    },
+    "es_demo": {
+      "type": "boolean"
+    },
+    "error": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "proyecto_id",
+    "especialidad",
+    "tarea",
+    "estado"
+  ],
+  "rls": {
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}

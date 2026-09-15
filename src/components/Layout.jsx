@@ -12,6 +12,7 @@ import NotificacionesMovil from '@/components/pwa/NotificacionesMovil';
 import InstalarApp from '@/components/pwa/InstalarApp';
 import CompartirApp from '@/components/CompartirApp';
 import { startGoMasterDemo } from '@/lib/goMasterDemo';
+import GoAreaAccess from '@/components/agent/GoAreaAccess';
 
 const NAV_GROUPS = [
   {
@@ -162,6 +163,7 @@ export default function Layout() {
           </div>
         </header>
 
+        <GoAreaAccess />
         <main className="flex-1 overflow-auto min-h-0 bg-surface-base">
           <Outlet />
         </main>

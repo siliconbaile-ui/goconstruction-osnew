@@ -13,6 +13,8 @@ import useVoiceOutput, { desbloquearVoz } from '@/hooks/useVoiceOutput';
 import useHistorialClasificado from '@/hooks/useHistorialClasificado';
 import agruparMensajes from '@/lib/agruparMensajes';
 import goSessionContext from '@/components/agent/goSessionContext';
+import GoLoopIntro from '@/components/agent/GoLoopIntro';
+import GoLoopWorkspace from '@/components/agent/GoLoopWorkspace';
 
 const AGENT_NAME = 'orion_asistente';
 
@@ -229,6 +231,8 @@ criterio técnico con los datos reales de tu obra
           {/* Mensajes */}
           <div ref={scrollRef} data-scroll-area
             className="flex-1 overflow-y-auto min-h-0 px-3 sm:px-4 lg:px-8 py-4 sm:py-6 scroll-smooth">
+            <GoLoopIntro />
+            <GoLoopWorkspace onPrompt={send} disabled={sending || !activeId} />
             <PanelControlRio onPrompt={send} />
             {!hasMessages ? (
               <WelcomeHero onPrompt={send} activo={sending} />
