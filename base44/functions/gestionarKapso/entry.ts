@@ -1,6 +1,8 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.44';
 import { kapsoRequest, kapsoWindow } from '../../shared/kapso.ts';
 
+const GO_SANDBOX_PHONE_ID = '597907523413541';
+
 export default async function(req) {
   try {
     const base44 = createClientFromRequest(req);
@@ -12,10 +14,12 @@ export default async function(req) {
     if (action === 'numbers') {
       const page = Math.max(1, Math.min(10000, Math.floor(Number(input.page) || 1)));
       const result = await kapsoRequest(`/whatsapp/phone_numbers?per_page=20&page=${page}`, { platform: true });
-      return Response.json({ data: result.data.map(n => ({ id: n.phone_number_id, name: n.name, number: n.display_phone_number || '', status: n.status || 'Sin estado informado' })), meta: result.meta });
+      const sandbox = result.data.filter(n => n.phone_number_id === GO_SANDBOX_PHONE_ID);
+      return Response.json({ data: sandbox.map(n => ({ id: n.phone_number_id, name: n.name, number: n.display_phone_number || '', status: n.status || 'Sin estado informado' })), meta: { ...result.meta, total_pages: 1, total_count: sandbox.length } });
     }
     if (!['conversations', 'messages', 'send'].includes(action)) return Response.json({ error: 'Operación no válida.' }, { status: 400 });
     if (typeof phoneId !== 'string' || !/^\d{1,30}$/.test(phoneId)) return Response.json({ error: 'Selecciona un número de Kapso.' }, { status: 400 });
+    if (phoneId !== GO_SANDBOX_PHONE_ID) return Response.json({ error: 'GO está configurado exclusivamente para Sandbox WhatsApp.' }, { status: 403 });
     const numbers = await kapsoRequest(`/whatsapp/phone_numbers?phone_number_id=${phoneId}`, { platform: true });
     if (!numbers.data?.some(n => n.phone_number_id === phoneId)) return Response.json({ error: 'Número no disponible en esta cuenta.' }, { status: 403 });
     if (input.after && (typeof input.after !== 'string' || input.after.length > 4096)) return Response.json({ error: 'Página no válida.' }, { status: 400 });
