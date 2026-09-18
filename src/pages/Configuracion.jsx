@@ -5,6 +5,7 @@ import { Plus, CheckCircle, Building2, Rocket } from 'lucide-react';
 import OrionCard from '@/components/OrionCard';
 import WhatsAppConnect from '@/components/agent/WhatsAppConnect';
 import GestionEquipo from '@/components/onboarding/GestionEquipo';
+import KapsoPanel from '@/components/kapso/KapsoPanel';
 
 const CHECKLIST_ITEMS = [
   { key: 'nombre', label: 'Nombre de obra configurado' },
@@ -119,6 +120,7 @@ export default function Configuracion() {
       </div>
 
       <WhatsAppConnect />
+      <KapsoPanel />
 
       <GestionEquipo />
 
