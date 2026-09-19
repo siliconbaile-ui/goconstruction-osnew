@@ -32,7 +32,7 @@ export default function ChatComposer({ value, onChange, onSend, sending, onVoice
   };
 
   return (
-    <div className="flex-shrink-0 px-3 sm:px-4 lg:px-8 pt-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:pb-5">
+    <div className="go-control-composer-wrap flex-shrink-0 px-3 sm:px-4 lg:px-8 pt-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:pb-5">
       {files.length > 0 && (
         <div className="max-w-5xl mx-auto flex flex-wrap gap-2 mb-2">
           {files.map(f => (
@@ -48,7 +48,7 @@ export default function ChatComposer({ value, onChange, onSend, sending, onVoice
         </div>
       )}
       {/* Composer amplio: área de escritura de varias líneas y acciones abajo. */}
-      <div className="max-w-5xl mx-auto flex flex-col gap-2 px-3 sm:px-4 pt-3 pb-2.5 rounded-3xl bg-surface border border-hairline orion-elevated">
+      <div className="go-control-composer max-w-5xl mx-auto flex flex-col gap-2 px-3 sm:px-4 pt-3 pb-2.5 rounded-3xl bg-surface border border-hairline orion-elevated">
         <textarea
           value={value}
           onChange={e => onChange(e.target.value)}

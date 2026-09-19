@@ -28,7 +28,7 @@ export default function PanelControlRio({ onPrompt }) {
   }, []);
 
   return (
-    <div className="max-w-3xl mx-auto mb-4">
+    <div className="go-control-panel max-w-3xl mx-auto mb-4">
       <div className="flex items-center gap-2 mb-2.5">
         <div className="w-6 h-6 rounded-lg flex items-center justify-center bg-primary">
           <LayoutDashboard className="w-3 h-3 text-primary-foreground" />

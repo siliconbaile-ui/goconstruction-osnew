@@ -17,9 +17,9 @@ export default function WelcomeHero({ onPrompt, activo }) {
   const nombre = usuario?.full_name?.split(' ')[0];
 
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="go-control-welcome max-w-3xl mx-auto">
       {/* Mensaje de apertura · sintonizado al cargo */}
-      <div className="flex gap-3 mb-5">
+      <div className="go-control-hero flex gap-3 mb-5">
         <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 bg-primary">
           <span className="text-primary-foreground text-[11px] font-bold">GO</span>
         </div>
@@ -37,7 +37,7 @@ export default function WelcomeHero({ onPrompt, activo }) {
       </div>
 
       {/* Ciclo agéntico */}
-      <div className="rounded-2xl p-4 sm:p-5 mb-6 bg-surface border border-hairline">
+      <div className="go-control-cycle rounded-2xl p-4 sm:p-5 mb-6 bg-surface border border-hairline">
         <div className="flex items-center justify-between mb-1.5">
           <div className="text-[10px] font-mono tracking-widest text-primary">CICLO 1 · CÓMO OPERA GO</div>
           <div className="flex gap-1">
@@ -67,7 +67,7 @@ export default function WelcomeHero({ onPrompt, activo }) {
       </div>
 
       {/* Tiles según cargo */}
-      <div className="grid grid-cols-2 gap-3 mb-4">
+      <div className="go-control-quick grid grid-cols-2 gap-3 mb-4">
         {s.tiles.map(({ label, sub, icon: Icon, prompt }) => (
           <button key={label} onClick={() => onPrompt(prompt)}
             className="text-left p-4 min-h-[104px] rounded-2xl bg-surface border border-hairline transition-all hover:border-primary/40 active:scale-[0.98]">
@@ -81,7 +81,7 @@ export default function WelcomeHero({ onPrompt, activo }) {
       </div>
 
       {/* Chips según cargo */}
-      <div className="flex flex-wrap gap-2">
+      <div className="go-control-chips flex flex-wrap gap-2">
         {s.chips.map(c => (
           <button key={c} onClick={() => onPrompt(c)}
             className="px-4 min-h-11 flex items-center rounded-full text-sm sm:text-xs bg-surface border border-hairline text-foreground/80 transition-colors hover:border-primary/40 active:scale-[0.98]">

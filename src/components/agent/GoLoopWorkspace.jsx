@@ -13,7 +13,7 @@ export default function GoLoopWorkspace({ onPrompt, disabled }) {
   const [especialidad, setEspecialidad] = useState('general'), [tarea, setTarea] = useState('');
   const [open, setOpen] = useState(Boolean(new URLSearchParams(search).get('go_area')));
   useEffect(() => { const area = new URLSearchParams(search).get('go_area'); if (areas.some(([, items]) => items.some(([id]) => id === area))) { setEspecialidad(area); setOpen(true); } }, [search]);
-  return <details open={open} onToggle={event => setOpen(event.currentTarget.open)} className="mx-auto mb-4 max-w-5xl rounded-xl border border-hairline bg-surface p-3">
+  return <details open={open} onToggle={event => setOpen(event.currentTarget.open)} className="go-control-workers mx-auto mb-4 max-w-5xl rounded-xl border border-hairline bg-surface p-3">
     <summary className="flex min-h-11 cursor-pointer items-center gap-2 text-xs font-semibold"><Network className="h-4 w-4 text-primary" />Trabajadores IA · iniciar y seguir un ciclo</summary>
     {open && <div className="mt-3 space-y-4">
       <form onSubmit={event => { event.preventDefault(); loop.run({ tarea, especialidad }); }} className="space-y-3">

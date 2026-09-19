@@ -189,15 +189,15 @@ export default function ConversationPanel() {
   const hasMessages = messages.length > 0;
 
   return (
-    <div className="flex h-full min-h-0 overflow-hidden bg-surface-base text-foreground">
+    <div className="go-control-shell flex h-full min-h-0 overflow-hidden bg-surface-base text-foreground">
       {colIzq && <AgentSidebar onPrompt={send} ficha={ficha} />}
       <BotonColumna lado="izquierda" abierta={colIzq} onToggle={() => setColIzq(v => !v)} />
 
       {/* CENTRO */}
-      <div className="flex-1 flex flex-col min-w-0 min-h-0 p-0 sm:p-4 lg:px-0">
-        <div className="flex flex-col min-h-0 flex-1 rounded-none sm:rounded-2xl overflow-hidden bg-surface-base border-0 sm:border border-hairline">
+      <div className="go-control-center flex-1 flex flex-col min-w-0 min-h-0 p-0 sm:p-4 lg:px-0">
+        <div className="go-control-card flex flex-col min-h-0 flex-1 rounded-none sm:rounded-2xl overflow-hidden bg-surface-base border-0 sm:border border-hairline">
           {/* Header agente */}
-          <header className="flex items-center gap-2.5 sm:gap-3 px-3 sm:px-5 lg:px-8 py-2.5 sm:py-4 flex-shrink-0 border-b border-hairline bg-surface">
+          <header className="go-control-agentbar flex items-center gap-2.5 sm:gap-3 px-3 sm:px-5 lg:px-8 py-2.5 sm:py-4 flex-shrink-0 border-b border-hairline bg-surface">
             <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center flex-shrink-0 bg-primary">
               <Sparkles className="w-4 h-4 text-primary-foreground" />
             </div>
@@ -230,14 +230,14 @@ criterio técnico con los datos reales de tu obra
 
           {/* Mensajes */}
           <div ref={scrollRef} data-scroll-area
-            className="flex-1 overflow-y-auto min-h-0 px-3 sm:px-4 lg:px-8 py-4 sm:py-6 scroll-smooth">
+            className="go-control-stream flex-1 overflow-y-auto min-h-0 px-3 sm:px-4 lg:px-8 py-4 sm:py-6 scroll-smooth">
             <GoLoopIntro />
             <GoLoopWorkspace onPrompt={send} disabled={sending || !activeId} />
             <PanelControlRio onPrompt={send} />
             {!hasMessages ? (
-              <WelcomeHero onPrompt={send} activo={sending} />
+              <div className="go-control-conversation"><WelcomeHero onPrompt={send} activo={sending} /></div>
             ) : (
-              <div className="max-w-5xl mx-auto space-y-3 sm:space-y-4">
+              <div className="go-control-conversation max-w-5xl mx-auto space-y-3 sm:space-y-4">
                 {agruparMensajes(messages).map(m => (
                   <MessageBubble key={m.id || m.created_date} message={m} conversacionId={activeId} />
                 ))}

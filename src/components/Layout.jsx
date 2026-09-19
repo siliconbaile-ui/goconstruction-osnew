@@ -114,6 +114,22 @@ export default function Layout() {
           ))}
         </nav>
 
+        <div className="lg:hidden px-4 py-3 border-t border-hairline">
+          <div className="mb-2 font-mono text-[9px] tracking-[0.18em] text-muted-foreground">CONTROLES</div>
+          <div className="flex flex-wrap items-center gap-2">
+            <button onClick={startGoMasterDemo} title="Iniciar recorrido narrado de GO" className="flex h-9 items-center gap-2 rounded-full bg-primary px-3 text-[10px] font-semibold text-primary-foreground">
+              <PlayCircle className="h-4 w-4" /> DEMO GO
+            </button>
+            <ThemeToggle />
+            <NotificacionesMovil />
+            <CompartirApp />
+            <Link to="/centro-alertas" title="Centro de Alertas" onClick={() => setSidebarOpen(false)} className="relative flex h-9 w-9 items-center justify-center rounded-full border border-hairline bg-surface-raised text-muted-foreground">
+              <Bell className="h-4 w-4" />
+              <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-danger" />
+            </Link>
+          </div>
+        </div>
+
         {/* Footer */}
         <div className="px-4 py-4" style={{ borderTop: '1px solid hsl(var(--hairline))' }}>
           <div className="text-[10px] font-mono space-y-1 text-muted-foreground">
@@ -126,14 +142,14 @@ export default function Layout() {
       {/* Main */}
       <div className="flex-1 flex flex-col min-w-0 min-h-0">
         <InstalarApp />
-        <header className="flex items-center justify-between px-4 lg:px-6 py-3 flex-shrink-0"
+        <header className={`flex items-center justify-between px-4 lg:px-6 py-3 flex-shrink-0 ${location.pathname === '/app' ? 'go-control-top' : ''}`}
           style={{
             background: 'hsl(var(--surface-1))',
             borderBottom: '1px solid hsl(var(--hairline))',
             paddingTop: 'max(0.75rem, env(safe-area-inset-top))',
           }}>
           <div className="flex items-center gap-3">
-            <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-1 text-muted-foreground hover:text-foreground">
+            <button onClick={() => setSidebarOpen(true)} aria-label="Abrir menú" className="go-control-menu lg:hidden p-1 text-muted-foreground hover:text-foreground">
               <Menu className="w-5 h-5" />
             </button>
             <span className="lg:hidden min-w-0"><Logo tamano="sm" conBajada={false} /></span>
@@ -141,7 +157,7 @@ export default function Layout() {
               GOCONSTRUCTION OS · COMMAND CENTER · <span style={{ color: 'hsl(var(--ok))' }}>OBRA PILOTO ACTIVA</span>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="go-control-toptools flex items-center gap-2">
             <button onClick={startGoMasterDemo} data-go-demo="start-master-demo" data-go-demo-action="read" title="Iniciar recorrido narrado de GO" className="flex items-center gap-2 h-9 px-3 rounded-full bg-primary text-primary-foreground text-[11px] font-semibold">
               <PlayCircle className="w-4 h-4" />
               <span className="hidden sm:inline">DEMO GO</span>

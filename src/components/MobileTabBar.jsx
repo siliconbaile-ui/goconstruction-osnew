@@ -13,7 +13,7 @@ const TABS = [
 export default function MobileTabBar() {
   const { pathname } = useLocation();
   return (
-    <nav className="lg:hidden flex-shrink-0 flex items-stretch"
+    <nav className={`lg:hidden flex-shrink-0 flex items-stretch ${pathname === '/app' ? 'go-control-tabs' : ''}`}
       style={{
         background: 'hsl(var(--surface-1))',
         borderTop: '1px solid hsl(var(--hairline))',
