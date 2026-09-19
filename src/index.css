@@ -505,9 +505,9 @@ button, a, [role="button"] {
     outline-offset: 3px;
   }
   .go-control-top {
-    min-height: 52px;
-    padding: 8px 12px !important;
-    gap: 8px;
+    min-height: 44px;
+    padding: 6px 10px !important;
+    gap: 7px;
     background: #1D2A3A !important;
     border-bottom: 1px solid #334456 !important;
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -543,8 +543,8 @@ button, a, [role="button"] {
   .go-control-center { padding: 0; }
   .go-control-card { background: #182331; border: 0; }
   .go-control-agentbar {
-    min-height: 48px;
-    padding: 6px 12px;
+    min-height: 44px;
+    padding: 5px 10px;
     gap: 7px;
     background: #1D2A3A;
     border-color: #334456;
@@ -574,35 +574,42 @@ button, a, [role="button"] {
   .go-control-stream {
     display: flex;
     flex-direction: column;
-    padding: 10px 12px;
+    padding: 8px;
     background: #182331;
+    scroll-padding-block: 8px;
   }
   .go-control-panel { order: 1; width: 100%; animation: go-control-fadeup .65s .08s ease both; }
-  .go-control-conversation { order: 2; width: 100%; animation: go-control-fadeup .65s .16s ease both; }
+  .go-control-conversation { order: 2; width: 100%; max-width: none; animation: go-control-fadeup .65s .16s ease both; }
   .go-control-agents { order: 3; width: 100%; animation: go-control-fadeup .65s .24s ease both; }
   .go-control-workers { order: 4; width: 100%; animation: go-control-fadeup .65s .32s ease both; }
   .go-control-has-messages .go-control-conversation { order: 1; }
   .go-control-has-messages .go-control-panel { order: 2; }
   .go-control-has-messages .go-control-agents { order: 3; }
   .go-control-has-messages .go-control-workers { order: 4; }
-  .go-control-message { scroll-margin-top: 8px; }
-  .go-control-message + .go-control-message { margin-top: 14px; }
+  .go-control-message { width: 100%; scroll-margin-top: 8px; }
+  .go-control-message + .go-control-message { margin-top: 12px; }
   .go-message-assistant > div { width: 100%; }
   .go-message-assistant [class*="rounded-tl-sm"] {
-    padding: 15px 14px;
-    border-color: #405367;
+    width: 100%;
+    padding: 16px;
+    border-color: #4A6075;
+    border-radius: 16px 16px 16px 5px;
     background: #263648;
   }
+  .go-message-user > div { max-width: min(88%, 38rem); }
   .go-message-user [class*="rounded-tr-sm"] { background: #F28C28; color: #202A32; }
   .go-message-content {
+    max-width: 76ch;
     font-family: system-ui, sans-serif;
-    font-size: 16px;
-    line-height: 1.62;
+    font-size: 16.5px;
+    line-height: 1.68;
     color: #F5F7FA;
   }
-  .go-message-content :is(h1,h2,h3) { margin-top: 1rem; margin-bottom: .5rem; line-height: 1.25; }
-  .go-message-content p { margin: .55rem 0; }
-  .go-message-content li { margin: .35rem 0; }
+  .go-message-content :is(h1,h2,h3) { margin-top: 1.1rem; margin-bottom: .55rem; line-height: 1.25; letter-spacing: -.01em; }
+  .go-message-content p { margin: .65rem 0; }
+  .go-message-content li { margin: .4rem 0; }
+  .go-message-assistant [class*="mt-2"][class*="text-xs"] { font-size: 12px; line-height: 1.5; }
+  .go-message-assistant [class*="mt-2"][class*="text-xs"] > button { padding-block: 10px; }
   .go-control-panel > div:first-child { margin-bottom: 10px; }
   .go-control-panel > div:first-child > div {
     background: #F28C28;
@@ -702,13 +709,14 @@ button, a, [role="button"] {
   .go-control-workers button:hover { background: #F2B544; transform: translateY(-1px); }
   .go-control-workers button:active { opacity: .65; transform: translateY(1px); }
   .go-control-composer-wrap {
-    padding: 0 12px 10px;
+    padding: 0 8px 8px;
     background: #182331;
     animation: go-control-fadeup .65s .4s ease both;
   }
   .go-control-composer {
     margin: 0;
-    padding: 10px;
+    max-width: none;
+    padding: 8px 10px;
     border: 1px solid #F28C28;
     border-radius: 18px;
     background: #263648;
@@ -716,8 +724,8 @@ button, a, [role="button"] {
     animation: go-control-glow 2.8s ease-in-out infinite;
   }
   .go-control-composer textarea {
-    height: 56px;
-    min-height: 56px;
+    height: 48px;
+    min-height: 48px;
     border: 0;
     color: #F5F7FA;
     font-family: system-ui, sans-serif;
@@ -746,14 +754,14 @@ button, a, [role="button"] {
     font-weight: 700;
   }
   .go-control-tabs {
-    height: calc(61px + env(safe-area-inset-bottom));
+    height: calc(56px + env(safe-area-inset-bottom));
     background: #1D2A3A !important;
     border-top: 1px solid #334456 !important;
     animation: go-control-fadeup .65s .48s ease both;
   }
   .go-control-tabs a {
-    min-height: 61px;
-    padding: 8px 2px 6px;
+    min-height: 56px;
+    padding: 6px 2px 5px;
     color: #AAB7C5 !important;
     font-size: 8px;
     letter-spacing: .1em;
