@@ -8,10 +8,10 @@ const messages = [
 
 export default function WhatsAppSimulation({ onBack }) {
   return <div className="space-y-3">
-    <button onClick={onBack} className="flex min-h-11 items-center gap-2 text-xs text-muted-foreground"><ArrowLeft className="h-4 w-4" />Volver</button>
+    <button onClick={onBack} className="flex min-h-12 items-center gap-2 rounded-lg px-2 text-sm text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"><ArrowLeft className="h-4 w-4" />Volver</button>
     <div className="rounded-2xl bg-surface-base p-3 space-y-2">
       {messages.map(({ side, icon: Icon, text }, index) => <div key={index} className={`flex gap-2 ${side === 'user' ? 'ml-7 justify-end' : 'mr-7'}`}>
-        <div className={`rounded-2xl p-3 text-xs leading-relaxed ${side === 'user' ? 'bg-ok text-primary-foreground rounded-tr-sm' : 'bg-surface-raised text-foreground rounded-tl-sm'}`}>
+        <div className={`rounded-2xl p-3 text-sm leading-relaxed ${side === 'user' ? 'bg-ok text-primary-foreground rounded-tr-sm' : 'bg-surface-raised text-foreground rounded-tl-sm'}`}>
           <Icon className="mb-1.5 h-4 w-4" />{text}
         </div>
       </div>)}

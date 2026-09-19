@@ -1,26 +1,17 @@
 import { base44 } from '@/api/base44Client';
-import { MessageCircle, Camera, FileText, MapPin } from 'lucide-react';
+import { Camera, FileText, MapPin } from 'lucide-react';
+import WhatsAppConnectLink from '@/components/whatsapp/WhatsAppConnectLink';
 
 const url = () => base44.agents.getWhatsAppConnectURL('orion_asistente');
 
-// El enlace se genera AL HACER CLIC (token fresco) y se abre en pestaña nueva;
-// si el navegador bloquea la ventana, navegamos directo.
+// Compatibilidad con otros accesos: una sola navegación, sin ventanas emergentes.
 export const abrirWhatsApp = (e) => {
-  e.preventDefault();
-  const destino = url();
-  const win = window.open(destino, '_blank', 'noopener');
-  if (!win) window.location.href = destino;
+  e?.preventDefault();
+  window.location.assign(url());
 };
 
 export function WhatsAppButton() {
-  return (
-    <a href="#whatsapp" onClick={abrirWhatsApp}
-      className="flex items-center gap-1.5 px-3 py-2 rounded-full text-[11px] font-semibold tracking-wide flex-shrink-0"
-      style={{ background: 'hsl(var(--ok) / 0.14)', color: 'hsl(var(--ok))' }}>
-      <MessageCircle className="w-3.5 h-3.5" />
-      <span className="hidden sm:inline">WHATSAPP</span>
-    </a>
-  );
+  return <WhatsAppConnectLink className="shrink-0 rounded-full bg-ok/15 px-3 text-xs text-ok sm:min-h-10">WhatsApp</WhatsAppConnectLink>;
 }
 
 const FLUJO = [
@@ -56,14 +47,9 @@ export default function WhatsAppConnect() {
         ))}
       </div>
 
-      <a href="#whatsapp" onClick={abrirWhatsApp}
-        className="flex items-center justify-center gap-2 w-full h-11 rounded-xl text-sm font-semibold text-white"
-        style={{ background: 'hsl(var(--ok))' }}>
-        <MessageCircle className="w-4 h-4" />
-        Conectar mi WhatsApp
-      </a>
-      <p className="text-[10px] leading-relaxed mt-2 text-muted-foreground">
-        Se abre el chat con tu cuenta ya vinculada. Cada usuario conecta su número una vez.
+      <WhatsAppConnectLink className="w-full bg-ok px-4 text-sm text-primary-foreground">Conectar mi WhatsApp</WhatsAppConnectLink>
+      <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+        Abre WhatsApp y envía el mensaje de conexión que aparece preparado. Si se solicita, inicia sesión para vincular tu cuenta.
       </p>
     </div>
   );

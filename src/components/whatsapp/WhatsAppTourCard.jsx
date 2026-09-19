@@ -1,18 +1,24 @@
-import { ArrowRight, Camera, FileText, MapPin, MessageCircle, X } from 'lucide-react';
+import { Camera, FileText, MapPin, MessageCircle, X } from 'lucide-react';
 import WhatsAppSimulation from '@/components/whatsapp/WhatsAppSimulation';
+import WhatsAppConnectLink from '@/components/whatsapp/WhatsAppConnectLink';
 
-const steps = [
-  { eyebrow: 'GO TAMBIÉN VIVE EN TERRENO', title: 'Opera la plataforma desde WhatsApp', text: 'Presiona aquí y comprueba cómo el equipo puede conversar con GO sin aprender otra aplicación.', items: [] },
-  { eyebrow: 'DEL CHAT A LA TRAZABILIDAD', title: 'Una conversación se convierte en gestión', text: 'GO interpreta lo recibido, lo vincula a la obra y mantiene evidencia para revisar cada decisión.', items: [[Camera, 'Fotos y notas desde terreno'], [FileText, 'Planos, EETT y contratos'], [MapPin, 'Obra, ubicación y responsable']] },
-];
-export default function WhatsAppTourCard({ step, setStep, onClose, onConnect }) {
-  if (step === 2) return <div className="w-[min(24rem,calc(100vw-1.5rem))] rounded-3xl border border-hairline bg-surface p-5 shadow-2xl"><WhatsAppSimulation onBack={() => setStep(1)} /></div>;
-  const current = steps[step];
-  return <section aria-live="polite" aria-label="Recorrido de WhatsApp" className="w-[min(24rem,calc(100vw-1.5rem))] rounded-3xl border border-hairline bg-surface p-5 shadow-2xl">
-    <div className="mb-4 flex items-start gap-3"><span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-ok text-primary-foreground"><MessageCircle className="h-5 w-5" /></span><div className="min-w-0 flex-1"><p className="text-[10px] font-mono tracking-widest text-ok">{current.eyebrow}</p><h2 className="mt-1 text-lg font-semibold leading-tight">{current.title}</h2></div><button onClick={onClose} aria-label="Cerrar recorrido" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-muted-foreground hover:bg-surface-raised"><X className="h-4 w-4" /></button></div>
-    <p className="text-sm leading-relaxed text-muted-foreground">{current.text}</p>
-    {current.items.length > 0 && <div className="my-4 space-y-2">{current.items.map(([Icon, label]) => <div key={label} className="flex items-center gap-3 rounded-xl bg-surface-raised p-3 text-xs"><Icon className="h-4 w-4 text-ok" />{label}</div>)}</div>}
-    <div className="mt-5 flex gap-2">{step === 0 ? <button onClick={() => setStep(1)} className="flex min-h-11 flex-1 items-center justify-center gap-2 rounded-full bg-ok px-4 text-sm font-semibold text-primary-foreground">Ver cómo funciona<ArrowRight className="h-4 w-4" /></button> : <><button onClick={() => setStep(2)} className="min-h-11 flex-1 rounded-full bg-surface-raised px-3 text-xs font-semibold">Ver simulación</button><button onClick={onConnect} className="min-h-11 flex-1 rounded-full bg-ok px-3 text-xs font-semibold text-primary-foreground">Conectar WhatsApp</button></>}</div>
-    <div className="mt-4 flex justify-center gap-1.5">{steps.map((_, index) => <span key={index} className={`h-1.5 rounded-full ${index === step ? 'w-5 bg-ok' : 'w-1.5 bg-hairline'}`} />)}</div>
+export default function WhatsAppTourCard({ step, setStep, onClose, onConnect, mobile = false }) {
+  return <section aria-label="Conectar GO a WhatsApp" className={mobile ? 'flex min-h-0 flex-1 flex-col text-foreground' : 'flex max-h-[85dvh] w-[min(24rem,calc(100vw-1.5rem))] flex-col overflow-hidden rounded-3xl border border-hairline bg-surface text-foreground shadow-2xl'}>
+    <header className="flex shrink-0 items-center gap-3 px-5 pb-3 pt-5">
+      <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-ok/15 text-ok"><MessageCircle className="h-6 w-6" /></span>
+      <div className="min-w-0 flex-1"><p className="text-xs font-medium text-ok">GO en terreno</p><h2 className="mt-1 text-xl font-semibold leading-tight">Lleva GO a tu WhatsApp</h2></div>
+      <button type="button" onClick={onClose} aria-label="Cerrar recorrido" className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring active:bg-surface-raised"><X className="h-5 w-5" /></button>
+    </header>
+    <div className="min-h-0 overflow-y-auto overscroll-contain px-5 pb-4" data-vaul-no-drag>
+      {step === 2 ? <WhatsAppSimulation onBack={() => setStep(0)} /> : <>
+        <p className="text-base leading-relaxed text-muted-foreground">Conversa con GO desde la obra. Abre WhatsApp y envía el mensaje preparado para conectar tu cuenta.</p>
+        {step === 1 && <div className="mt-4 space-y-3">{[[Camera, 'Comparte fotos y notas de terreno'], [FileText, 'Consulta documentos con GO'], [MapPin, 'Indica la obra y el sector']].map(([Icon, text]) => <div key={text} className="flex items-center gap-3 rounded-xl bg-surface-raised p-3 text-sm"><Icon className="h-5 w-5 shrink-0 text-ok" />{text}</div>)}<p className="mt-3 text-sm text-muted-foreground">Revisa con GO la obra y los permisos antes de registrar información.</p></div>}
+      </>}
+    </div>
+    <footer className="shrink-0 space-y-2 border-t border-hairline bg-surface px-5 pb-5 pt-4">
+      <WhatsAppConnectLink onOpen={onConnect} className="min-h-14 w-full bg-ok px-4 text-base text-primary-foreground">Conectar WhatsApp</WhatsAppConnectLink>
+      <p className="text-center text-xs leading-relaxed text-muted-foreground">La conexión se completa al enviar el mensaje en WhatsApp.</p>
+      {step !== 2 && <div className="flex gap-2"><button type="button" onClick={() => setStep(step === 1 ? 0 : 1)} className="min-h-12 flex-1 rounded-xl px-2 text-sm text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring active:bg-surface-raised">{step === 1 ? 'Ver menos' : 'Cómo funciona'}</button><button type="button" onClick={() => setStep(2)} className="min-h-12 flex-1 rounded-xl px-2 text-sm text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring active:bg-surface-raised">Ver ejemplo</button></div>}
+    </footer>
   </section>;
 }

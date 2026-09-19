@@ -215,13 +215,13 @@ GO<span className="hidden sm:inline"> · jefe técnico de obra</span>
 criterio técnico con los datos reales de tu obra
               </span>
               <WhatsAppButton />
-              <button onClick={() => setPanelMovil(true)}
-                className="lg:hidden flex items-center gap-1.5 h-9 px-3 rounded-full text-[11px] font-semibold tracking-wide flex-shrink-0 bg-surface-raised text-foreground/85 active:scale-95 transition-transform">
+              <button onClick={() => setPanelMovil(true)} aria-label="Abrir información de la obra"
+                className="lg:hidden flex min-h-12 min-w-12 sm:min-h-9 items-center justify-center gap-1.5 px-3 rounded-full text-[11px] font-semibold tracking-wide flex-shrink-0 bg-surface-raised text-foreground/85 active:opacity-80">
                 <Activity className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">OBRA</span>
               </button>
-              <button onClick={startNewConversation}
-                className="flex items-center gap-1.5 h-9 px-3 rounded-full text-[11px] font-semibold tracking-wide flex-shrink-0 bg-surface-raised text-primary active:scale-95 transition-transform">
+              <button onClick={startNewConversation} aria-label="Nueva conversación con GO"
+                className="flex min-h-12 min-w-12 sm:min-h-9 items-center justify-center gap-1.5 px-3 rounded-full text-[11px] font-semibold tracking-wide flex-shrink-0 bg-surface-raised text-primary active:opacity-80">
                 <Plus className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">NUEVA SESIÓN</span>
               </button>
