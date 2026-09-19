@@ -21,7 +21,7 @@ export default async function (req: Request): Promise<Response> {
       if (typeof documento_id !== 'string') {
         return Response.json({ error: 'documento_id inválido' }, { status: 400 });
       }
-      const [documento] = await base44.entities.DocumentoTecnico.filter({ id: documento_id }, undefined, 1);
+      const documento = await base44.entities.DocumentoTecnico.get(documento_id).catch(() => null);
       if (!documento) return Response.json({ error: 'Documento no encontrado' }, { status: 404 });
       // Mismo permiso de edición que DocumentoTecnico: creador o administrador.
       // Debe comprobarse antes de escribir vectores, grafo o metadatos.
