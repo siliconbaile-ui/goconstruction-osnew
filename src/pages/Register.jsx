@@ -4,15 +4,20 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { UserPlus, Mail, Lock, Loader2 } from "lucide-react";
+import { UserPlus, Mail, Lock, Loader2, User, Phone, Building2, Briefcase } from "lucide-react";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import AuthLayout from "@/components/AuthLayout";
 import MicrosoftMark from "@/components/MicrosoftMark";
 import GoogleIcon from "@/components/GoogleIcon";
 import { toast } from "@/components/ui/use-toast";
 import { safeReturnTo } from "@/lib/authReturnTo";
+import { CARGOS } from "@/lib/cargos";
 
 export default function Register() {
+  const [nombre, setNombre] = useState("");
+  const [telefono, setTelefono] = useState("");
+  const [cargo, setCargo] = useState("");
+  const [empresa, setEmpresa] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -53,6 +58,12 @@ export default function Register() {
         return;
       }
       base44.auth.setToken(result.access_token);
+      await base44.auth.updateMe({
+        nombre_contacto: nombre.trim(),
+        telefono: telefono.trim(),
+        cargo,
+        empresa_nombre: empresa.trim(),
+      });
       window.location.href = destino();
     } catch (err) {
       setError(err.message || "Código de verificación inválido");
@@ -196,6 +207,37 @@ export default function Register() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
+          <Label htmlFor="nombre">Nombre completo</Label>
+          <div className="relative">
+            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" aria-hidden="true" />
+            <Input id="nombre" autoComplete="name" placeholder="Tu nombre y apellido" value={nombre} onChange={(e) => setNombre(e.target.value)} className="pl-10 h-12" required />
+          </div>
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="telefono">Teléfono</Label>
+          <div className="relative">
+            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" aria-hidden="true" />
+            <Input id="telefono" type="tel" autoComplete="tel" placeholder="+56 9 1234 5678" value={telefono} onChange={(e) => setTelefono(e.target.value)} className="pl-10 h-12" required />
+          </div>
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="cargo">Cargo</Label>
+          <div className="relative">
+            <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" aria-hidden="true" />
+            <select id="cargo" value={cargo} onChange={(e) => setCargo(e.target.value)} className="w-full h-12 rounded-md border border-input bg-transparent pl-10 pr-3 text-sm text-foreground" required>
+              <option value="" className="bg-background">Selecciona tu cargo</option>
+              {CARGOS.map((item) => <option key={item.value} value={item.value} className="bg-background">{item.label}</option>)}
+            </select>
+          </div>
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="empresa">Empresa</Label>
+          <div className="relative">
+            <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" aria-hidden="true" />
+            <Input id="empresa" autoComplete="organization" placeholder="Constructora Ejemplo SpA" value={empresa} onChange={(e) => setEmpresa(e.target.value)} className="pl-10 h-12" required />
+          </div>
+        </div>
+        <div className="space-y-2">
           <Label htmlFor="email">Correo</Label>
           <div className="relative">
             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" aria-hidden="true" />
@@ -251,7 +293,7 @@ export default function Register() {
               Creando cuenta...
             </>
           ) : (
-            "Crear cuenta y entrar a la demo"
+            "Crear mi acceso"
           )}
         </Button>
       </form>

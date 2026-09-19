@@ -7,6 +7,7 @@ import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import ForgotPassword from '@/pages/ForgotPassword';
 import ResetPassword from '@/pages/ResetPassword';
+import PublicStart from '@/pages/PublicStart';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
@@ -67,7 +68,7 @@ const AuthenticatedApp = () => {
 
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/app" replace />} />
+      <Route path="/" element={<PublicStart />} />
       <Route path="/demo" element={<Demo />} />
       <Route path="/polpaico-os" element={<PolpaicoOS />} />
       <Route path="/control-calidad" element={<CasoControlCalidad />} />

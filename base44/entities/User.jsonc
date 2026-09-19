@@ -1,4 +1,6 @@
 {
+  "name": "User",
+  "type": "object",
   "properties": {
     "role": {
       "type": "string",
@@ -8,9 +10,13 @@
         "user"
       ]
     },
-    "empresa_id": {
+    "nombre_contacto": {
       "type": "string",
-      "description": "Empresa constructora a la que pertenece el usuario"
+      "description": "Nombre completo declarado durante el registro"
+    },
+    "telefono": {
+      "type": "string",
+      "description": "Tel\u00e9fono personal para contacto y WhatsApp"
     },
     "cargo": {
       "type": "string",
@@ -25,9 +31,13 @@
         "capataz"
       ]
     },
-    "telefono": {
+    "empresa_nombre": {
       "type": "string",
-      "description": "Tel\u00e9fono para WhatsApp"
+      "description": "Nombre de empresa declarado durante el registro"
+    },
+    "empresa_id": {
+      "type": "string",
+      "description": "Empresa constructora a la que pertenece el usuario"
     },
     "proyectos_asignados": {
       "type": "array",
@@ -39,7 +49,5 @@
   },
   "required": [
     "role"
-  ],
-  "name": "User",
-  "type": "object"
+  ]
 }

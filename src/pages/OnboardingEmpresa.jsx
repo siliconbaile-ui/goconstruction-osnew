@@ -28,6 +28,13 @@ export default function OnboardingEmpresa() {
     (async () => {
       try {
         const user = await base44.auth.me();
+        if (!user.empresa_id) {
+          setForm({
+            nombre: user.empresa_nombre || '',
+            telefono: user.telefono || '',
+            email_contacto: user.email || '',
+          });
+        }
         if (user.empresa_id) {
           const emps = await base44.entities.Empresa.filter({ id: user.empresa_id });
           const emp = emps[0];

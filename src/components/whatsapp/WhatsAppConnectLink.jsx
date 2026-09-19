@@ -29,7 +29,7 @@ export default function WhatsAppConnectLink({ children = 'Conectar WhatsApp', cl
     }
   };
   return <>
-    <a href={base44.agents.getWhatsAppConnectURL('orion_asistente')} target="_self" rel="noopener noreferrer" onClick={connect} aria-label="Conectar WhatsApp con GO" aria-busy={opening} className={`inline-flex min-h-12 min-w-12 touch-manipulation items-center justify-center gap-2 rounded-xl font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background active:opacity-80 ${className}`}>
+    <a href={base44.agents.getWhatsAppConnectURL('orion_asistente')} target="_self" rel="noopener noreferrer" onClick={connect} aria-label="Conectar WhatsApp con GO" aria-busy={opening} className={`inline-flex min-h-12 min-w-12 touch-manipulation items-center justify-center gap-2 rounded-xl font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background active:opacity-80 ${className} !bg-ok !text-primary-foreground hover:!bg-ok/90`}>
       {opening ? <Loader2 className="h-5 w-5 shrink-0 animate-spin" /> : <MessageCircle className="h-5 w-5 shrink-0" />}
       {!iconOnly && <span>{opening ? 'Abriendo WhatsApp…' : children}</span>}
     </a>
