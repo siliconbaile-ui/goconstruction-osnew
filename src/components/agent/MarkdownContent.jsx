@@ -37,7 +37,7 @@ export default function MarkdownContent({ content }) {
   }
 
   return (
-    <div className="text-sm leading-relaxed text-foreground min-w-0 break-words [&_pre]:overflow-x-auto [&_p]:my-1 [&_ul]:my-1 [&_ul]:list-disc [&_ul]:pl-4 [&_ol]:my-1 [&_ol]:list-decimal [&_ol]:pl-4 [&_li]:my-0.5 [&_strong]:font-semibold [&_code]:px-1 [&_code]:rounded [&_code]:bg-surface-raised [&_code]:text-[12px]">
+    <div className="go-message-content text-sm leading-relaxed text-foreground min-w-0 break-words [&_pre]:overflow-x-auto [&_p]:my-1 [&_ul]:my-1 [&_ul]:list-disc [&_ul]:pl-4 [&_ol]:my-1 [&_ol]:list-decimal [&_ol]:pl-4 [&_li]:my-0.5 [&_strong]:font-semibold [&_code]:px-1 [&_code]:rounded [&_code]:bg-surface-raised [&_code]:text-[12px]">
       {bloques.map((b, i) => b.tipo === 'tabla'
         ? <Tabla key={i} filas={b.lineas} />
         : <ReactMarkdown key={i}>{b.lineas.join('\n')}</ReactMarkdown>

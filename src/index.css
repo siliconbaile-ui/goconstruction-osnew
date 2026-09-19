@@ -505,9 +505,9 @@ button, a, [role="button"] {
     outline-offset: 3px;
   }
   .go-control-top {
-    min-height: 64px;
-    padding: 16px !important;
-    gap: 10px;
+    min-height: 52px;
+    padding: 8px 12px !important;
+    gap: 8px;
     background: #1D2A3A !important;
     border-bottom: 1px solid #334456 !important;
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -525,7 +525,7 @@ button, a, [role="button"] {
   }
   .go-control-top .go-control-menu:hover { background: #39495A; box-shadow: 0 0 0 2px #F28C2833; }
   .go-control-top .go-control-menu:active { opacity: .7; }
-  .go-control-top [class*="w-7"][class*="h-7"] { width: 31px; height: 31px; border-radius: 9px; border-color: #596B7D; }
+  .go-control-top [class*="w-7"][class*="h-7"] { width: 28px; height: 28px; border-radius: 8px; border-color: #596B7D; }
   .go-control-top .go-control-toptools { gap: 6px; min-width: 0; }
   .go-control-top .go-control-toptools > * {
     flex-shrink: 0;
@@ -543,8 +543,9 @@ button, a, [role="button"] {
   .go-control-center { padding: 0; }
   .go-control-card { background: #182331; border: 0; }
   .go-control-agentbar {
-    padding: 11px 16px;
-    gap: 8px;
+    min-height: 48px;
+    padding: 6px 12px;
+    gap: 7px;
     background: #1D2A3A;
     border-color: #334456;
     animation: go-control-fadeup .65s .08s ease both;
@@ -552,8 +553,8 @@ button, a, [role="button"] {
   .go-control-agentbar > div:first-child { background: #F28C28; color: #202A32; }
   .go-control-agentbar .ml-auto { gap: 6px; }
   .go-control-agentbar .ml-auto > * {
-    min-height: 36px;
-    min-width: 36px;
+    min-height: 34px;
+    min-width: 34px;
     border: 1px solid #4A5B6D;
     background: #263648;
     color: #F5F7FA;
@@ -573,13 +574,35 @@ button, a, [role="button"] {
   .go-control-stream {
     display: flex;
     flex-direction: column;
-    padding: 16px;
+    padding: 10px 12px;
     background: #182331;
   }
   .go-control-panel { order: 1; width: 100%; animation: go-control-fadeup .65s .08s ease both; }
   .go-control-conversation { order: 2; width: 100%; animation: go-control-fadeup .65s .16s ease both; }
   .go-control-agents { order: 3; width: 100%; animation: go-control-fadeup .65s .24s ease both; }
   .go-control-workers { order: 4; width: 100%; animation: go-control-fadeup .65s .32s ease both; }
+  .go-control-has-messages .go-control-conversation { order: 1; }
+  .go-control-has-messages .go-control-panel { order: 2; }
+  .go-control-has-messages .go-control-agents { order: 3; }
+  .go-control-has-messages .go-control-workers { order: 4; }
+  .go-control-message { scroll-margin-top: 8px; }
+  .go-control-message + .go-control-message { margin-top: 14px; }
+  .go-message-assistant > div { width: 100%; }
+  .go-message-assistant [class*="rounded-tl-sm"] {
+    padding: 15px 14px;
+    border-color: #405367;
+    background: #263648;
+  }
+  .go-message-user [class*="rounded-tr-sm"] { background: #F28C28; color: #202A32; }
+  .go-message-content {
+    font-family: system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.62;
+    color: #F5F7FA;
+  }
+  .go-message-content :is(h1,h2,h3) { margin-top: 1rem; margin-bottom: .5rem; line-height: 1.25; }
+  .go-message-content p { margin: .55rem 0; }
+  .go-message-content li { margin: .35rem 0; }
   .go-control-panel > div:first-child { margin-bottom: 10px; }
   .go-control-panel > div:first-child > div {
     background: #F28C28;
@@ -679,13 +702,13 @@ button, a, [role="button"] {
   .go-control-workers button:hover { background: #F2B544; transform: translateY(-1px); }
   .go-control-workers button:active { opacity: .65; transform: translateY(1px); }
   .go-control-composer-wrap {
-    padding: 0 16px 15px;
+    padding: 0 12px 10px;
     background: #182331;
     animation: go-control-fadeup .65s .4s ease both;
   }
   .go-control-composer {
     margin: 0;
-    padding: 12px;
+    padding: 10px;
     border: 1px solid #F28C28;
     border-radius: 18px;
     background: #263648;
@@ -693,8 +716,8 @@ button, a, [role="button"] {
     animation: go-control-glow 2.8s ease-in-out infinite;
   }
   .go-control-composer textarea {
-    height: 74px;
-    min-height: 74px;
+    height: 56px;
+    min-height: 56px;
     border: 0;
     color: #F5F7FA;
     font-family: system-ui, sans-serif;
@@ -704,7 +727,7 @@ button, a, [role="button"] {
   .go-control-composer textarea::placeholder { color: #AAB7C5; }
   .go-control-composer > div:last-child {
     gap: 5px;
-    padding-top: 10px;
+    padding-top: 8px;
     border-top: 1px solid #405367;
   }
   .go-control-composer > div:last-child button {
@@ -723,14 +746,14 @@ button, a, [role="button"] {
     font-weight: 700;
   }
   .go-control-tabs {
-    height: calc(67px + env(safe-area-inset-bottom));
+    height: calc(61px + env(safe-area-inset-bottom));
     background: #1D2A3A !important;
     border-top: 1px solid #334456 !important;
     animation: go-control-fadeup .65s .48s ease both;
   }
   .go-control-tabs a {
-    min-height: 67px;
-    padding: 11px 2px 7px;
+    min-height: 61px;
+    padding: 8px 2px 6px;
     color: #AAB7C5 !important;
     font-size: 8px;
     letter-spacing: .1em;

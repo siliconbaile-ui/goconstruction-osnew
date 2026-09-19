@@ -37,6 +37,7 @@ export default function ConversationPanel() {
   const [colIzq, setColIzq] = useState(false);
   const [colDer, setColDer] = useState(false);
   const scrollRef = useRef(null);
+  const lastAssistantFocusRef = useRef(null);
 
   const { hablando, detener: detenerVoz } = useVoiceOutput(messages, voiceMode);
   useEffect(() => {
@@ -107,9 +108,26 @@ export default function ConversationPanel() {
   }, [activeId]);
 
   useEffect(() => {
-    if (messages.length > 0 && scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
+    if (!messages.length || !scrollRef.current) return;
+    const lastAssistant = [...messages].reverse().find(message => message.role !== 'user');
+    const assistantKey = lastAssistant && (lastAssistant.id || lastAssistant.created_date || messages.indexOf(lastAssistant));
+    requestAnimationFrame(() => {
+      const container = scrollRef.current;
+      if (!container) return;
+      if (lastAssistant && assistantKey !== lastAssistantFocusRef.current) {
+        const nodes = container.querySelectorAll('[data-go-role="assistant"]');
+        const node = nodes[nodes.length - 1];
+        if (node) {
+          const top = node.getBoundingClientRect().top - container.getBoundingClientRect().top + container.scrollTop;
+          container.scrollTo({ top: Math.max(0, top - 8), behavior: 'smooth' });
+          lastAssistantFocusRef.current = assistantKey;
+          return;
+        }
+      }
+      if (messages[messages.length - 1]?.role === 'user') {
+        container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+      }
+    });
   }, [messages]);
 
   useEffect(() => {
@@ -230,7 +248,7 @@ criterio técnico con los datos reales de tu obra
 
           {/* Mensajes */}
           <div ref={scrollRef} data-scroll-area
-            className="go-control-stream flex-1 overflow-y-auto min-h-0 px-3 sm:px-4 lg:px-8 py-4 sm:py-6 scroll-smooth">
+            className={`go-control-stream ${hasMessages ? 'go-control-has-messages' : ''} flex-1 overflow-y-auto min-h-0 px-3 sm:px-4 lg:px-8 py-4 sm:py-6 scroll-smooth`}>
             <GoLoopIntro />
             <GoLoopWorkspace onPrompt={send} disabled={sending || !activeId} />
             <PanelControlRio onPrompt={send} />
@@ -238,8 +256,10 @@ criterio técnico con los datos reales de tu obra
               <div className="go-control-conversation"><WelcomeHero onPrompt={send} activo={sending} /></div>
             ) : (
               <div className="go-control-conversation max-w-5xl mx-auto space-y-3 sm:space-y-4">
-                {agruparMensajes(messages).map(m => (
-                  <MessageBubble key={m.id || m.created_date} message={m} conversacionId={activeId} />
+                {agruparMensajes(messages).map((m, index) => (
+                  <div key={m.id || m.created_date || index} data-go-role={m.role === 'user' ? 'user' : 'assistant'} className="go-control-message">
+                    <MessageBubble message={m} conversacionId={activeId} />
+                  </div>
                 ))}
                 {sending && (
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">

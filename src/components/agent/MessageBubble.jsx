@@ -144,7 +144,7 @@ function ToolCallDisplay({ toolCall }) {
 export default function MessageBubble({ message, conversacionId }) {
   const isUser = message.role === 'user';
   return (
-    <div className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
+    <div className={`go-message-bubble flex ${isUser ? 'go-message-user justify-end' : 'go-message-assistant justify-start'}`}>
       <div className={`min-w-0 ${isUser ? 'max-w-[88%]' : 'w-full'}`}>
         {!isUser && (
           <div className="flex items-center gap-2 mb-1.5">
