@@ -32,7 +32,7 @@ export default function GoDemoOverlay({ plan, index, speaking, finished, onStop,
         </span>
         <div className="min-w-0 flex-1">
           <p className="text-[10px] font-mono uppercase tracking-widest text-primary">GO · lección {index + 1} de {total}</p>
-          <p className="truncate text-sm font-semibold">{plan.title}</p>
+          <p className="truncate text-sm font-semibold">{step?.title || plan.title}</p>
         </div>
         <button onClick={onStop} aria-label="Detener demo" className="flex h-10 w-10 items-center justify-center rounded-lg bg-surface-raised text-muted-foreground">
           <X className="h-4 w-4" />
