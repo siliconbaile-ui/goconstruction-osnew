@@ -93,8 +93,10 @@ function hablarNativo(texto) {
       const masculina = voces.find(v => /es(-|_)(CL|419|MX|US)/i.test(v.lang) && /jorge|diego|juan|carlos|male|hombre/i.test(v.name))
         || voces.find(v => /es(-|_)(CL|419|MX)/i.test(v.lang));
       if (masculina) u.voice = masculina;
-      u.onend = resolve;
-      u.onerror = resolve;
+      const ms = Math.max(4000, texto.length * 80);
+      const t = setTimeout(resolve, ms);
+      u.onend = () => { clearTimeout(t); resolve(); };
+      u.onerror = () => { clearTimeout(t); resolve(); };
       window.speechSynthesis.speak(u);
     } catch { resolve(); }
   });
