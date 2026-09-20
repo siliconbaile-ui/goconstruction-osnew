@@ -60,7 +60,7 @@ export const GO_MASTER_DEMO = {
       narration: 'Finalmente, todo llega al informe ejecutivo: avance, riesgos, no conformidades, RDIs, pagos y monto retenido. La administración recibe una lectura clara, lista para comité o mandante, y puede exportarla con la misma trazabilidad.'
     },
     {
-      route: '/polpaico-os', interaction: 'focus', hold_ms: 1200,
+      route: '/app', target: 'nav-app', interaction: 'click', hold_ms: 1200,
       title: 'Configuración y cierre',
       narration: 'La plataforma puede configurarse por empresa y por obra. Desde este chat puedes solicitar nuevos módulos, vistas o automatizaciones; GO estructura el requerimiento y lo deriva al flujo de configuración correspondiente. Tú conversas conmigo; GoConstruction OS organiza la información, consulta los módulos y deja trazabilidad. Menos navegación, más control de obra. Esto es GoConstruction OS.'
     }
