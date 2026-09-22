@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Mail, MessageCircle, MapPin, Linkedin } from 'lucide-react';
 import Logo from '@/components/marca/Logo';
 import FooterPublico from '@/components/marca/FooterPublico';
+import { GO_WHATSAPP_URL } from '@/components/whatsapp/goWhatsApp';
 
 const CORREO = 'contacto@b2bytes.cl';
 
@@ -32,7 +33,7 @@ export default function Contacto() {
             </span>
           </a>
 
-          <a href="https://wa.me/?text=Hola%2C%20quiero%20saber%20m%C3%A1s%20de%20GoConstruction%20OS" target="_blank" rel="noopener noreferrer"
+          <a href={GO_WHATSAPP_URL} target="_blank" rel="noopener noreferrer"
             className="flex items-center gap-3 p-4 rounded-2xl bg-surface border border-hairline hover:border-primary/40 transition-colors">
             <span className="w-10 h-10 rounded-xl flex items-center justify-center bg-surface-raised flex-shrink-0">
               <MessageCircle className="w-4 h-4 text-primary" />

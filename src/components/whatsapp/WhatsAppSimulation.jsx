@@ -1,9 +1,12 @@
-import { ArrowLeft, Camera, CheckCircle2, MapPin } from 'lucide-react';
+import { ArrowLeft, Camera, MessageCircle } from 'lucide-react';
+import draft from '@/components/whatsapp/goOnboardingDraft.json';
 
 const messages = [
-  { side: 'user', icon: Camera, text: 'GO, encontré una fisura en el muro del eje B. Te envío la foto.' },
-  { side: 'go', icon: MapPin, text: 'Evidencia recibida con ubicación. Preparé la inspección y marqué revisión prioritaria.' },
-  { side: 'go', icon: CheckCircle2, text: 'Quedó trazabilidad para calidad, responsable y cierre. Nada se pierde en el chat.' },
+  { side: 'go', icon: MessageCircle, text: draft.whatsapp_greeting },
+  { side: 'user', icon: Camera, text: 'En la obra de este ejemplo apareció una fisura en el muro del eje B.' },
+  { side: 'go', icon: MessageCircle, text: 'Entiendo: fisura en el muro del eje B. Para empezar por lo observable, ¿puedes enviar una foto general del sector, sin datos personales?' },
+  { side: 'user', icon: Camera, text: 'Voy a tomarla.' },
+  { side: 'go', icon: MessageCircle, text: 'Envíala aquí cuando la tengas. El siguiente paso es revisar lo visible y qué antecedente técnico falta; una foto no permite certificar estabilidad ni cerrar una NC.' },
 ];
 
 export default function WhatsAppSimulation({ onBack }) {
@@ -16,6 +19,6 @@ export default function WhatsAppSimulation({ onBack }) {
         </div>
       </div>)}
     </div>
-    <p className="text-[11px] leading-relaxed text-muted-foreground">Simulación ilustrativa: en una obra conectada, GO procesa mensajes, archivos y evidencia según los permisos configurados.</p>
+    <p className="text-[11px] leading-relaxed text-muted-foreground">Propuesta de conversación, no respuesta real del canal. No envía mensajes ni guarda registros. La respuesta automática del número Kapso necesita un puente verificado con GO.</p>
   </div>;
 }

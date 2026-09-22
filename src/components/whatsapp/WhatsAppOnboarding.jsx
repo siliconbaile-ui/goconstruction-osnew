@@ -9,7 +9,7 @@ export default function WhatsAppOnboarding() {
   const [open, setOpen] = useState(false), [step, setStep] = useState(0);
   const [mobile, setMobile] = useState(() => window.matchMedia('(max-width: 1023px)').matches);
   const hasMobileMenu = ['/app', '/asistente', '/vision-urgente', '/dashboard', '/monitor-avance', '/qa-terreno', '/evidencia-terreno', '/gestor-rdi', '/semaforo-pagos', '/centro-alertas', '/informe-ejecutivo', '/base-conocimiento', '/sincronizacion', '/manual-marca', '/configuracion'].includes(pathname);
-  const isAccess = ['/login', '/register', '/forgot-password', '/reset-password', '/onboarding'].includes(pathname);
+  const isAccess = ['/', '/login', '/register', '/forgot-password', '/reset-password', '/onboarding', '/polpaico-os'].includes(pathname);
   useEffect(() => {
     const media = window.matchMedia('(max-width: 1023px)');
     const change = () => setMobile(media.matches);
@@ -24,6 +24,7 @@ export default function WhatsAppOnboarding() {
   }, [pathname, isAccess]);
   const remember = () => sessionStorage.setItem('go-whatsapp-onboarding-seen', '1');
   const close = () => { remember(); setOpen(false); };
+  if (isAccess) return null;
   return <>
     {mobile && <WhatsAppMobileSheet open={open} step={step} setStep={setStep} onClose={close} onConnect={remember} />}
     <div className={`fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-4 z-40 flex flex-col items-end gap-3 lg:bottom-6 lg:right-6 ${mobile && (open || hasMobileMenu) ? 'hidden' : ''}`}>

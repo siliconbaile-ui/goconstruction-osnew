@@ -1,8 +1,9 @@
-import { base44 } from '@/api/base44Client';
+import { GO_WHATSAPP_URL } from '@/components/whatsapp/goWhatsApp';
+import WhatsAppInvite from '@/components/whatsapp/WhatsAppInvite';
 import { Camera, FileText, MapPin } from 'lucide-react';
 import WhatsAppConnectLink from '@/components/whatsapp/WhatsAppConnectLink';
 
-const url = () => base44.agents.getWhatsAppConnectURL('orion_asistente');
+const url = () => GO_WHATSAPP_URL;
 
 // Compatibilidad con otros accesos: una sola navegación, sin ventanas emergentes.
 export const abrirWhatsApp = (e) => {
@@ -15,22 +16,22 @@ export function WhatsAppButton() {
 }
 
 const FLUJO = [
-  { Icon: Camera, t: 'Foto de terreno', d: 'GO la analiza, abre la inspección con la foto como evidencia y GPS, y fija la gravedad.' },
-  { Icon: FileText, t: 'Plano, EETT o contrato', d: 'Queda como documento técnico e indexado por página: después responde citando la página exacta.' },
-  { Icon: MapPin, t: 'Asignación automática', d: 'Todo se asigna a la obra activa; si mencionas otra obra por nombre o código, va a esa.' },
+  { Icon: Camera, t: 'Foto o nota de terreno', d: 'Parte por lo observable. El registro requiere obra identificada, herramientas habilitadas y permisos efectivos.' },
+  { Icon: FileText, t: 'Plano, EETT o contrato', d: 'Contrasta evidencia disponible; las citas y páginas se confirman con las fuentes recuperadas.' },
+  { Icon: MapPin, t: 'Obra y contexto', d: 'Indica la obra y el problema urgente. Compartir un enlace no concede permisos sobre la obra.' },
 ];
 
 export default function WhatsAppConnect() {
   return (
     <div className="rounded-2xl p-4 sm:p-5 bg-surface border border-hairline">
       <div className="text-[10px] font-mono tracking-widest mb-2" style={{ color: 'hsl(var(--ok))' }}>
-        CANAL TERRENO · WHATSAPP · INGESTA AUTOMÁTICA
+        CANAL TERRENO · CONVERSA CON GO
       </div>
       <p className="text-sm font-semibold leading-snug mb-2 text-foreground">
         El capataz no entra a la plataforma: le escribe a GO.
       </p>
       <p className="text-xs leading-relaxed mb-4 text-muted-foreground">
-        Cada archivo o foto que recibas por WhatsApp entra al sistema en el momento, asignado a su obra y sin que nadie lo suba a mano.
+        Empieza directamente por WhatsApp, sin registro previo. Las consultas y gestiones sobre registros privados mantienen sus permisos y validaciones.
       </p>
 
       <div className="space-y-2.5 mb-4">
@@ -47,10 +48,9 @@ export default function WhatsAppConnect() {
         ))}
       </div>
 
-      <WhatsAppConnectLink className="w-full bg-ok px-4 text-sm text-primary-foreground">Conectar mi WhatsApp</WhatsAppConnectLink>
-      <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-        Abre WhatsApp y envía el mensaje de conexión que aparece preparado. Si se solicita, inicia sesión para vincular tu cuenta.
-      </p>
+      <WhatsAppConnectLink className="w-full bg-ok px-4 text-sm text-primary-foreground">Conversar con GO</WhatsAppConnectLink>
+      <p className="my-3 text-sm leading-relaxed text-muted-foreground">Envía el mensaje preparado y continúa en el mismo chat. No necesitas abrir la plataforma para comenzar.</p>
+      <WhatsAppInvite />
     </div>
   );
 }

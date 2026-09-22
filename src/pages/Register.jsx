@@ -12,6 +12,7 @@ import GoogleIcon from "@/components/GoogleIcon";
 import { toast } from "@/components/ui/use-toast";
 import { safeReturnTo } from "@/lib/authReturnTo";
 import { CARGOS } from "@/lib/cargos";
+import WhatsAppConnectLink from '@/components/whatsapp/WhatsAppConnectLink';
 
 export default function Register() {
   const [nombre, setNombre] = useState("");
@@ -178,6 +179,8 @@ export default function Register() {
         </>
       }
     >
+      <WhatsAppConnectLink className="mb-2 w-full px-4 text-sm">Prefiero conversar con GO por WhatsApp</WhatsAppConnectLink>
+      <p className="mb-6 text-center text-xs text-muted-foreground">Sin cuenta para comenzar. El registro de abajo es opcional.</p>
       <Button
         variant="outline"
         className="w-full h-12 text-sm font-medium mb-6"

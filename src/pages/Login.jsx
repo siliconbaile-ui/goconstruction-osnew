@@ -9,6 +9,7 @@ import AuthLayout from "@/components/AuthLayout";
 import MicrosoftMark from "@/components/MicrosoftMark";
 import GoogleIcon from "@/components/GoogleIcon";
 import { safeReturnTo } from "@/lib/authReturnTo";
+import WhatsAppConnectLink from '@/components/whatsapp/WhatsAppConnectLink';
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -66,6 +67,8 @@ export default function Login() {
       subtitle="Crea tu acceso o continúa con tu cuenta Microsoft o Google. Entrarás directamente al agente GO."
       footer={<>¿Ya tienes una cuenta por correo? Ingresa tus datos arriba.</>}
     >
+      <WhatsAppConnectLink className="mb-2 w-full px-4 text-sm">Conversar con GO por WhatsApp</WhatsAppConnectLink>
+      <p className="mb-6 text-center text-xs text-muted-foreground">Sin iniciar sesión para comenzar. Puedes usar tu cuenta como alternativa.</p>
       <Button
         variant="outline"
         className="w-full h-12 text-sm font-medium mb-6"
