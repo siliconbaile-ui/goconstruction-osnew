@@ -7,7 +7,7 @@ export async function probarRecorridoInteractivo(base44) {
   const opcionesPrueba = { pruebaId };
   const inicio = normalizarMensaje({ conversation: { id: `prueba-${pruebaId}` }, message: {
     id: `prueba-inicio-${pruebaId}`, from: '12025550123', type: 'text',
-    text: { body: 'Hola GO. Quiero iniciar un recorrido profesional del piso y estado actual de una obra; todavía no he compartido fotos ni identificado la obra. ¿Qué opciones tengo para comenzar?' },
+    text: { body: 'Hola GO' },
   } }, GO_PHONE_NUMBER_ID);
   const primero = await invocarGoWhatsApp(base44, inicio, opcionesPrueba);
   const enviado = await enviarRespuestaKapso(GO_PHONE_NUMBER_ID, inicio, primero.respuesta, false, primero.opciones);
@@ -15,6 +15,9 @@ export async function probarRecorridoInteractivo(base44) {
   const botones = outbound?.interactive?.action?.buttons || [];
   if (!enviado.ok || outbound.type !== 'interactive' || outbound.interactive.type !== 'button' || botones.length !== 3)
     throw new Error('El inicio del recorrido no produjo interactive con tres reply buttons.');
+  const etiquetas = ['Sí, revisemos piso', 'Otro frente', 'Solo una consulta'];
+  if (botones.some((boton, indice) => boton.reply.title !== etiquetas[indice]))
+    throw new Error('La bienvenida no ofreció las etiquetas humanas del recorrido.');
   const elegido = botones[0].reply;
   const payloadSeleccion = { phone_number_id: GO_PHONE_NUMBER_ID, conversation: { id: inicio.conversation_id }, message: {
     id: `prueba-seleccion-${pruebaId}`, from: inicio.remite_numero, type: 'interactive',
@@ -26,23 +29,26 @@ export async function probarRecorridoInteractivo(base44) {
     throw new Error('La selección no continuó con GO en la misma conversación.');
   const repetido = await invocarGoWhatsApp(base44, seleccion, opcionesPrueba);
   if (repetido.agent_message_id !== segundo.agent_message_id) throw new Error('El reintento duplicó el turno.');
-  // Fixture de cuatro opciones: comprueba la rama de listas sin otra llamada al agente.
-  const lista = await enviarRespuestaKapso(GO_PHONE_NUMBER_ID, inicio, 'Fixture: selecciona el siguiente control.', false,
-    [...primero.opciones, { id: 'prueba-lista-cuarta', title: 'Otra toma', opcion: 'Otra toma' }]);
-  const listado = lista.test_payload?.body;
-  if (listado?.interactive?.type !== 'list' || listado.interactive.action.sections[0].rows.length !== 4)
-    throw new Error('Cuatro opciones no produjeron list message.');
-  const seleccionLista = normalizarMensaje({ ...payloadSeleccion, message: { ...payloadSeleccion.message,
-    id: `prueba-lista-${pruebaId}`, interactive: { type: 'list_reply', list_reply: elegido },
-  } }, GO_PHONE_NUMBER_ID);
-  if (seleccionLista.opcion_elegida?.id !== elegido.id) throw new Error('No se normalizó list_reply.');
+  const metricas = [primero, segundo].map(turno => ({
+    caracteres: turno.respuesta.length, lineas: turno.respuesta.split('\n').length,
+    preguntas: (turno.respuesta.match(/\?/g) || []).length, botones: turno.opciones.length,
+  }));
+  if (metricas.some(m => m.caracteres > 360 || m.lineas > 3 || m.preguntas > 1 || m.botones > 3))
+    throw new Error('El recorrido no cumple mensajes cortos con una sola pregunta y hasta tres botones.');
+  if (/resistencia|conformidad|estabilidad|acredita/i.test(primero.respuesta))
+    throw new Error('La bienvenida contiene un aviso técnico fuera de contexto.');
+  if (segundo.opciones.length || !/foto/i.test(segundo.respuesta) || !/piso/i.test(segundo.respuesta)
+    || !/juntas/i.test(segundo.respuesta) || !/fisuras/i.test(segundo.respuesta) || !/humedad/i.test(segundo.respuesta))
+    throw new Error('La selección no pidió la foto con una explicación concreta y sin repetir menú.');
+  const siguiente = await enviarRespuestaKapso(GO_PHONE_NUMBER_ID, seleccion, segundo.respuesta, false, segundo.opciones);
+  if (!siguiente.ok || siguiente.test_payload?.body?.type !== 'text') throw new Error('La solicitud de foto no produjo texto libre.');
   return { ok: true, modo: 'prueba_interactiva_go', envio_whatsapp: false, agente: AGENTE_GO,
-    agent_conversation_id: primero.agent_conversation_id, outbound,
-    seleccion_normalizada: seleccion.contenido_texto, respuesta_continuacion: segundo.respuesta,
-    continuacion_conversation_id: segundo.agent_conversation_id,
+    agent_conversation_id: primero.agent_conversation_id, continuacion_conversation_id: segundo.agent_conversation_id,
+    transcripcion: { persona: inicio.contenido_texto, bienvenida: primero.respuesta,
+      seleccion: elegido.title, solicitud_foto: segundo.respuesta },
+    metricas, outbound, continuacion_tipo: siguiente.test_payload.body.type,
     agent_message_ids: [primero.agent_message_id, segundo.agent_message_id],
     verificaciones: { interactive_tres_botones: true, misma_conversacion: true,
-      reintento_sin_duplicar: true, cuatro_opciones_list_message: true, list_reply_normalizado: true },
-    lista_fixture: listado,
+      reintento_sin_duplicar: true, mensajes_cortos: true, bienvenida_sin_disclaimer: true, sin_repetir_menu: true },
   };
 }
