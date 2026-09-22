@@ -1,0 +1,102 @@
+{
+  "name": "WebhookKapso",
+  "type": "object",
+  "properties": {
+    "message_id": {
+      "type": "string"
+    },
+    "phone_number_id": {
+      "type": "string"
+    },
+    "conversation_id": {
+      "type": "string"
+    },
+    "remite_numero": {
+      "type": "string"
+    },
+    "remite_nombre": {
+      "type": "string"
+    },
+    "tipo_mensaje": {
+      "type": "string",
+      "enum": [
+        "texto",
+        "foto",
+        "documento",
+        "audio",
+        "ubicacion",
+        "sistema"
+      ]
+    },
+    "contenido_texto": {
+      "type": "string"
+    },
+    "archivo_url": {
+      "type": "string"
+    },
+    "archivo_mime": {
+      "type": "string"
+    },
+    "transcripcion": {
+      "type": "string"
+    },
+    "coordenadas_gps": {
+      "type": "string"
+    },
+    "timestamp_inbound": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "estado": {
+      "type": "string",
+      "enum": [
+        "recibido",
+        "procesando",
+        "respondido",
+        "error",
+        "duplicado"
+      ],
+      "default": "recibido"
+    },
+    "respuesta_texto": {
+      "type": "string"
+    },
+    "respuesta_message_id": {
+      "type": "string"
+    },
+    "error_detalle": {
+      "type": "string"
+    },
+    "reintentos": {
+      "type": "number",
+      "default": 0
+    },
+    "es_test": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "message_id",
+    "phone_number_id",
+    "tipo_mensaje"
+  ],
+  "rls": {
+    "create": null,
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
