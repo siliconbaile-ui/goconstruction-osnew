@@ -10,29 +10,9 @@ import {
   estadoPuente,
 } from '../../shared/kapsoPuente.ts';
 
-const MODELO_GO = 'gpt_5_6_sol';
+import { invocarGoWhatsApp, AGENTE_GO } from '../../shared/kapsoGoNarrativa.ts';
+
 const MAX_REINTENTOS = 2;
-
-// Procesa el mensaje: lo enruta al agente GO y devuelve la respuesta por Kapso.
-async function procesarMensaje(base44: any, registro: any): Promise<{ respuesta: string; error?: string }> {
-  try {
-    const contenido = registro.transcripcion || registro.contenido_texto || '(mensaje multimedia recibido)';
-    const prompt = `Conversación WhatsApp entrante de ${registro.remite_numero || 'contacto nuevo'}.\n` +
-      `Tipo: ${registro.tipo_mensaje}.\n` +
-      `Contenido: ${contenido}\n\n` +
-      `Respondes como GO (jefe técnico digital de GoConstruction OS). Tonos: viaje profesional, inicio que capta, una pregunta de alto valor por turno, reflejar lo entendido, mínima evidencia siguiente, próximo paso claro, sin promesas fuera de tus herramientas. ` +
-      `Máximo dos líneas. Sin tablas ni markdown. El contacto es nuevo: no asumas acceso a datos privados hasta identificar obra y contexto.`;
-
-    const llmRes = await base44.asServiceRole.integrations.Core.InvokeLLM({
-      prompt,
-      model: MODELO_GO,
-    });
-    const respuesta = typeof llmRes === 'string' ? llmRes : (llmRes?.response || llmRes?.text || JSON.stringify(llmRes));
-    return { respuesta: String(respuesta).slice(0, 4000) };
-  } catch (e) {
-    return { respuesta: '', error: e.message };
-  }
-}
 
 export default async function (req: Request): Promise<Response> {
   // ---- Health check (GET) ----
@@ -40,6 +20,7 @@ export default async function (req: Request): Promise<Response> {
     return Response.json({
       ok: true,
       servicio: 'puente-kapso-go',
+      agente: AGENTE_GO,
       ...estadoPuente(secrets.get('KAPSO_WEBHOOK_SECRET'), secrets.get('KAPSO_API_KEY')),
     });
   }
@@ -54,6 +35,24 @@ export default async function (req: Request): Promise<Response> {
 
     if (!secreto) {
       return Response.json({ error: 'Webhook no configurado.' }, { status: 503 });
+    }
+
+    // Diagnóstico explícito de administrador: mismo adaptador y agente, sin envío por Kapso.
+    // No acepta eventos entrantes ni sustituye la firma de la ruta webhook.
+    if (!firma && req.headers.get('Authorization')) {
+      const diagnostico = JSON.parse(new TextDecoder().decode(rawBody));
+      if (diagnostico.modo === 'prueba_agente_go') {
+        const cliente = createClientFromRequest(req);
+        const usuario = await cliente.auth.me();
+        if (usuario?.role !== 'admin') return Response.json({ error: 'Solo administrador.' }, { status: 403 });
+        const pruebaId = crypto.randomUUID();
+        const resultado = await invocarGoWhatsApp(cliente, {
+          message_id: `prueba-go-${pruebaId}`, phone_number_id: GO_PHONE_NUMBER_ID,
+          remite_numero: `prueba-${usuario.id}`, tipo_mensaje: 'texto',
+          contenido_texto: 'Hola GO. Quiero iniciar un recorrido profesional del piso y estado actual de una obra; todavía no he compartido fotos ni identificado la obra. ¿Qué opciones tengo para comenzar?',
+        }, { pruebaId });
+        return Response.json({ ok: true, modo: 'prueba_agente_go', envio_whatsapp: false, ...resultado });
+      }
     }
 
     // ---- 2. Verificar firma HMAC-SHA256 ----
@@ -116,7 +115,7 @@ export default async function (req: Request): Promise<Response> {
         es_test: true,
       });
 
-      // ---- 6. Procesar y responder (modo test: no envía real) ----
+      // ---- 6. Procesar con el agente GO existente y responder por Kapso ----
       waitUntil((async () => {
         let reintentos = 0;
         let exito = false;
@@ -124,8 +123,7 @@ export default async function (req: Request): Promise<Response> {
 
         while (reintentos <= MAX_REINTENTOS && !exito) {
           try {
-            const { respuesta, error } = await procesarMensaje(base44, registro);
-            if (error) throw new Error(error);
+            const { respuesta } = await invocarGoWhatsApp(base44, registro);
             const envio = await enviarRespuestaKapso(phoneId, mensaje, respuesta, true);
             if (!envio.ok) throw new Error(envio.error || 'No se pudo preparar la respuesta de prueba.');
             await base44.asServiceRole.entities.WebhookKapso.update(registro.id, {
