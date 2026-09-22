@@ -126,7 +126,7 @@ export default async function (req: Request): Promise<Response> {
           try {
             const { respuesta, error } = await procesarMensaje(base44, registro);
             if (error) throw new Error(error);
-            const envio = await enviarRespuestaKapso(phoneId, mensaje, respuesta, false);
+            const envio = await enviarRespuestaKapso(phoneId, mensaje, respuesta, true);
             if (!envio.ok) throw new Error(envio.error || 'No se pudo preparar la respuesta de prueba.');
             await base44.asServiceRole.entities.WebhookKapso.update(registro.id, {
               estado: envio.ok ? 'respondido' : 'error',
