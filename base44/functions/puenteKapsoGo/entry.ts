@@ -46,7 +46,7 @@ export default async function (req: Request): Promise<Response> {
 
   try {
     // ---- 1. Leer raw body y headers ----
-    const rawBody = await req.text();
+    const rawBody = await req.arrayBuffer();
     const firma = req.headers.get('x-webhook-signature');
     const idempotencyKey = req.headers.get('x-idempotency-key') || '';
     const evento = req.headers.get('x-webhook-event') || '';
@@ -63,16 +63,15 @@ export default async function (req: Request): Promise<Response> {
     }
 
     // ---- 3. Parsear y filtrar por evento y phone_number_id ----
-    const payload = JSON.parse(rawBody);
+    const payload = JSON.parse(new TextDecoder().decode(rawBody));
     const isBatch = req.headers.get('x-webhook-batch') === 'true' || payload.batch === true;
     const payloads = isBatch ? (payload.data || []) : [payload];
 
-    if (!isBatch && evento && evento !== EVENTO_MENSAJE_RECIBIDO) {
+    if (evento && evento !== EVENTO_MENSAJE_RECIBIDO) {
       return Response.json({ ok: true, ignorado: evento });
     }
 
     const base44 = createClientFromRequest(req);
-    const apiKeyKapso = secrets.get('KAPSO_API_KEY');
     const resultados: any[] = [];
 
     for (const item of payloads) {
@@ -128,6 +127,7 @@ export default async function (req: Request): Promise<Response> {
             const { respuesta, error } = await procesarMensaje(base44, registro);
             if (error) throw new Error(error);
             const envio = await enviarRespuestaKapso(phoneId, mensaje, respuesta, false);
+            if (!envio.ok) throw new Error(envio.error || 'No se pudo preparar la respuesta de prueba.');
             await base44.asServiceRole.entities.WebhookKapso.update(registro.id, {
               estado: envio.ok ? 'respondido' : 'error',
               respuesta_texto: respuesta,
@@ -152,8 +152,10 @@ export default async function (req: Request): Promise<Response> {
       resultados.push({ message_id: mensaje.message_id, estado: 'procesando' });
     }
 
+    console.info('puenteKapsoGo: recepción aceptada', { cantidad: resultados.length, modo_test: true });
     return Response.json({ ok: true, procesados: resultados });
   } catch (error) {
+    console.error('puenteKapsoGo: recepción fallida', { nombre: error.name, mensaje: error.message });
     return Response.json({ error: error.message || 'Error interno.' }, { status: 500 });
   }
 }

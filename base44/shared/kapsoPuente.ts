@@ -25,7 +25,7 @@ export interface MensajeEntrante {
 
 // Verifica la firma HMAC-SHA256 del webhook de Kapso.
 // Kapso firma el raw body exacto (bytes como llegaron), no un JSON re-serializado.
-export function verificarFirma(rawBody: string | ArrayBuffer, firmaHeader: string | null, secreto: string): boolean {
+export async function verificarFirma(rawBody: string | ArrayBuffer, firmaHeader: string | null, secreto: string): Promise<boolean> {
   if (typeof firmaHeader !== "string" || !firmaHeader || !secreto) return false;
   const encoder = new TextEncoder();
   const key = encoder.encode(secreto);
@@ -54,9 +54,9 @@ export function normalizarMensaje(payload: any, phoneId: string): MensajeEntrant
   const conv = payload.conversation || {};
   const conversationId = String(conv.id || msg.conversation_id || payload.conversation_id || "").trim();
 
-  const from = msg.from || msg.phone_number || payload.phone_number || "";
+  const from = msg.from || conv.phone_number || msg.phone_number || payload.phone_number || "";
   const remiteNumero = String(from).replace(/[^\d]/g, "");
-  const remiteNombre = String(msg.contact_name || msg.name || "").trim();
+  const remiteNombre = String(conv.contact_name || msg.contact_name || msg.name || "").trim();
 
   const tipoRaw = String(msg.type || "text").toLowerCase();
   let tipo: MensajeEntrante["tipo_mensaje"] = "texto";
@@ -81,12 +81,19 @@ export function normalizarMensaje(payload: any, phoneId: string): MensajeEntrant
   else if (msg.audio?.url) { archivoUrl = String(msg.audio.url); archivoMime = String(msg.audio.mime_type || "audio/ogg"); }
   else if (msg.voice?.url) { archivoUrl = String(msg.voice.url); archivoMime = String(msg.voice.mime_type || "audio/ogg"); }
 
-  if (msg.transcription?.text) transcripcion = String(msg.transcription.text);
-  if (msg.location?.latitude && msg.location?.longitude) {
+  if (!contenidoTexto && msg.kapso?.content) contenidoTexto = String(msg.kapso.content);
+  if (msg.kapso?.media_url) archivoUrl = String(msg.kapso.media_url);
+  if (msg.kapso?.media_data?.mime_type) archivoMime = String(msg.kapso.media_data.mime_type);
+  if (msg.kapso?.transcript) transcripcion = String(msg.kapso.transcript);
+  else if (msg.transcription?.text) transcripcion = String(msg.transcription.text);
+  if (msg.location?.latitude != null && msg.location?.longitude != null) {
     coordenadas = `${msg.location.latitude},${msg.location.longitude}`;
   }
 
-  const ts = msg.timestamp || payload.timestamp || conv.last_inbound_at || new Date().toISOString();
+  const ts = msg.timestamp ?? payload.timestamp ?? conv.kapso?.last_inbound_at ?? conv.last_inbound_at ?? new Date().toISOString();
+  // Kapso v2: message.timestamp es Unix en segundos, incluso cuando llega como string.
+  const fecha = new Date(typeof ts === "number" || /^\d+$/.test(String(ts)) ? Number(ts) * 1000 : ts);
+  if (!Number.isFinite(fecha.getTime())) return null;
 
   return {
     message_id: messageId,
@@ -100,7 +107,7 @@ export function normalizarMensaje(payload: any, phoneId: string): MensajeEntrant
     archivo_mime: archivoMime,
     transcripcion,
     coordenadas_gps: coordenadas,
-    timestamp_inbound: typeof ts === "number" ? new Date(ts * 1000).toISOString() : new Date(ts).toISOString(),
+    timestamp_inbound: fecha.toISOString(),
   };
 }
 
