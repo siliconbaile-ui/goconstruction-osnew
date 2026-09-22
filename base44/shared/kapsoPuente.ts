@@ -1,4 +1,5 @@
 import { kapsoRequest } from "./kapso.ts";
+import { construirSalidaKapso } from "./kapsoInteractivo.ts";
 
 // ID de teléfono Meta de GO en Kapso (producción).
 export const GO_PHONE_NUMBER_ID = "1318336508028669";
@@ -21,6 +22,7 @@ export interface MensajeEntrante {
   transcripcion: string;
   coordenadas_gps: string;
   timestamp_inbound: string;
+  opcion_elegida?: { id: string; titulo: string; tipo: string };
 }
 
 // Verifica la firma HMAC-SHA256 del webhook de Kapso.
@@ -90,6 +92,17 @@ export function normalizarMensaje(payload: any, phoneId: string): MensajeEntrant
     coordenadas = `${msg.location.latitude},${msg.location.longitude}`;
   }
 
+  // WhatsApp mantiene el mismo remitente y conversación para botones y listas.
+  const reply = msg.interactive?.button_reply || msg.interactive?.list_reply;
+  const opcionElegida = reply?.id ? {
+    id: String(reply.id), titulo: String(reply.title || ''),
+    tipo: msg.interactive.button_reply ? 'button_reply' : 'list_reply',
+  } : undefined;
+  if (opcionElegida) {
+    tipo = 'texto';
+    contenidoTexto = `Opción elegida: ${opcionElegida.titulo} [${opcionElegida.id}]`;
+  }
+
   const ts = msg.timestamp ?? payload.timestamp ?? conv.kapso?.last_inbound_at ?? conv.last_inbound_at ?? new Date().toISOString();
   // Kapso v2: message.timestamp es Unix en segundos, incluso cuando llega como string.
   const fecha = new Date(typeof ts === "number" || /^\d+$/.test(String(ts)) ? Number(ts) * 1000 : ts);
@@ -108,26 +121,22 @@ export function normalizarMensaje(payload: any, phoneId: string): MensajeEntrant
     transcripcion,
     coordenadas_gps: coordenadas,
     timestamp_inbound: fecha.toISOString(),
+    ...(opcionElegida ? { opcion_elegida: opcionElegida } : {}),
   };
 }
 
-// Envía un mensaje de texto por Kapso al mismo chat.
+// Envía texto, reply buttons (1–3 opciones) o list message (4–10) al mismo chat.
 // En modo test (enviarReal=false) no realiza la llamada HTTP: devuelve el payload capturado.
 export async function enviarRespuestaKapso(
   phoneId: string,
   mensaje: MensajeEntrante,
   texto: string,
-  enviarReal: boolean
+  enviarReal: boolean,
+  opciones = []
 ): Promise<{ ok: boolean; message_id?: string; test_payload?: any; error?: string }> {
   const phone = mensaje.remite_numero.replace(/^\+/, "");
   if (!/^\d{7,15}$/.test(phone)) return { ok: false, error: "Remitente sin número válido." };
-  const body = {
-    messaging_product: "whatsapp",
-    recipient_type: "individual",
-    to: phone,
-    type: "text",
-    text: { body: texto.slice(0, 4000) },
-  };
+  const body = construirSalidaKapso(phone, texto, opciones);
   if (!enviarReal) return { ok: true, test_payload: { phone_id: phoneId, body, simulated: true } };
   try {
     const sent = await kapsoRequest(`/${phoneId}/messages`, { body });

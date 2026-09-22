@@ -11,6 +11,7 @@ import {
 } from '../../shared/kapsoPuente.ts';
 
 import { invocarGoWhatsApp, AGENTE_GO } from '../../shared/kapsoGoNarrativa.ts';
+import { probarRecorridoInteractivo } from '../../shared/kapsoPruebaInteractiva.ts';
 
 const MAX_REINTENTOS = 2;
 
@@ -41,10 +42,16 @@ export default async function (req: Request): Promise<Response> {
     // No acepta eventos entrantes ni sustituye la firma de la ruta webhook.
     if (!firma && req.headers.get('Authorization')) {
       const diagnostico = JSON.parse(new TextDecoder().decode(rawBody));
-      if (diagnostico.modo === 'prueba_agente_go') {
+      if (['prueba_agente_go', 'prueba_interactiva_go'].includes(diagnostico.modo)) {
         const cliente = createClientFromRequest(req);
         const usuario = await cliente.auth.me();
         if (usuario?.role !== 'admin') return Response.json({ error: 'Solo administrador.' }, { status: 403 });
+        if (diagnostico.modo === 'prueba_interactiva_go') {
+          const headers = new Headers(req.headers);
+          headers.set('X-Data-Env', 'dev');
+          const clientePrueba = createClientFromRequest(new Request(req.url, { headers }));
+          return Response.json(await probarRecorridoInteractivo(clientePrueba));
+        }
         const pruebaId = crypto.randomUUID();
         const resultado = await invocarGoWhatsApp(cliente, {
           message_id: `prueba-go-${pruebaId}`, phone_number_id: GO_PHONE_NUMBER_ID,
@@ -123,12 +130,14 @@ export default async function (req: Request): Promise<Response> {
 
         while (reintentos <= MAX_REINTENTOS && !exito) {
           try {
-            const { respuesta } = await invocarGoWhatsApp(base44, registro);
-            const envio = await enviarRespuestaKapso(phoneId, mensaje, respuesta, true);
+            const { respuesta, opciones } = await invocarGoWhatsApp(base44, {
+              ...registro, opcion_elegida: mensaje.opcion_elegida,
+            });
+            const envio = await enviarRespuestaKapso(phoneId, mensaje, respuesta, true, opciones);
             if (!envio.ok) throw new Error(envio.error || 'No se pudo preparar la respuesta de prueba.');
             await base44.asServiceRole.entities.WebhookKapso.update(registro.id, {
               estado: envio.ok ? 'respondido' : 'error',
-              respuesta_texto: respuesta,
+              respuesta_texto: opciones.length ? JSON.stringify({ cuerpo: respuesta, opciones }) : respuesta,
               respuesta_message_id: envio.message_id || '',
               error_detalle: envio.error || '',
               reintentos,
