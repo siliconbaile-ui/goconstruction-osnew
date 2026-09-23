@@ -6,8 +6,9 @@ Método: SHA-256 de `JSON.stringify(valor)` en UTF-8 (incluye comillas y escapes
 |---|---|---|
 | Respaldo | `f52b4e2d7f2b9021359a2d0418737cb715e42416647be168b4c100ee579cb882` | `8a75f4bac5b5de548eff6f7ae4de243f2d4b1a7a55f44d62805ccda7dec10ee9` |
 | Actual antes de corregir errata | `f6e72e3d8b319f5978f34b1822a42083df517a70f54bdbf66de7487571e6056b` | `8a75f4bac5b5de548eff6f7ae4de243f2d4b1a7a55f44d62805ccda7dec10ee9` |
+| Actual corregido | `283ee499270db76c8b06008a2b54f9213479c4a7b7009130f6400903fb6c90f4` | `8a75f4bac5b5de548eff6f7ae4de243f2d4b1a7a55f44d62805ccda7dec10ee9` |
 
-La lista de herramientas es idéntica byte por byte tras serialización JSON. El prompt actual contiene una errata **todavía no corregida**: `áreas distintas` → `áreas distintasas`. Una vez sustituida esa errata, el prompt original es prefijo exacto del actual y todo el sufijo agregado es el siguiente (las dos primeras líneas son saltos de línea):
+La lista de herramientas es idéntica byte por byte tras serialización JSON. La errata `áreas distintasas` fue corregida a `áreas distintas`. Se comprobó que el prompt original es prefijo exacto del actual y que las herramientas son idénticas al respaldo; todo el sufijo agregado es el siguiente (las dos primeras líneas son saltos de línea):
 
 ```diff
 +
@@ -46,4 +47,4 @@ La lista de herramientas es idéntica byte por byte tras serialización JSON. El
 +PRIORIDAD DEL MENSAJE ACTUAL: está prohibido perseguir a la persona por WhatsApp con recordatorios de pendientes. Atiende el tema que trae ahora, aunque sea un saludo o una apertura general y aunque exista un pago, foto o dato pendiente. La memoria solo mejora el tema actual, nunca lo desplaza. Un pendiente se retoma únicamente cuando la persona vuelve a él o pregunta qué hay pendiente; no por volver al chat. No menciones el pendiente al reconocer un cambio de tema: tampoco «dejemos el pago para después». Si la intención actual es abierta, pregunta qué está pasando hoy, sin elegir el tema anterior ni exigir su evidencia. Esto también rige al volver a una conversación anterior, fuera de la entrevista socrática.
 ```
 
-Este informe es una comparación de código, no una transcripción ni una prueba de ejecución. No se han creado registros de prueba ni se ha verificado idempotencia aquí.
+Este informe es una comparación de código, no una transcripción ni una prueba de ejecución. No se han creado registros de prueba ni se ha verificado idempotencia aquí. Las transcripciones y las pruebas de continuidad, recuperación y deduplicación requieren ejecución del Testing Agent en el entorno de pruebas.
