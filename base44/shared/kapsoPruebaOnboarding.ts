@@ -3,6 +3,7 @@ import { GO_PHONE_NUMBER_ID, normalizarMensaje, enviarRespuestaKapso } from './k
 import { CASOS_GO, entradaPruebaGo } from './kapsoEscenariosGo.ts';
 import { interpretarSalidaGo } from './kapsoInteractivo.ts';
 import { leerSeguimientoGo } from './kapsoRecorridoGo.ts';
+import { leerTranscripcionPruebaGo } from './kapsoTranscripcionGo.ts';
 
 // Solo desde la ruta diagnóstica admin, con cliente forzado a Test. No hace envíos a Kapso.
 export async function probarOnboardingGo(base44, input) {
@@ -11,6 +12,11 @@ export async function probarOnboardingGo(base44, input) {
   if (caso !== 'bienvenida' && !input.prueba_id) throw new Error('Falta la sesión iniciada en desarrollo.');
   const pruebaId = input.prueba_id || crypto.randomUUID();
   if (!/^[a-f0-9-]{36}$/.test(pruebaId)) throw new Error('Identificador de prueba inválido.');
+  if (input.solo_transcripcion === true) {
+    if (!input.prueba_id) throw new Error('Falta la sesión de desarrollo que se quiere leer.');
+    return { ok: true, data_env: 'dev', envio_whatsapp: false, prueba_id: pruebaId,
+      transcripcion: await leerTranscripcionPruebaGo(base44, pruebaId) };
+  }
   const db = base44.entities;
   const codigo = `GO-QA-${pruebaId}`;
   let proyecto = (await db.ProyectoObra.filter({ codigo, es_demo: true }, '-created_date', 1))[0];
@@ -51,6 +57,7 @@ export async function probarOnboardingGo(base44, input) {
     preguntas: (respuesta.respuesta.match(/\?/g) || []).length, botones: respuesta.opciones.length };
   const verificaciones = { corto: metricas.caracteres <= 360 && metricas.lineas <= 3, una_pregunta: metricas.preguntas <= 1,
     botones_validos: metricas.botones <= 3 && envio.ok,
+    inicio_natural: caso !== 'bienvenida' || (metricas.botones === 0 && /jefe técnico/i.test(respuesta.respuesta) && /hoy/i.test(respuesta.respuesta)),
     mismo_agente: conversacion.agent_name === 'orion_asistente', misma_conversacion: !anterior || anterior.id === conversacion.id,
     contexto_persistido: leerSeguimientoGo(conversacion)?.message_id === respuesta.agent_message_id,
     sin_herramientas_ajenas: caso !== 'otra_obra' || herramientas.length === 0 };

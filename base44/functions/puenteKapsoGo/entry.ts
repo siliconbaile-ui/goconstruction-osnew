@@ -61,7 +61,7 @@ export default async function (req: Request): Promise<Response> {
         const resultado = await invocarGoWhatsApp(cliente, {
           message_id: `prueba-go-${pruebaId}`, phone_number_id: GO_PHONE_NUMBER_ID,
           remite_numero: `prueba-${usuario.id}`, tipo_mensaje: 'texto',
-          contenido_texto: 'Hola GO. Quiero iniciar un recorrido profesional del piso y estado actual de una obra; todavía no he compartido fotos ni identificado la obra. ¿Qué opciones tengo para comenzar?',
+          contenido_texto: 'Hola GO',
         }, { pruebaId });
         return Response.json({ ok: true, modo: 'prueba_agente_go', envio_whatsapp: false, ...resultado });
       }

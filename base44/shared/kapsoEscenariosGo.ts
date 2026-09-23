@@ -1,12 +1,16 @@
 // Fixtures sintéticos: nunca datos ni teléfonos de personas reales; medios visibles marcados como prueba.
 export const FOTO_QA_GO = 'https://media.base44.com/images/public/6a8536b631a67708e1537e3c/7722f73f3_generated_image.png';
-export const CASOS_GO = ['bienvenida', 'boton_piso', 'obra', 'foto', 'acuerdo', 'cierre', 'retorno', 'audio', 'audio_vacio', 'insuficiente', 'urgencia', 'humano', 'mensaje_humano', 'otra_obra', 'documentos', 'foto_sin_url', 'avance_fixture', 'consulta_producto', 'ver_ejemplo', 'revisar_piso', 'precio', 'quiero_usarlo'];
+export const CASOS_GO = ['bienvenida', 'boton_piso', 'obra', 'foto', 'acuerdo', 'cierre', 'retorno', 'audio', 'audio_vacio', 'insuficiente', 'urgencia', 'humano', 'mensaje_humano', 'otra_obra', 'documentos', 'foto_sin_url', 'avance_fixture', 'consulta_producto', 'ver_ejemplo', 'revisar_piso', 'precio', 'quiero_usarlo', 'rama_libre', 'evidencia_libre', 'acuerdo_libre', 'cierre_libre'];
 export function entradaPruebaGo(caso, proyecto, seleccion) {
   const casos = {
     bienvenida: { type: 'text', text: { body: 'Hola GO, quiero conversar sobre una obra y resolver lo más urgente.' } },
     consulta_producto: { type: 'text', text: { body: 'que hacen aca' } },
     ver_ejemplo: { type: 'text', text: { body: 'Sí, muéstrame un ejemplo de cómo me ayudarías.' } },
-    revisar_piso: { type: 'text', text: { body: 'Quiero probar con mi caso: tengo un piso con fisuras y quiero saber qué revisar.' } },
+    revisar_piso: { type: 'text', text: { body: 'Tengo un piso con fisuras y quiero saber qué revisar.' } },
+    rama_libre: { type: 'text', text: { body: 'En obra Los Olmos, frente eléctrico del segundo nivel, faltan luminarias para mañana. No es un problema de piso; necesito ordenar la entrega.' } },
+    evidencia_libre: { type: 'text', text: { body: 'La orden pide 24 luminarias para mañana a las 8. Bodega confirmó 16 disponibles y no dio fecha para las otras 8.' } },
+    acuerdo_libre: { type: 'text', text: { body: 'Hoy a las 16 el encargado de bodega confirmará la fecha de las 8 restantes. Yo compartiré aquí su respuesta; no cambies registros.' } },
+    cierre_libre: { type: 'text', text: { body: 'Quedamos así por hoy. Retomaré aquí cuando bodega confirme.' } },
     precio: { type: 'text', text: { body: '¿Cuánto cuesta usar GO en mi constructora?' } },
     quiero_usarlo: { type: 'text', text: { body: 'Me interesa para dos obras de mi empresa. ¿Cómo partiríamos?' } },
     boton_piso: { type: 'interactive', interactive: { type: 'button_reply', button_reply: seleccion } },
