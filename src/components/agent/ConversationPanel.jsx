@@ -55,21 +55,22 @@ export default function ConversationPanel({ agentName = 'orion_asistente' }) {
   const loadConversations = useCallback(async () => {
     try {
       const list = await base44.agents.listConversations({ agent_name: agentName });
-      setConversations(list || []);
-      return list || [];
+      const visibles = incorporacion ? (list || []).filter(c => c.metadata?.canal === 'app') : (list || []);
+      setConversations(visibles);
+      return visibles;
     } catch {
       setConversations([]);
       return [];
     } finally {
       setLoadingConvs(false);
     }
-  }, [agentName]);
+  }, [agentName, incorporacion]);
 
   const startNewConversation = useCallback(async () => {
     try {
       const conv = await base44.agents.createConversation({
         agent_name: agentName,
-        metadata: incorporacion ? { name: 'GO · incorporación' } : await goSessionContext()
+        metadata: incorporacion ? { name: 'GO · incorporación', canal: 'app' } : await goSessionContext()
       });
       setConversations(prev => [conv, ...prev]);
       setActiveId(conv.id);
