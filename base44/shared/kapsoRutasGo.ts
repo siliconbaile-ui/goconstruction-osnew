@@ -1,6 +1,6 @@
 import { entradaHistorialGo, normalizarRespuestaGo } from './kapsoRegistroBase.ts';
 
-export const DEMO_PLATAFORMA_GO = 'https://whatsapptobim.base44.app/demo';
+export const DEMO_PLATAFORMA_GO = 'https://gobim.lat/demo';
 
 function rutaAnteriorGo(conversacion) {
   for (const mensaje of [...(conversacion.messages || [])].reverse()) {
