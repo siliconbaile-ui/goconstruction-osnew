@@ -1,36 +1,38 @@
-import { Play, MessageCircle, ShieldCheck } from 'lucide-react';
+import { Play, MessageCircle, ShieldCheck, LayoutDashboard, Camera, Route } from 'lucide-react';
 import Logo from '@/components/marca/Logo';
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+
+const capacidades = [
+  { icon: LayoutDashboard, titulo: 'Consulta y gestiona', texto: 'Avances, riesgos, RDIs, calidad, EDPs e informes. Pídeselo a GO sin recorrer cada módulo.' },
+  { icon: Camera, titulo: 'Conecta el terreno', texto: 'Comparte planos, fotos y documentos por el chat o WhatsApp, también desde la obra.' },
+  { icon: Route, titulo: 'Descubre cómo funciona', texto: 'El recorrido te muestra los módulos y la trazabilidad detrás de cada respuesta.' },
+];
 
 export default function GoDemoWelcome({ onStart, onSkip }) {
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-black/70 p-4 backdrop-blur-sm">
-      <div className="my-auto w-full max-w-lg rounded-3xl border border-primary/30 bg-surface p-6 shadow-2xl sm:p-8">
-        <div className="mb-5 flex justify-center"><Logo /></div>
-        <div className="mb-5 text-center">
-          <h1 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">Tu Centro de Comando de obra</h1>
-          <p className="mt-1.5 text-sm font-medium text-primary">Hola, soy GO, el jefe técnico digital de GoConstruction OS.</p>
+    <Dialog open onOpenChange={open => { if (!open) onSkip(); }}>
+      <DialogContent onPointerDownOutside={event => event.preventDefault()} className="flex max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-3xl flex-col gap-0 overflow-hidden rounded-2xl border-border bg-card p-0 text-card-foreground shadow-2xl sm:rounded-2xl [&>button]:flex [&>button]:h-11 [&>button]:w-11 [&>button]:items-center [&>button]:justify-center">
+        <div className="shrink-0 border-b border-border px-5 py-4 pr-16 sm:px-7 sm:pr-16"><Logo tamano="sm" /></div>
+        <div className="min-h-0 overflow-y-auto overscroll-contain px-5 py-5 sm:px-7 sm:py-6">
+          <DialogTitle className="max-w-xl text-2xl font-semibold leading-tight tracking-tight sm:text-3xl">Tu Centro de Comando de obra</DialogTitle>
+          <DialogDescription className="mt-2 text-base leading-relaxed">Soy GO, tu jefe técnico digital. Gestiona tu obra desde una conversación.</DialogDescription>
+          <div className="mt-5 grid gap-3 sm:grid-cols-3">
+            {capacidades.map(({ icon: Icon, titulo, texto }) => <div key={titulo} className="flex gap-3 rounded-xl border border-border bg-muted/40 p-3.5 sm:block sm:p-4">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary"><Icon className="h-[18px] w-[18px]" aria-hidden="true" /></span>
+              <div className="sm:mt-3"><h2 className="text-sm font-semibold leading-snug">{titulo}</h2><p className="mt-1 text-sm leading-relaxed text-muted-foreground">{texto}</p></div>
+            </div>)}
+          </div>
+          <div className="mt-4 flex items-start gap-2.5 rounded-lg bg-secondary/60 px-3.5 py-3">
+            <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+            <p className="text-xs leading-relaxed text-muted-foreground">Los módulos se adaptan a tu empresa. Pagos, cierres de calidad, contratos y decisiones de seguridad mantienen sus controles y validaciones humanas.</p>
+          </div>
         </div>
-        <div className="space-y-3 text-sm leading-relaxed text-muted-foreground">
-          <p>Este chat es tu punto central de operación. Desde aquí puedes consultar el estado de la obra, revisar avances, detectar riesgos, cargar planos y evidencias, gestionar RDIs, controlar no conformidades, validar EDPs y generar informes, sin recorrer decenas de pantallas.</p>
-          <p>La misma lógica conversacional está disponible en WhatsApp, una de mis extremidades operativas: puedes enviar consultas, fotografías y documentos desde terreno, y la información quedará vinculada a la obra correspondiente.</p>
-          <p>Durante esta demo también recorreremos el backend para mostrar los módulos activos y la trazabilidad que existe detrás de cada respuesta. No necesitas aprender cada pantalla: puedes pedirme por chat o WhatsApp que encuentre la información, prepare una acción o te lleve al módulo correcto.</p>
-          <p className="flex items-start gap-2 text-foreground/70">
-            <ShieldCheck className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary" />
-            <span>Los módulos pueden habilitarse o configurarse según la operación de cada empresa. Las acciones sensibles —pagos, cierres de calidad, cambios contractuales o decisiones de seguridad— siempre conservan sus controles y validaciones humanas.</span>
-          </p>
+        <div className="flex shrink-0 flex-col gap-2 border-t border-border bg-card px-5 py-4 sm:flex-row sm:items-center sm:justify-end sm:gap-3 sm:px-7">
+          <Button onClick={onStart} className="h-11 gap-2 rounded-xl px-5 sm:order-2"><Play className="h-4 w-4" />Comenzar recorrido</Button>
+          <Button onClick={onSkip} variant="outline" className="h-11 gap-2 rounded-xl px-5 sm:order-1"><MessageCircle className="h-4 w-4" />Conocer a GO</Button>
         </div>
-        <p className="mt-4 text-center text-xs font-semibold text-primary">Este Centro de Comando es la primera capacidad del recorrido.</p>
-        <div className="mt-6 space-y-3">
-          <button onClick={onStart} className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-opacity active:opacity-80">
-            <Play className="h-5 w-5" />
-            Comenzar recorrido
-          </button>
-          <button onClick={onSkip} className="flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-surface-raised px-4 text-sm font-medium text-foreground/70">
-            <MessageCircle className="h-4 w-4" />
-            Conocer a GO
-          </button>
-        </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }
