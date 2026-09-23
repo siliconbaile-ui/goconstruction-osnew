@@ -798,10 +798,11 @@ button, a, [role="button"] {
     letter-spacing: .1em;
     transition: color .2s, background .2s, opacity .2s;
   }
-  .go-control-tabs a:first-child { color: #F28C28 !important; border-top: 2px solid #F28C28; }
+  .go-control-tabs a[aria-current="page"] { color: hsl(var(--primary)) !important; border-top: 2px solid hsl(var(--primary)); }
   .go-control-tabs a:hover { background: #2A3A4C; color: #F5F7FA !important; }
   .go-control-tabs a:active { opacity: .65; }
-  .go-control-tabs a:first-child > span:first-of-type { display: none; }
+  .go-control-tabs a[aria-current="page"] > span:first-of-type { display: none; }
+  .go-module-filters { flex-wrap: nowrap !important; }
 }
 
 @media (max-width: 639px) {
@@ -818,6 +819,25 @@ button, a, [role="button"] {
   .go-control-agentbar .ml-auto > a:nth-of-type(2) { min-height: 40px; padding-inline: 8px; }
   .go-control-agentbar .ml-auto > button { min-height: 40px; min-width: 40px; padding-inline: 8px; }
 }
+
+/* Módulos de la barra móvil: superficies y acentos iguales al espacio GO. */
+.go-control-theme .go-module-page [style*="background: rgb(10, 17, 32)"],
+.go-control-theme .go-module-page [style*="background: rgb(13, 21, 38)"],
+.go-control-theme .go-module-page [style*="background: rgb(10, 22, 40)"] { background-color: hsl(var(--surface-1)) !important; }
+.go-control-theme .go-module-page [style*="background: rgb(0, 51, 153)"],
+.go-control-theme .go-module-page [style*="background-color: rgb(0, 51, 153)"] { background-color: hsl(var(--primary)) !important; color: hsl(var(--primary-foreground)) !important; }
+.go-control-theme .go-module-page [style*="border: 1px solid rgb(30, 45, 74)"],
+.go-control-theme .go-module-page [style*="border-top: 1px solid rgb(30, 45, 74)"] { border-color: hsl(var(--hairline)) !important; }
+.go-control-theme .go-module-page [style*="color: rgb(74, 111, 165)"],
+.go-control-theme .go-module-page [style*="color: rgb(45, 74, 110)"],
+.go-control-theme .go-module-page [style*="color: rgb(122, 151, 189)"] { color: hsl(var(--muted-foreground)) !important; }
+.go-control-theme .go-module-page [style*="color: rgb(211, 84, 0)"] { color: hsl(var(--danger)) !important; }
+.go-control-theme .go-module-page [style*="color: rgb(39, 174, 96)"] { color: hsl(var(--ok)) !important; }
+.go-control-theme .go-module-page .text-white { color: hsl(var(--foreground)) !important; }
+.go-control-theme .go-module-page button[style*="background: rgb(0, 51, 153)"] .text-white,
+.go-control-theme .go-module-page button[style*="background: rgb(0, 51, 153)"].text-white { color: hsl(var(--primary-foreground)) !important; }
+.go-control-theme .go-module-page .go-module-filters { overflow-x: auto; max-width: 100%; padding-bottom: 2px; }
+.go-control-theme .go-module-page .go-module-filters > button { white-space: nowrap; min-height: 40px; flex-shrink: 0; }
 
 @media (prefers-reduced-motion: reduce) {
   .go-control-page,

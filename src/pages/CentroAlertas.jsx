@@ -2,6 +2,9 @@ import { useState, useEffect, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Bell, Loader2, ShieldCheck, RefreshCw } from 'lucide-react';
 import OrionCard from '@/components/OrionCard';
+import GoModuleAssist from '@/components/agent/GoModuleAssist';
+import goModuleInsights from '@/lib/goModuleInsights';
+import applyGoRecordEvent from '@/lib/applyGoRecordEvent';
 import AlertaRow from '@/components/alertas/AlertaRow';
 import { NIVEL_STYLE, ROL_LABEL } from '@/lib/alertaMeta';
 
@@ -32,6 +35,10 @@ export default function CentroAlertas() {
   };
 
   useEffect(() => { cargar(); }, []);
+  useEffect(() => {
+    const unsubscribe = base44.entities.AlertaSistema.subscribe(event => setAlertas(prev => applyGoRecordEvent(prev, event)));
+    return unsubscribe;
+  }, []);
 
   const horasDe = (a) => (Date.now() - new Date(a.created_date).getTime()) / 3600000;
 
@@ -88,13 +95,14 @@ export default function CentroAlertas() {
     return okEstado && okNivel;
   }), [alertas, filtroEstado, filtroNivel]);
 
+  const insights = goModuleInsights('Alertas', alertas);
   const abiertas = alertas.filter(a => ['activa', 'reconocida'].includes(a.estado));
   const criticas = abiertas.filter(a => a.nivel === 'critica').length;
   const stale = abiertas.filter(a => horasDe(a) >= 24).length;
   const escaladas = abiertas.filter(a => a.escalada).length;
 
   return (
-    <div className="p-4 lg:p-6 space-y-5">
+    <div className="go-module-page p-4 lg:p-6 space-y-5">
       <div className="flex items-start justify-between gap-3 flex-wrap">
         <div>
           <div className="font-mono text-xs mb-1" style={{ color: '#4A6FA5' }}>MÓDULO P0 · VIGILANCIA CONTINUA</div>
@@ -108,6 +116,7 @@ export default function CentroAlertas() {
         </button>
       </div>
 
+      <GoModuleAssist area="Alertas" priorities={insights.priorities} snapshot={insights.snapshot} loading={loading} />
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {[
           { label: 'ABIERTAS', value: abiertas.length, color: abiertas.length > 0 ? '#F39C12' : '#27AE60' },
@@ -131,7 +140,7 @@ export default function CentroAlertas() {
         </div>
       )}
 
-      <div className="flex flex-wrap gap-2">
+      <div className="go-module-filters flex flex-wrap gap-2">
         {[
           { key: 'abiertas', label: `Abiertas (${abiertas.length})` },
           { key: 'resueltas', label: 'Resueltas' },

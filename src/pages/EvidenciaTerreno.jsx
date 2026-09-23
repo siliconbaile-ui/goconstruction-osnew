@@ -3,6 +3,9 @@ import { base44 } from '@/api/base44Client';
 import OrionCard from '@/components/OrionCard';
 import CapturaEvidencia from '@/components/evidencia/CapturaEvidencia';
 import EvidenciaGrid from '@/components/evidencia/EvidenciaGrid';
+import GoModuleAssist from '@/components/agent/GoModuleAssist';
+import goModuleInsights from '@/lib/goModuleInsights';
+import applyGoRecordEvent from '@/lib/applyGoRecordEvent';
 
 export default function EvidenciaTerreno() {
   const [proyecto, setProyecto] = useState(null);
@@ -25,12 +28,20 @@ export default function EvidenciaTerreno() {
     })();
   }, []);
 
+  useEffect(() => {
+    const unsubscribe = base44.entities.InspeccionCalidad.subscribe(event => {
+      if (event.type === 'delete' || event.data?.tipo === 'foto') setInspecciones(prev => applyGoRecordEvent(prev, event));
+    });
+    return unsubscribe;
+  }, []);
+
   const filtradas = inspecciones.filter(i => {
     if (filtro === 'nc') return i.es_no_conformidad;
     if (filtro === 'sin_gps') return !i.coordenadas_gps;
     return true;
   });
 
+  const insights = goModuleInsights('Terreno', inspecciones);
   const stats = [
     { label: 'EVIDENCIAS', value: inspecciones.length, color: '#4A6FA5' },
     { label: 'NO CONFORMIDADES', value: inspecciones.filter(i => i.es_no_conformidad).length, color: '#D35400' },
@@ -39,7 +50,7 @@ export default function EvidenciaTerreno() {
   ];
 
   return (
-    <div className="p-4 lg:p-6 space-y-5">
+    <div className="go-module-page p-4 lg:p-6 space-y-5">
       <div>
         <div className="font-mono text-xs mb-1" style={{ color: '#4A6FA5' }}>MÓDULO 4 · EVIDENCIA VISUAL</div>
         <h1 className="text-xl font-bold text-white">Bitácora Visual Georreferenciada</h1>
@@ -48,6 +59,7 @@ export default function EvidenciaTerreno() {
         </p>
       </div>
 
+      <GoModuleAssist area="Terreno" priorities={insights.priorities} snapshot={insights.snapshot} loading={loading} />
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {stats.map(s => (
           <OrionCard key={s.label} className="p-4">
@@ -65,11 +77,11 @@ export default function EvidenciaTerreno() {
         <CapturaEvidencia
           proyecto={proyecto}
           partidas={partidas}
-          onRegistrada={insp => setInspecciones(prev => [insp, ...prev])}
+          onRegistrada={insp => setInspecciones(prev => [insp, ...prev.filter(i => i.id !== insp.id)])}
         />
       )}
 
-      <div className="flex gap-2">
+      <div className="go-module-filters flex gap-2">
         {[
           { key: 'todas', label: 'Todas' },
           { key: 'nc', label: 'No conformidades' },

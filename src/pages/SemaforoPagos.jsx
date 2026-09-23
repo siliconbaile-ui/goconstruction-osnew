@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { CreditCard, Plus, Lock, CheckCircle, XCircle } from 'lucide-react';
 import OrionCard from '@/components/OrionCard';
+import GoModuleAssist from '@/components/agent/GoModuleAssist';
+import goModuleInsights from '@/lib/goModuleInsights';
+import applyGoRecordEvent from '@/lib/applyGoRecordEvent';
 import { estadoPagoColor, formatFecha } from '@/lib/orionUtils';
 
 export default function SemaforoPagos() {
@@ -34,6 +37,11 @@ export default function SemaforoPagos() {
       setLoading(false);
     };
     load();
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = base44.entities.EstadoPago.subscribe(event => setEdps(prev => applyGoRecordEvent(prev, event)));
+    return unsubscribe;
   }, []);
 
   const generarEDP = async () => {
@@ -102,11 +110,12 @@ export default function SemaforoPagos() {
     return true;
   });
 
+  const insights = goModuleInsights('Pagos', edps);
   const totalBloqueado = edps.filter(e => e.estado === 'bloqueado_calidad').reduce((s, e) => s + (e.monto_usd || 0), 0);
   const totalAprobado = edps.filter(e => ['aprobado', 'pagado'].includes(e.estado)).reduce((s, e) => s + (e.monto_usd || 0), 0);
 
   return (
-    <div className="p-4 lg:p-6 space-y-5">
+    <div className="go-module-page p-4 lg:p-6 space-y-5">
       <div className="flex items-center justify-between">
         <div>
           <div className="font-mono text-xs mb-1" style={{ color: '#4A6FA5' }}>MÓDULO P0 · ASISTIDO</div>
@@ -117,6 +126,7 @@ export default function SemaforoPagos() {
         </button>
       </div>
 
+      <GoModuleAssist area="Pagos" priorities={insights.priorities} snapshot={insights.snapshot} loading={loading} />
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {[
@@ -142,7 +152,7 @@ export default function SemaforoPagos() {
       )}
 
       {/* Filtros */}
-      <div className="flex gap-2 flex-wrap">
+      <div className="go-module-filters flex gap-2 flex-wrap">
         {[
           { key: 'todos', label: 'Todos' },
           { key: 'bloqueados', label: `Bloqueados (${edps.filter(e => e.estado === 'bloqueado_calidad').length})` },

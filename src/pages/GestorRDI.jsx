@@ -3,6 +3,9 @@ import { base44 } from '@/api/base44Client';
 import { FileText, Plus, CheckCircle, AlertTriangle, Zap, Sparkles, Loader2, LayoutGrid, List, MapPin } from 'lucide-react';
 import OrionCard from '@/components/OrionCard';
 import RDIKanban from '@/components/rdi/RDIKanban';
+import GoModuleAssist from '@/components/agent/GoModuleAssist';
+import goModuleInsights from '@/lib/goModuleInsights';
+import applyGoRecordEvent from '@/lib/applyGoRecordEvent';
 import EvidenciaGeo from '@/components/rdi/EvidenciaGeo';
 import { prioridadColor, formatFecha } from '@/lib/orionUtils';
 
@@ -36,6 +39,11 @@ export default function GestorRDI() {
       setLoading(false);
     };
     load();
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = base44.entities.RequerimientoInformacion.subscribe(event => setRdis(prev => applyGoRecordEvent(prev, event)));
+    return unsubscribe;
   }, []);
 
   const crearRDI = async () => {
@@ -112,6 +120,7 @@ Entrega una respuesta técnica sugerida y un nivel de confianza (0 a 100) según
     return true;
   });
 
+  const insights = goModuleInsights('RDIs', rdis);
   const vencidos = rdis.filter(r => r.estado === 'vencido').length;
   const sinAsignar = rdis.filter(r => ['abierto', 'en_revision'].includes(r.estado) && !r.especialista_asignado).length;
 
@@ -121,7 +130,7 @@ Entrega una respuesta técnica sugerida y un nivel de confianza (0 a 100) según
   };
 
   return (
-    <div className="p-4 lg:p-6 space-y-5">
+    <div className="go-module-page p-4 lg:p-6 space-y-5">
       <div className="flex items-center justify-between">
         <div>
           <div className="font-mono text-xs mb-1" style={{ color: '#4A6FA5' }}>MÓDULO P0 · AUTÓNOMO</div>
@@ -132,6 +141,7 @@ Entrega una respuesta técnica sugerida y un nivel de confianza (0 a 100) según
         </button>
       </div>
 
+      <GoModuleAssist area="RDIs" priorities={insights.priorities} snapshot={insights.snapshot} loading={loading} />
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {[
@@ -157,7 +167,7 @@ Entrega una respuesta técnica sugerida y un nivel de confianza (0 a 100) según
       )}
 
       {/* Filtros */}
-      <div className="flex gap-2">
+      <div className="go-module-filters flex gap-2">
         {[
           { key: 'todos', label: 'Todos' },
           { key: 'activos', label: `Activos (${rdis.filter(r => ['abierto', 'en_revision'].includes(r.estado)).length})` },

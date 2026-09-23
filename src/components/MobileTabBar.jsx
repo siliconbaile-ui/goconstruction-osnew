@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Bot, Camera, ClipboardList, Wallet, BellRing } from 'lucide-react';
 
+const GO_ROUTES = ['/app', '/evidencia-terreno', '/gestor-rdi', '/semaforo-pagos', '/centro-alertas'];
 const TABS = [
   { label: 'GO', path: '/app', icon: Bot },
   { label: 'Terreno', path: '/evidencia-terreno', icon: Camera },
@@ -13,7 +14,7 @@ const TABS = [
 export default function MobileTabBar() {
   const { pathname } = useLocation();
   return (
-    <nav className={`lg:hidden flex-shrink-0 flex items-stretch ${pathname === '/app' ? 'go-control-tabs' : ''}`}
+    <nav className={`lg:hidden flex-shrink-0 flex items-stretch ${GO_ROUTES.includes(pathname) ? 'go-control-tabs' : ''}`}
       style={{
         background: 'hsl(var(--surface-1))',
         borderTop: '1px solid hsl(var(--hairline))',
@@ -22,7 +23,7 @@ export default function MobileTabBar() {
       {TABS.map(({ label, path, icon: Icon }) => {
         const activo = pathname === path;
         return (
-          <Link key={path} to={path}
+          <Link key={path} to={path} aria-current={activo ? 'page' : undefined}
             className="relative flex-1 flex flex-col items-center justify-center gap-1 min-h-[60px] py-3 transition-colors active:opacity-70"
             style={{ color: activo ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground))' }}>
             {activo && (

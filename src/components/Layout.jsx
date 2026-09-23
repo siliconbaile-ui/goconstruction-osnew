@@ -53,10 +53,11 @@ const NAV_GROUPS = [
 
 export default function Layout() {
   const location = useLocation();
+  const goControl = ['/app', '/evidencia-terreno', '/gestor-rdi', '/semaforo-pagos', '/centro-alertas'].includes(location.pathname);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className={`h-[100dvh] flex overflow-hidden bg-surface-base text-foreground ${location.pathname === '/app' ? 'go-control-theme' : ''}`}>
+    <div className={`h-[100dvh] flex overflow-hidden bg-surface-base text-foreground ${goControl ? 'go-control-theme' : ''}`}>
       {sidebarOpen && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />
       )}
@@ -142,7 +143,7 @@ export default function Layout() {
       {/* Main */}
       <div className="flex-1 flex flex-col min-w-0 min-h-0">
         <InstalarApp />
-        <header className={`flex items-center justify-between px-4 lg:px-6 py-3 flex-shrink-0 ${location.pathname === '/app' ? 'go-control-top' : ''}`}
+        <header className={`flex items-center justify-between px-4 lg:px-6 py-3 flex-shrink-0 ${goControl ? 'go-control-top' : ''}`}
           style={{
             background: 'hsl(var(--surface-1))',
             borderBottom: '1px solid hsl(var(--hairline))',
