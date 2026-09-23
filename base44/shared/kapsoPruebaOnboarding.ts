@@ -30,6 +30,7 @@ export async function probarOnboardingGo(base44, input) {
     if (!anterior) throw new Error('Primero ejecuta bienvenida.');
     const historial = await agents.getConversation(anterior.id);
     const mensaje = historial.messages.find(m => m.role === 'assistant' && m.content?.includes('Sí, revisemos piso') && !m.tool_calls?.length);
+    if (!mensaje) throw new Error('La nueva apertura no presupone piso; usa revisar_piso para declarar ese caso. boton_piso solo comprueba botones antiguos.');
     const opcion = interpretarSalidaGo(mensaje.content).opciones[0];
     if (!opcion || !/piso/i.test(opcion.titulo)) throw new Error('No hay botón de piso que pulsar.');
     elegido = { id: `go:${mensaje.id}:0`, title: opcion.titulo };

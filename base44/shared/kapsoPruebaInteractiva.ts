@@ -13,12 +13,12 @@ export async function probarRecorridoInteractivo(base44) {
   const enviado = await enviarRespuestaKapso(GO_PHONE_NUMBER_ID, inicio, primero.respuesta, false, primero.opciones);
   const outbound = enviado.test_payload?.body;
   const botones = outbound?.interactive?.action?.buttons || [];
-  if (!enviado.ok || outbound.type !== 'interactive' || outbound.interactive.type !== 'button' || botones.length !== 3)
-    throw new Error('El inicio del recorrido no produjo interactive con tres reply buttons.');
-  const etiquetas = ['Sí, revisemos piso', 'Otro frente', 'Solo una consulta'];
+  if (!enviado.ok || outbound?.type !== 'interactive' || outbound.interactive.type !== 'button' || botones.length !== 2)
+    throw new Error('El inicio no ofreció las dos intenciones: ayuda concreta y conocer GO.');
+  const etiquetas = ['Tengo un caso', 'Quiero conocer GO'];
   if (botones.some((boton, indice) => boton.reply.title !== etiquetas[indice]))
     throw new Error('La bienvenida no ofreció las etiquetas humanas del recorrido.');
-  const elegido = botones[0].reply;
+  const elegido = botones[1].reply;
   const payloadSeleccion = { phone_number_id: GO_PHONE_NUMBER_ID, conversation: { id: inicio.conversation_id }, message: {
     id: `prueba-seleccion-${pruebaId}`, from: inicio.remite_numero, type: 'interactive',
     interactive: { type: 'button_reply', button_reply: elegido },
@@ -37,18 +37,18 @@ export async function probarRecorridoInteractivo(base44) {
     throw new Error('El recorrido no cumple mensajes cortos con una sola pregunta y hasta tres botones.');
   if (/resistencia|conformidad|estabilidad|acredita/i.test(primero.respuesta))
     throw new Error('La bienvenida contiene un aviso técnico fuera de contexto.');
-  if (segundo.opciones.length || !/foto/i.test(segundo.respuesta) || !/piso/i.test(segundo.respuesta)
-    || !/juntas/i.test(segundo.respuesta) || !/fisuras/i.test(segundo.respuesta) || !/humedad/i.test(segundo.respuesta))
-    throw new Error('La selección no pidió la foto con una explicación concreta y sin repetir menú.');
+  if (!/GO|jefatura|GoConstruction/i.test(segundo.respuesta) || !/ejemplo/i.test(segundo.respuesta)
+    || /partimos por el piso|qué (?:situación|problema) necesitas resolver hoy/i.test(segundo.respuesta))
+    throw new Error('El descubrimiento no explicó GO e invitó a un ejemplo antes de pedir un problema.');
   const siguiente = await enviarRespuestaKapso(GO_PHONE_NUMBER_ID, seleccion, segundo.respuesta, false, segundo.opciones);
-  if (!siguiente.ok || siguiente.test_payload?.body?.type !== 'text') throw new Error('La solicitud de foto no produjo texto libre.');
+  if (!siguiente.ok) throw new Error('La explicación comercial no produjo un mensaje válido.');
   return { ok: true, modo: 'prueba_interactiva_go', envio_whatsapp: false, agente: AGENTE_GO,
     agent_conversation_id: primero.agent_conversation_id, continuacion_conversation_id: segundo.agent_conversation_id,
     transcripcion: { persona: inicio.contenido_texto, bienvenida: primero.respuesta,
-      seleccion: elegido.title, solicitud_foto: segundo.respuesta },
+      seleccion: elegido.title, explicacion_producto: segundo.respuesta },
     metricas, outbound, continuacion_tipo: siguiente.test_payload.body.type,
     agent_message_ids: [primero.agent_message_id, segundo.agent_message_id],
-    verificaciones: { interactive_tres_botones: true, misma_conversacion: true,
+    verificaciones: { apertura_dos_intenciones: true, misma_conversacion: true,
       reintento_sin_duplicar: true, mensajes_cortos: true, bienvenida_sin_disclaimer: true, sin_repetir_menu: true },
   };
 }
