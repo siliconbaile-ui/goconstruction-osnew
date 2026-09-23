@@ -1,0 +1,78 @@
+{
+  "name": "ContactoAuditoriaGO",
+  "type": "object",
+  "properties": {
+    "contacto_clave": {
+      "type": "string"
+    },
+    "entorno": {
+      "type": "string",
+      "enum": [
+        "dev"
+      ]
+    },
+    "grupo_prueba": {
+      "type": "string"
+    },
+    "telefono_normalizado": {
+      "type": "string"
+    },
+    "phone_number_id": {
+      "type": "string"
+    },
+    "primer_wamid": {
+      "type": "string"
+    },
+    "primera_entrada": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "procedencia": {
+      "type": "string",
+      "enum": [
+        "directo",
+        "pase_presentado"
+      ]
+    },
+    "perfil_id": {
+      "type": "string"
+    },
+    "estado_onboarding": {
+      "type": "string"
+    },
+    "ultimo_wamid": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "contacto_clave",
+    "entorno",
+    "grupo_prueba",
+    "telefono_normalizado",
+    "phone_number_id",
+    "primer_wamid",
+    "primera_entrada"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

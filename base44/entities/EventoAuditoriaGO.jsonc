@@ -1,0 +1,106 @@
+{
+  "name": "EventoAuditoriaGO",
+  "type": "object",
+  "properties": {
+    "clave": {
+      "type": "string"
+    },
+    "entorno": {
+      "type": "string",
+      "enum": [
+        "dev"
+      ]
+    },
+    "grupo_prueba": {
+      "type": "string"
+    },
+    "sesion_id": {
+      "type": "string"
+    },
+    "persona_id": {
+      "type": "string"
+    },
+    "turno_id": {
+      "type": "string"
+    },
+    "wamid": {
+      "type": "string"
+    },
+    "telefono_normalizado": {
+      "type": "string"
+    },
+    "timestamp_evento": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tipo": {
+      "type": "string",
+      "enum": [
+        "ingreso",
+        "mensaje_entrante",
+        "mensaje_saliente",
+        "boton_elegido",
+        "agente_inicio",
+        "agente_fin",
+        "herramienta_detectada",
+        "transicion",
+        "consentimiento",
+        "perfil_actualizado",
+        "invitacion_emitida",
+        "invitacion_usada",
+        "acceso_bloqueado",
+        "error",
+        "reintento",
+        "conflicto"
+      ]
+    },
+    "datos": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "firma_integridad": {
+      "type": "string"
+    },
+    "simulado": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "clave",
+    "entorno",
+    "grupo_prueba",
+    "sesion_id",
+    "persona_id",
+    "turno_id",
+    "wamid",
+    "telefono_normalizado",
+    "timestamp_evento",
+    "tipo",
+    "datos",
+    "firma_integridad",
+    "simulado"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

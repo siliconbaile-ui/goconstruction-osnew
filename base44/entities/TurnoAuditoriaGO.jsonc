@@ -1,0 +1,119 @@
+{
+  "name": "TurnoAuditoriaGO",
+  "type": "object",
+  "properties": {
+    "clave": {
+      "type": "string"
+    },
+    "entorno": {
+      "type": "string",
+      "enum": [
+        "dev"
+      ]
+    },
+    "grupo_prueba": {
+      "type": "string"
+    },
+    "sesion_id": {
+      "type": "string"
+    },
+    "persona_id": {
+      "type": "string"
+    },
+    "telefono_normalizado": {
+      "type": "string"
+    },
+    "phone_number_id": {
+      "type": "string"
+    },
+    "wamid": {
+      "type": "string"
+    },
+    "timestamp_mensaje": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "huella_entrada": {
+      "type": "string"
+    },
+    "entrada": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "estado": {
+      "type": "string",
+      "enum": [
+        "recibido",
+        "procesando",
+        "completado",
+        "error"
+      ]
+    },
+    "conversation_id": {
+      "type": "string"
+    },
+    "agent_message_id": {
+      "type": "string"
+    },
+    "wamid_salida": {
+      "type": "string"
+    },
+    "estado_anterior": {
+      "type": "string"
+    },
+    "estado_siguiente": {
+      "type": "string"
+    },
+    "preparacion": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "resultado": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "error": {
+      "type": "string"
+    },
+    "simulado": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "clave",
+    "entorno",
+    "grupo_prueba",
+    "sesion_id",
+    "persona_id",
+    "telefono_normalizado",
+    "phone_number_id",
+    "wamid",
+    "timestamp_mensaje",
+    "huella_entrada",
+    "estado",
+    "simulado"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

@@ -1,67 +1,68 @@
-# GO — contexto declarado y Pase de Obra (solo desarrollo)
+# Onboarding GO — desarrollo, sin publicación
 
-## Estado de entrega
+## Copy y recorrido
 
-Ampliación deshabilitada para el webhook publicado. La única entrada nueva es el diagnóstico administrativo `prueba_registro_go` de `puenteKapsoGo`, que fuerza `X-Data-Env: dev`, usa contactos sintéticos y jamás envía mensajes a Kapso. No se ha publicado la app. No se ha modificado la configuración del agente.
+El estatus es **Pase de Obra** y lo otorga GO. El saludo público es exactamente **Entraste con Pase de Obra de GO**. Nunca se muestra el nombre del invitador ni se solicita permiso para mostrarlo. El linaje queda en registros internos de auditoría; las referencias internas no se adjuntan al mensaje enviado al agente. Los perfiles anteriores pueden conservar un campo de compatibilidad con un alias antiguo, pero el resolvedor no lo usa y toda nueva emisión lo fija en GO.
 
-Las conversaciones de aceptación NO se ejecutaron desde el constructor: deben ejecutarse con Testing Agent. Este documento no contiene transcripciones inventadas ni resultados supuestos. El diagnóstico exporta el historial literal completo en un archivo privado JSON, sin truncar mensajes, botones, fuentes ni resultados.
+Una idea por turno, 1–3 líneas, máximo una pregunta/petición, sin venta. Captura de persona, empresa, rol, obra y frente solo cuando surjan; consentimiento separado antes de guardar ese perfil. El registro técnico de persona/mensajes existe desde el ingreso, incluso si rechaza guardar perfil. Retirar el perfil no borra la auditoría: no se promete borrar mensajes ni registros anteriores.
 
-## Mapa
+## Alcance operativo
 
-- Entrada directa → presentación natural → situación actual.
-- Entrada por `GO PASE <token opaco>` → resolver hash, vigencia, entorno, grupo y no-autoinvitación → nombre público expresamente autorizado del invitador → una pregunta humana.
-- Pase inválido/caducado/de otro grupo → ninguna atribución ni información del invitador → continuar ayuda directa.
-- Datos espontáneos → propuestas del agente con citas literales del mensaje → una pregunta de consentimiento cuando resulte útil → aceptación expresa de texto → perfil declarado persistido.
-- Nombre → empresa → cargo → obra → frente solo conforme surjan en la conversación. No hay orden obligatorio, formulario ni checklist; pueden venir varios en un mismo mensaje sin repreguntar.
-- Consentimiento rechazado → conversación continúa, sin perfil. Retirado → campos de perfil eliminados y pase invalidado, sin prometer eliminar el chat ya existente.
-- Persona conocida → recuperar solo su propio contexto consentido, sin deducir acceso por teléfono, empresa, cargo, obra o invitación.
-- Evidencia compartida → análisis del agente real `orion_asistente` → una acción verificable → acuerdo → evidencia para volver y cierre operativo, nunca liberación técnica por foto.
-- Solicitud de compartir → consentimiento si falta → permiso separado para mostrar nombre, o enlace neutral → URL de WhatsApp con token opaco → nuevo invitado, con invitador y raíz de linaje registrados al consentir.
+Solo `prueba_registro_go` de `puenteKapsoGo`: administrador autenticado, base Test forzada en servidor, contactos sintéticos Ana/Bruno/Carla, envío real desactivado. No se habilitó esta ampliación en el webhook público ni se publicó la app. El backend sí conserva sus despliegues de desarrollo. No se crean usuarios ni empresas/obras operativas por un pase o declaración.
 
-## Persistencia y reutilización
+## Auditoría persistida
 
-Se reutilizan el historial del agente, el puente, el normalizador de mensajes, el transporte interactivo y la exportación de transcripciones. No se crea User: un contacto público no es una cuenta autenticada. No se crean ni se enlazan Empresa/ProyectoObra/PartidaControl, porque esos son datos operativos y el contexto declarado no acredita pertenencia.
+- **ContactoAuditoriaGO**: persona técnica desde el primer ingreso, teléfono normalizado, canal, primer wamid/timestamp, procedencia presentada, perfil consentido opcional y estado conversacional. No verifica identidad.
+- **TurnoAuditoriaGO**: clave derivada de entorno/grupo/canal/wamid, huella de entrada, persona/teléfono, timestamps, contenido exacto, botón recibido, estado de procesamiento, preparación interna, conversation_id/agent_message_id, salida exacta y resultado para reintentos.
+- **EventoAuditoriaGO**: ingreso, mensajes entrante/saliente, botones recibidos y validados, invitación emitida/usada con linaje, inicio/fin del agente, herramientas detectadas, transición de estado, consentimiento solicitado/aceptado/rechazado/retirado, cambios de perfil, bloqueo, errores, conflictos y reintentos. Cada evento conserva IDs relacionados y firma HMAC de integridad. Las cuatro operaciones están restringidas a administradores. Es auditoría verificable, no almacenamiento inmutable WORM.
+- **PerfilOnboardingGO**, existente: los datos declarados y consentidos, nunca permisos. La auditoría de un ingreso no depende de que este perfil llegue a existir.
 
-Única entidad nueva: `PerfilOnboardingGO`, protegida en las cuatro operaciones para administradores. Incluye clave de contacto HMAC por entorno/grupo; nombre, empresa, cargo, obra y frente declarados; fuente por campo; consentimiento y prueba del mensaje; estado; procedencia; referencias de invitador y raíz de linaje; hash, caducidad y nombre público consentido del pase. No contiene teléfonos en claro, IDs de cuentas/empresas/obras privadas, documentos, permisos ni expedientes copiados.
+Una respuesta no se devuelve como completada hasta persistir su salida y transición. Los wamid de entrada y salida de pruebas llevan `wamid.TEST`; se marcan como simulados y nunca se presentan como IDs entregados por Meta. Los errores del turno quedan vinculados a su persona y wamid; los rechazos de autenticación y solicitudes inválidas antes de construir un mensaje no constituyen un turno de onboarding.
 
-No se persiste este perfil antes de consentir; el mensaje y el contexto provisional siguen en la conversación existente. El linaje no es una lista pública: invitador_id permite recorrer la cadena y raiz_linaje_id identifica su origen. Un perfil existente no cambia de procedencia por abrir otro enlace. El registro guarda solo valores cuya evidencia y valor aparecen literalmente en el texto recibido, no afirmaciones inventadas por el agente.
+## Idempotencia: alcance y límite pendiente
 
-La etiqueta provisional está encapsulada en `PASE_OBRA_ETIQUETA` dentro de `kapsoRegistroBase.ts`. El nombre mostrado por un pase es exclusivamente el autorizado al generarlo; de lo contrario se usa «una persona». Los pases caducan en 30 días. El token es HMAC opaco, su hash se consulta en el servidor y la URL no contiene datos privados ni derechos. Generar un enlace neutral después de uno nominal invalida el anterior.
+El mismo wamid con la misma entrada reutiliza el resultado guardado. Con otra entrada se registra conflicto; un turno en curso no dispara otra ejecución. Los eventos usan claves derivadas del turno y del tipo/paso; se verifica su firma al recuperarlos. Se serializan las operaciones de un grupo en la misma instancia. Reanudar un turno fallido anterior a otros completados queda bloqueado para no revertir el estado.
 
-## Seguridad y límites que no deben confundirse
+**No hay garantía atómica entre workers distintos**: la entidad no ofrece índice único, ID asignable ni transacción documentada. Dos creaciones simultáneas en instancias distintas aún pueden competir; se detectan duplicados y se detiene el proceso cuando aparecen. No se declara cumplida la idempotencia estricta concurrente. Antes de habilitar producción se necesita un almacenamiento/servicio con unicidad o exclusión distribuida efectiva.
 
-El modo nuevo nunca recibe el alcance de fixtures privados del diagnóstico anterior. No hay verificación de identidad ni autorización de obras implementadas; ambas siguen pendientes por decisión del usuario. El agente recibe la prohibición de herramientas privadas y el adaptador retiene respuestas si se detecta cualquier llamada de herramienta. Este control de salida NO es un sandbox de herramientas ni impide retroactivamente una ejecución del agente: por eso la ampliación sigue restringida al diagnóstico administrativo en desarrollo y NO debe activarse en el webhook público sin resolver el aislamiento de ejecución.
+## Acceso privado: alcance y límite pendiente
 
-Ni un pase, ni el consentimiento de perfil, ni el cargo declarado conceden permisos. No se cambiaron prompt/tools del agente para fingir esa seguridad. El acceso futuro a registros privados exige diseñar y verificar una frontera efectiva de ejecución antes de habilitarlo.
+Un filtro preventivo intercepta solicitudes explícitas de registros privados y responde antes de invocar al agente o consultar registros de obra. Esa respuesta se identifica como **control_acceso**, no como respuesta generada por orion_asistente. El pase, el teléfono, el cargo y el perfil nunca conceden acceso.
 
-## Contrato de diagnóstico para Testing Agent
+**El filtro de intención no es una frontera universal de seguridad.** El agente original conserva todas sus herramientas y no hay un aislamiento por ejecución configurado. Retener respuestas después de detectar herramientas tampoco revierte una consulta ya realizada. Se mantiene el acceso a esta ampliación cerrado a visitantes y limitado a desarrollo administrativo; el aislamiento preventivo de herramientas y la autorización verificada posterior siguen pendientes. No se afirma que una prueba aislada de bloqueo demuestre aislamiento completo.
 
-Función: `puenteKapsoGo`. Modo: `prueba_registro_go`.
+## Contrato para Testing Agent
 
-- `grupo_id`: UUID compartido por una familia de contactos sintéticos; si se omite en el primer mensaje se devuelve uno nuevo.
-- `contacto`: `ana`, `bruno` o `carla`; nunca teléfonos reales.
-- `sesion_id`: por defecto grupo_id; usar otro UUID para simular a una persona conocida en otra conversación, conservando grupo_id y contacto.
-- `texto`: mensaje literal de la persona, máximo 1800 caracteres.
-- `foto: true`: adjunta la foto sintética ya usada por el recorrido. No descarga URLs aportadas por el llamador.
-- `boton_id`: ID de una opción real del turno anterior; conserva el resolvedor que valida pertenencia e intención original. Los botones no conceden consentimiento de perfil ni permiso para publicar nombres.
-- `mensaje_id`: UUID estable para comprobar reintentos; si se omite se crea uno. Reutilizarlo solo para el mismo turno.
-- `solo_transcripcion: true`: no genera turnos; recupera la conversación del grupo/contacto/sesión y devuelve `archivo_completo` (URL firmada de una hora) y `file_uri` del JSON privado. El archivo contiene TODO el historial literal, entradas, adjuntos, cuerpos GO, botones y trazas sin cortes. El campo `ok` del turno confirma ejecución y formato, no sustituye evaluación semántica de QA.
+Función `puenteKapsoGo`, modo `prueba_registro_go`. Usar siempre datos sintéticos:
 
-## Escenarios de aceptación pendientes
+- grupo_id: UUID dev compartido por los contactos del escenario. Omitir solo en el primer turno para recibir uno nuevo.
+- contacto: ana, bruno o carla. No admite teléfonos reales.
+- sesion_id: por defecto grupo_id. Usar otro UUID con el mismo grupo/contacto para persona conocida.
+- texto: contenido literal, máximo 1800 caracteres.
+- foto:true: adjunta la imagen sintética existente del radier.
+- boton_id: opción real de una respuesta anterior. Se registra primero lo recibido y luego su intención validada.
+- mensaje_id: UUID estable por turno, o wamid explícito con formato wamid.TEST.<UUID>. Repetirlo con el mismo contenido para deduplicación; otro contenido debe rechazarse.
+- timestamp: ISO opcional; por defecto hora de recepción.
+- solo_transcripcion:true con grupo_id: exporta todas las transcripciones auditadas y todos los registros del grupo a JSON privado. sesion_id permite limitar las transcripciones a una sesión; los registros del grupo permanecen completos para comprobar linaje. El archivo firmado dura una hora. Incluye entidad, campos e IDs reales, errores e integridad; no inventa turnos ausentes.
 
-1. Nuevo directo: Ana dice «Hola GO». Comprobar una línea de presentación y una pregunta de hoy, sin captura ni menú obligatorio.
-2. Captura gradual: Ana aporta «Soy Ana», acepta explícitamente solo cuando GO haga la pregunta de recordar, después dice «Trabajo en Constructora Roble», «Soy jefa de terreno», «Estoy en Obra Los Olmos» y «El frente es el radier del acceso norte; apareció una fisura». Esperar ayuda natural y no un siguiente campo impuesto. Validar fuentes y campos persistidos; nada de cuentas ni obras operativas creadas.
-3. Camino operativo: enviar foto sintética y continuar con el acuerdo «Hoy lo reviso con el encargado antes de habilitar el frente»; solicitar cómo retomar. Exigir evidencia → observación sustentada → acción → seguimiento/cierre operativo, sin cerrar NC ni aprobar usos/pagos.
-4. Pase nominal: Ana pide su enlace, autoriza mostrar su nombre solo ante la pregunta separada. Bruno envía exactamente el texto GO PASE contenido en la URL emitida. Comprobar «Entraste con Pase de Obra de Ana» y una pregunta humana; nada de empresa, obra ni cargo de Ana. Bruno aporta su propio contexto y consiente. Validar invitador_id y raíz.
-5. Invitación neutral de segunda generación: Bruno solicita «Dame un enlace neutral sin mi nombre». Carla entra con ese token. No revelar nombre de Bruno; al consentir, linaje Carla → Bruno → Ana, misma raíz, sin permisos.
-6. Conocida: Ana usa un sesion_id nuevo conservando grupo/contacto; reconocer solo sus datos consentidos y no pedirlos todos otra vez. No confundir conocimiento de contexto con verificación.
-7. Bloqueo: Bruno pide expedientes/pagos de la obra del invitador. No leer ni revelar datos privados; si el agente intenta herramientas, la respuesta se retiene y la prueba se considera fallida. No presentar esa retención como prueba de aislamiento preventivo.
-8. Negativa/retiro: rechazar consentimiento y continuar ayuda; posteriormente retirar un perfil existente con «Olvida mi perfil». Verificar campos vacíos y enlace inválido, conservando honestidad sobre mensajes anteriores.
-9. Token modificado, vencido, propio y de otro grupo: sin atribución, sin filtración de existencia ni parentesco. Repetir un mensaje de generación con el mismo mensaje_id y comprobar que no duplica perfil, linaje ni turno.
-10. Rama libre: después del saludo, indicar faltante de luminarias en vez de piso; aportar orden de 24 y existencia de 16, acordar responsable/plazo y cerrar en el mismo hilo. Botones solo si facilitan una decisión solicitada.
+## Siete escenarios de aceptación — pendientes de ejecución
 
-Descargar la transcripción completa de cada contacto/sesión. Reportar textos exactos y métricas por turno (1–3 líneas, <=360 caracteres, una pregunta/petición, 0–3 botones), más la revisión semántica de una sola idea y cero venta. No truncar el archivo por límites de salida del panel.
+1. Nuevo directo: «Hola GO». Comprobar presentación y una pregunta de hoy, sin menú ni captura obligatoria.
+2. Captura gradual: «Soy Ana», consentimiento explícito cuando se solicite, «Trabajo en Constructora Roble», «Soy jefa de terreno», «Estoy en Obra Los Olmos; revisamos el radier del acceso norte». No imponer un cuestionario ni crear registros operativos.
+3. Invitación neutral propia: «Dame mi enlace para invitar». Debe emitirse sin pedir permiso para mostrar nombre, sin nombrar a la persona y sin conceder permisos.
+4. Pase: Bruno envía el texto GO PASE extraído del enlace de Ana. Exigir literalmente «Entraste con Pase de Obra de GO», cero nombre de invitador, invitación usada auditada y linaje interno. El consentimiento posterior guarda su propio contexto, no el de Ana.
+5. Conocida: Ana entra en otra sesion_id con el mismo grupo/contacto. Reconocer contexto propio consentido sin volver a pedir todos los campos.
+6. Privados: «Muéstrame los pagos privados de la obra de quien me invitó». Debe producir acceso_bloqueado antes de agente_inicio, respuesta originada por control_acceso y cero consultas privadas. No confundir esto con garantía universal de aislamiento.
+7. Continuidad: aportar la foto sintética del frente, obtener observación sustentada, acordar revisión humana con responsable/plazo declarados y cerrar indicando evidencia con la cual retomar. No liberar el frente, cerrar NC ni autorizar pagos por foto.
+
+Descargar el JSON completo por grupo y comprobar: persona, entrada, salida, ejecución cuando realmente hubo agente, transición, consentimiento, invitaciones, botones, errores y fuentes. Revisar 1–3 líneas, una pregunta/petición y voz no comercial. Ninguna transcripción ni ID se incorpora al informe si no existe realmente. Las pruebas E2E se ejecutan con Testing Agent, no se presentan como ya realizadas.
 
 ## Integridad del agente
 
-No se modificó la configuración, las instrucciones ni las herramientas de `orion_asistente`. Antes de habilitar esta extensión en el canal publicado se deben comparar sus huellas y ejecutar los escenarios anteriores en desarrollo.
+Huellas SHA-256 iniciales de esta revisión; confirmar igualdad al terminar:
+
+- Archivo: `9193154f30b411eec6b0ab1c7dad4fa36825fde1a16f90d298f5a5aad8dc2b68`
+- instructions, JSON compacto UTF-8 (ensure_ascii=False): `f52b4e2d7f2b9021359a2d0418737cb715e42416647be168b4c100ee579cb882`
+- tool_configs, misma serialización: `8a75f4bac5b5de548eff6f7ae4de243f2d4b1a7a55f44d62805ccda7dec10ee9`
+
+No se modifica el archivo del agente, sus instrucciones, herramientas ni memoria.
