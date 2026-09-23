@@ -15,6 +15,7 @@ import { probarRecorridoInteractivo } from '../../shared/kapsoPruebaInteractiva.
 import { codisenarOnboardingGo } from '../../shared/kapsoCodisenoGo.ts';
 import { probarOnboardingGo } from '../../shared/kapsoPruebaOnboarding.ts';
 import { probarRegistroGo } from '../../shared/kapsoPruebaRegistro.ts';
+import { ErrorEntradaRegistroGo } from '../../shared/goErrorEntrada.ts';
 
 const MAX_REINTENTOS = 2;
 
@@ -173,6 +174,7 @@ export default async function (req: Request): Promise<Response> {
     console.info('puenteKapsoGo: recepción aceptada', { cantidad: resultados.length, modo_test: true });
     return Response.json({ ok: true, procesados: resultados });
   } catch (error) {
+    if (error instanceof ErrorEntradaRegistroGo) return Response.json({ error: error.message, codigo: 'ENTRADA_INVALIDA' }, { status: 400 });
     console.error('puenteKapsoGo: recepción fallida', { nombre: error.name, mensaje: error.message });
     return Response.json({ error: error.message || 'Error interno.' }, { status: 500 });
   }
