@@ -43,7 +43,7 @@ export async function finalizarSocraticoGo(estado, salida, agentMessageId) {
       vinculacion_operacional: 'pendiente', permiso_operacional: false }, { estado: 'propuesta', fuente: s.regla.fuente_literal,
       anterior_id: espejo?.id || '', version: (espejo?.version || 0) + 1, obra });
     creados.push(nueva);
-    if (espejo && espejo.id !== nueva.id) await base44.entities.ConocimientoObraGO.update(espejo.id, { estado: 'retirada', datos: { ...espejo.datos, sustituida_por: nueva.id } });
+    if (espejo && espejo.id !== nueva.id) await base44.asServiceRole.entities.ConocimientoObraGO.update(espejo.id, { estado: 'retirada', datos: { ...espejo.datos, sustituida_por: nueva.id } });
   }
   if (s.integracion) creados.push(await guardarSocraticoGo(base44, auditoria, 'integracion_propuesta', { ...s.integracion, conectada: false }, { estado: 'propuesta', fuente: s.integracion.fuente_literal, obra }));
   await auditoria.registrar('transicion', { evento: 'ACTO_SOCRATICO', acto: s.acto, first_value_previo: valor?.id || null, ronda_dia: dia,

@@ -152,7 +152,7 @@ export function estadoPuente(secretoWebhook: string | undefined, apiKey: string 
     webhook_secret_configurado: Boolean(secretoWebhook),
     api_key_configurada: Boolean(apiKey),
     phone_number_id: GO_PHONE_NUMBER_ID,
-    modo_test: true,
+    modo_test: false,
     timestamp: new Date().toISOString(),
   };
 }

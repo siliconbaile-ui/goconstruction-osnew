@@ -1,6 +1,6 @@
 import { PERMISO_RELATO_GO } from './goSocraticoStore.ts';
 export function contratoSocraticoGo(contexto) {
-  return `ETAPA 2 AUTORIZADA POR EL ADAPTADOR ADMINISTRATIVO, exclusivamente dev simulado. Aplica la sección añadida de tu system prompt. No uses ninguna herramienta operacional: persistimos el sobre después de validar. Conserva cuerpo/opciones/seguimiento/registro y añade siempre:
+  return `ETAPA 2 AUTORIZADA POR EL ADAPTADOR. Aplica la sección añadida de tu system prompt. No uses ninguna herramienta operacional: persistimos el sobre después de validar. Conserva cuerpo/opciones/seguimiento/registro y añade siempre:
 "socratico":{"acto":0,"pedir_historia":false,"primer_valor":null,"capturas":[],"regla":null,"reglas_aplicadas":[],"integracion":null}.
 acto es entero 0..7. El recorrido flexible sigue siendo el mismo, no un menú. Sin FIRST_VALUE anterior no avances a actos 2..7 ni pidas historias. Al ayudar por primera vez, primer_valor={"resultado":"fragmento exacto de tu cuerpo con la ayuda concreta","cita":"fragmento literal del mensaje recibido que sustenta esa ayuda"}; nunca marcar por un saludo. El servidor mide tiempo y registra FIRST_VALUE como ayuda entregada, no éxito confirmado.
 Si ya hubo primer valor y falta permiso de relato, antes de pedir una historia usa como cuerpo EXACTAMENTE: ${PERMISO_RELATO_GO} Sin botones ni otra pregunta. No lo confundas con permiso de perfil. Si rechazado/retirado, no insistas ni extraigas relatos.

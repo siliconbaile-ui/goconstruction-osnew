@@ -8,7 +8,8 @@
     "entorno": {
       "type": "string",
       "enum": [
-        "dev"
+        "dev",
+        "prod"
       ]
     },
     "grupo_prueba": {
@@ -54,21 +55,13 @@
     "primera_entrada"
   ],
   "rls": {
-    "create": {
-      "user_condition": {
-        "role": "admin"
-      }
-    },
+    "create": null,
     "read": {
       "user_condition": {
         "role": "admin"
       }
     },
-    "update": {
-      "user_condition": {
-        "role": "admin"
-      }
-    },
+    "update": null,
     "delete": {
       "user_condition": {
         "role": "admin"

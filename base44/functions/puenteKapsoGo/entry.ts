@@ -16,11 +16,13 @@ import { codisenarOnboardingGo } from '../../shared/kapsoCodisenoGo.ts';
 import { probarOnboardingGo } from '../../shared/kapsoPruebaOnboarding.ts';
 import { probarRegistroGo } from '../../shared/kapsoPruebaRegistro.ts';
 import { ErrorEntradaRegistroGo } from '../../shared/goErrorEntrada.ts';
+import { iniciarAuditoriaGo } from '../../shared/goAuditoriaTurno.ts';
+import { cerrarAuditoriaGo } from '../../shared/goAuditoriaCierre.ts';
+import { serializarAuditoriaGo } from '../../shared/goAuditoriaStore.ts';
 
 const MAX_REINTENTOS = 2;
 
 export default async function (req: Request): Promise<Response> {
-  // ---- Health check (GET) ----
   if (req.method === 'GET') {
     return Response.json({
       ok: true,
@@ -31,19 +33,14 @@ export default async function (req: Request): Promise<Response> {
   }
 
   try {
-    // ---- 1. Leer raw body y headers ----
     const rawBody = await req.arrayBuffer();
     const firma = req.headers.get('x-webhook-signature');
     const idempotencyKey = req.headers.get('x-idempotency-key') || '';
     const evento = req.headers.get('x-webhook-event') || '';
     const secreto = secrets.get('KAPSO_WEBHOOK_SECRET');
 
-    if (!secreto) {
-      return Response.json({ error: 'Webhook no configurado.' }, { status: 503 });
-    }
+    if (!secreto) return Response.json({ error: 'Webhook no configurado.' }, { status: 503 });
 
-    // Diagnóstico explícito de administrador: mismo adaptador y agente, sin envío por Kapso.
-    // No acepta eventos entrantes ni sustituye la firma de la ruta webhook.
     if (!firma && req.headers.get('Authorization')) {
       const diagnostico = JSON.parse(new TextDecoder().decode(rawBody));
       if (['prueba_agente_go', 'prueba_interactiva_go', 'codiseno_onboarding_go', 'prueba_onboarding_go', 'prueba_registro_go'].includes(diagnostico.modo)) {
@@ -74,20 +71,14 @@ export default async function (req: Request): Promise<Response> {
       }
     }
 
-    // ---- 2. Verificar firma HMAC-SHA256 ----
     const firmaValida = await verificarFirma(rawBody, firma, secreto);
-    if (!firmaValida) {
-      return Response.json({ error: 'Firma inválida.' }, { status: 401 });
-    }
+    if (!firmaValida) return Response.json({ error: 'Firma inválida.' }, { status: 401 });
 
-    // ---- 3. Parsear y filtrar por evento y phone_number_id ----
     const payload = JSON.parse(new TextDecoder().decode(rawBody));
     const isBatch = req.headers.get('x-webhook-batch') === 'true' || payload.batch === true;
     const payloads = isBatch ? (payload.data || []) : [payload];
 
-    if (evento && evento !== EVENTO_MENSAJE_RECIBIDO) {
-      return Response.json({ ok: true, ignorado: evento });
-    }
+    if (evento && evento !== EVENTO_MENSAJE_RECIBIDO) return Response.json({ ok: true, ignorado: evento });
 
     const base44 = createClientFromRequest(req);
     const resultados: any[] = [];
@@ -105,18 +96,14 @@ export default async function (req: Request): Promise<Response> {
         continue;
       }
 
-      // ---- 4. Idempotencia estricta por message_id ----
       const existente = await base44.asServiceRole.entities.WebhookKapso.filter(
-        { message_id: mensaje.message_id },
-        '-created_date',
-        1
+        { message_id: mensaje.message_id }, '-created_date', 1
       );
       if (existente.length > 0) {
         resultados.push({ message_id: mensaje.message_id, estado: 'duplicado' });
         continue;
       }
 
-      // ---- 5. Crear registro de inbound ----
       const registro = await base44.asServiceRole.entities.WebhookKapso.create({
         message_id: mensaje.message_id,
         phone_number_id: mensaje.phone_number_id,
@@ -131,10 +118,9 @@ export default async function (req: Request): Promise<Response> {
         coordenadas_gps: mensaje.coordenadas_gps,
         timestamp_inbound: mensaje.timestamp_inbound,
         estado: 'procesando',
-        es_test: true,
+        es_test: false,
       });
 
-      // ---- 6. Procesar con el agente GO existente y responder por Kapso ----
       waitUntil((async () => {
         let reintentos = 0;
         let exito = false;
@@ -142,20 +128,33 @@ export default async function (req: Request): Promise<Response> {
 
         while (reintentos <= MAX_REINTENTOS && !exito) {
           try {
-            const { respuesta, opciones } = await invocarGoWhatsApp(base44, {
-              ...registro, opcion_elegida: mensaje.opcion_elegida,
+            const sesionId = `prod:${mensaje.remite_numero}`;
+            const grupo = 'prod';
+            const resultado = await serializarAuditoriaGo(`prod:${mensaje.message_id}`, async () => {
+              const auditoria = await iniciarAuditoriaGo(base44, { ...registro, opcion_elegida: mensaje.opcion_elegida }, grupo, sesionId, 'prod');
+              if (auditoria.duplicado) return { ...auditoria.resultado, idempotente: true };
+              try {
+                const res = await invocarGoWhatsApp(base44, { ...registro, opcion_elegida: mensaje.opcion_elegida }, {
+                  registroContexto: { grupoPrueba: grupo, auditoria, etapa2: true, entorno: 'prod' } });
+                const envio = await enviarRespuestaKapso(phoneId, mensaje, res.respuesta, true, res.opciones);
+                if (!envio.ok) throw new Error(envio.error || 'No se pudo enviar la respuesta.');
+                if (envio.message_id) res.respuesta_message_id = envio.message_id;
+                return await cerrarAuditoriaGo(base44, auditoria, res, envio.message_id || '');
+              } catch (e) {
+                await auditoria.fallar(e);
+                throw e;
+              }
             });
-            const envio = await enviarRespuestaKapso(phoneId, mensaje, respuesta, true, opciones);
-            if (!envio.ok) throw new Error(envio.error || 'No se pudo preparar la respuesta de prueba.');
+            const envio = await enviarRespuestaKapso(phoneId, mensaje, resultado.respuesta, true, resultado.opciones);
+            if (!envio.ok) throw new Error(envio.error || 'No se pudo enviar la respuesta.');
             await base44.asServiceRole.entities.WebhookKapso.update(registro.id, {
-              estado: envio.ok ? 'respondido' : 'error',
-              respuesta_texto: opciones.length ? JSON.stringify({ cuerpo: respuesta, opciones }) : respuesta,
-              respuesta_message_id: envio.message_id || '',
-              error_detalle: envio.error || '',
+              estado: 'respondido',
+              respuesta_texto: resultado.opciones?.length ? JSON.stringify({ cuerpo: resultado.respuesta, opciones: resultado.opciones }) : resultado.respuesta,
+              respuesta_message_id: envio.message_id || resultado.respuesta_message_id || '',
+              error_detalle: '',
               reintentos,
             });
-            if (envio.ok) exito = true;
-            else errorFinal = envio.error || '';
+            exito = true;
           } catch (e) {
             errorFinal = e.message;
             reintentos++;
@@ -171,7 +170,7 @@ export default async function (req: Request): Promise<Response> {
       resultados.push({ message_id: mensaje.message_id, estado: 'procesando' });
     }
 
-    console.info('puenteKapsoGo: recepción aceptada', { cantidad: resultados.length, modo_test: true });
+    console.info('puenteKapsoGo: recepción aceptada', { cantidad: resultados.length });
     return Response.json({ ok: true, procesados: resultados });
   } catch (error) {
     if (error instanceof ErrorEntradaRegistroGo) return Response.json({ error: error.message, codigo: 'ENTRADA_INVALIDA' }, { status: 400 });

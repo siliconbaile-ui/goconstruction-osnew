@@ -8,7 +8,8 @@
     "entorno": {
       "type": "string",
       "enum": [
-        "dev"
+        "dev",
+        "prod"
       ]
     },
     "grupo_prueba": {
@@ -106,7 +107,7 @@
     },
     "simulado": {
       "type": "boolean",
-      "default": true
+      "default": false
     },
     "identidad_verificada": {
       "type": "boolean",
@@ -134,16 +135,8 @@
         "role": "admin"
       }
     },
-    "create": {
-      "user_condition": {
-        "role": "admin"
-      }
-    },
-    "update": {
-      "user_condition": {
-        "role": "admin"
-      }
-    },
+    "create": null,
+    "update": null,
     "delete": {
       "user_condition": {
         "role": "admin"

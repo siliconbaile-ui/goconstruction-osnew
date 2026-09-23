@@ -7,7 +7,6 @@ import { FOTO_QA_GO } from './kapsoEscenariosGo.ts';
 import { ErrorEntradaRegistroGo } from './goErrorEntrada.ts';
 
 const CONTACTOS = { ana: '12025550101', bruno: '12025550102', carla: '12025550103' };
-// El llamador exige administrador y fuerza X-Data-Env=dev. No admite números de personas reales.
 export async function probarRegistroGo(base44, input) {
   const grupo = input.grupo_id || crypto.randomUUID();
   const sesion = input.sesion_id || grupo;
@@ -17,7 +16,7 @@ export async function probarRegistroGo(base44, input) {
   if (input.solo_transcripcion && !input.grupo_id) throw new ErrorEntradaRegistroGo('Indica el grupo cuya transcripción quieres recuperar.');
   const clave = await firmaOpacaGo(`contacto:dev:${grupo}:${GO_PHONE_NUMBER_ID}:${remitente}`);
   const perfilFiltro = { contacto_clave: clave, entorno: 'dev', grupo_prueba: grupo };
-  if (input.solo_transcripcion) return exportarAuditoriaGo(base44, grupo, input.sesion_id || '');
+  if (input.solo_transcripcion) return exportarAuditoriaGo(base44, grupo, input.sesion_id || '', 'dev');
   const texto = input.texto === undefined ? 'Hola GO' : input.texto;
   if (typeof texto !== 'string' || !texto.trim() || texto.length > 1800) throw new ErrorEntradaRegistroGo('Mensaje sintético vacío o demasiado largo.');
   const mensajeId = input.mensaje_id || crypto.randomUUID();
@@ -37,7 +36,7 @@ export async function probarRegistroGo(base44, input) {
     message: { id: wamid, from: remitente, ...contenido, timestamp: input.timestamp || new Date().toISOString() } }, GO_PHONE_NUMBER_ID);
   if (!entrada) throw new ErrorEntradaRegistroGo('Entrada o timestamp inválidos.');
   if (input.etapa === 2) { entrada.etapa2 = true; entrada.aplicar_regla_id = input.aplicar_regla_id || ''; }
-  const resultado = await ejecutarTurnoAuditadoGo(base44, entrada, grupo, sesion);
+  const resultado = await ejecutarTurnoAuditadoGo(base44, entrada, grupo, sesion, 'dev');
   if (resultado.ok === false) return { ...resultado, grupo_id: grupo, sesion_id: sesion, contacto, wamid };
   const perfil = (await base44.entities.PerfilOnboardingGO.filter(perfilFiltro, '-created_date', 1))[0] || null;
   return { ok: true, data_env: 'dev', envio_whatsapp: false, grupo_id: grupo, sesion_id: sesion, contacto,

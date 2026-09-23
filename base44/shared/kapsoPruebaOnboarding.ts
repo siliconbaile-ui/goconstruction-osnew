@@ -5,7 +5,6 @@ import { interpretarSalidaGo } from './kapsoInteractivo.ts';
 import { leerSeguimientoGo } from './kapsoRecorridoGo.ts';
 import { leerTranscripcionPruebaGo } from './kapsoTranscripcionGo.ts';
 
-// Solo desde la ruta diagnóstica admin, con cliente forzado a Test. No hace envíos a Kapso.
 export async function probarOnboardingGo(base44, input) {
   const caso = input.caso || 'bienvenida';
   if (!CASOS_GO.includes(caso)) throw new Error('Caso no permitido.');

@@ -4,28 +4,26 @@ import { contextoAnteriorRegistroGo, declaracionesValidasGo, retirarPerfilGo, vi
 import { resolverPaseGo, revalidarPaseGo, emitirPaseGo } from './kapsoPaseGo.ts';
 import { narrativaRegistroGo } from './kapsoRegistroNarrativa.ts';
 
-// Solo la ruta administrativa fuerza dev y habilita esta ampliación; el webhook publicado no la activa.
-export async function prepararRegistroGo(base44, registro, conversacion, entrada, grupoPrueba, auditoria = null) {
-  if (!UUID_GO.test(grupoPrueba)) throw new Error('Grupo de desarrollo inválido.');
-  const db = base44.entities.PerfilOnboardingGO;
-  const contactoClave = await firmaOpacaGo(`contacto:dev:${grupoPrueba}:${registro.phone_number_id}:${registro.remite_numero}`);
-  const filtro = { contacto_clave: contactoClave, entorno: 'dev', grupo_prueba: grupoPrueba };
+export async function prepararRegistroGo(base44, registro, conversacion, entrada, grupoPrueba, auditoria = null, entorno = 'dev') {
+  if (entorno === 'dev' && !UUID_GO.test(grupoPrueba)) throw new Error('Grupo de desarrollo inválido.');
+  const db = base44.asServiceRole.entities.PerfilOnboardingGO;
+  const contactoClave = await firmaOpacaGo(`contacto:${entorno}:${grupoPrueba}:${registro.phone_number_id}:${registro.remite_numero}`);
+  const filtro = { contacto_clave: contactoClave, entorno, grupo_prueba: grupoPrueba };
   const encontrados = await db.filter(filtro, '-created_date', 2);
   if (encontrados.length > 1) throw new Error('El contacto tiene perfiles duplicados; no se seleccionó uno arbitrariamente.');
   let perfil = encontrados[0] || null;
   const anterior = contextoAnteriorRegistroGo(conversacion);
   if (auditoria?.anterior?.preparacion?.tecnico) anterior.tecnico = auditoria.anterior.preparacion.tecnico;
   const texto = entrada.texto || '';
-  // Ningún botón, audio ni inferencia del modelo concede consentimiento.
   const respuestaDirecta = registro.tipo_mensaje === 'texto' && !registro.opcion_elegida;
   const si = respuestaDirecta && confirmarGo(texto), no = respuestaDirecta && negarGo(texto);
   const retiro = respuestaDirecta && ['olvida mi perfil', 'retira mi consentimiento', 'no guardes mis datos'].includes(normalizarRespuestaGo(texto));
   let confirmacion = '', enlace = '';
   if (retiro) { perfil = await retirarPerfilGo(db, perfil, registro.message_id); confirmacion = 'Perfil retirado; pase invalidado. Los mensajes del chat no se eliminaron.'; }
-  const recibida = await resolverPaseGo(db, texto, grupoPrueba, contactoClave, registro.message_id);
+  const recibida = await resolverPaseGo(db, texto, grupoPrueba, contactoClave, registro.message_id, entorno);
   if (recibida) await auditoria?.registrar('invitacion_usada', { ...recibida,
     perfil_aun_no_consentido: !perfil, otorgante: 'GO' });
-  let referencia = !perfil ? await revalidarPaseGo(db, anterior.tecnico.referencia, grupoPrueba, contactoClave) : null;
+  let referencia = !perfil ? await revalidarPaseGo(db, anterior.tecnico.referencia, grupoPrueba, contactoClave, entorno) : null;
   if (!perfil && !referencia && recibida?.estado === 'valido') referencia = recibida;
   let consentimiento = perfil?.consentimiento || anterior.tecnico.consentimiento || 'pendiente';
   if (retiro) consentimiento = 'retirado';
@@ -49,7 +47,7 @@ export async function prepararRegistroGo(base44, registro, conversacion, entrada
   const continuacionPedido = anterior.tecnico.solicitud_pase && (si || no) && preguntoPermiso;
   const solicitarPase = !retiro && (pedido || continuacionPedido) && !['rechazado', 'retirado'].includes(consentimiento);
   if (solicitarPase && perfil?.consentimiento === 'aceptado') {
-    const emitido = await emitirPaseGo(db, perfil, registro.message_id);
+    const emitido = await emitirPaseGo(db, perfil, registro.message_id, entorno);
     perfil = emitido.perfil; enlace = emitido.url;
     await auditoria?.registrar('invitacion_emitida', { perfil_id: perfil.id, pase_hash: perfil.pase_hash,
       invitador_id: perfil.id, raiz_linaje_id: perfil.raiz_linaje_id || perfil.id, expira: perfil.pase_expira, otorgante: 'GO' });
@@ -59,21 +57,21 @@ export async function prepararRegistroGo(base44, registro, conversacion, entrada
     perfil: vistaPerfilDeclaradoGo(perfil), consentimiento, confirmacion,
     nueva_invitacion: recibida?.estado === 'valido', invitacion_invalida: recibida?.estado === 'invalido',
     saludo_pase: recibida?.estado === 'valido' ? SALUDO_PASE_GO : '',
-    solicitud_pase: solicitarPase, enlace_emitido: enlace, identidad_verificada: false, acceso_privado: false, entorno: 'dev' };
+    solicitud_pase: solicitarPase, enlace_emitido: enlace, identidad_verificada: false, acceso_privado: false, entorno };
   const estado = { db, perfil, tecnico, contexto, texto, auditoria, instrucciones: narrativaRegistroGo(contexto) };
   await auditoria?.guardarPreparacion(estado);
   return estado;
 }
 
-export async function recuperarRegistroGo(base44, registro, mensaje, grupoPrueba, auditoria = null) {
+export async function recuperarRegistroGo(base44, registro, mensaje, grupoPrueba, auditoria = null, entorno = 'dev') {
   const entrada = entradaHistorialGo(mensaje);
   const guardado = auditoria?.turno?.preparacion;
   const tecnico = guardado?.tecnico || entrada?.registro_tecnico;
   const contexto = guardado?.contexto || entrada?.registro_contexto;
   if (!tecnico || !contexto) throw new Error('El turno no pertenece al registro conversacional.');
-  const db = base44.entities.PerfilOnboardingGO;
-  const clave = await firmaOpacaGo(`contacto:dev:${grupoPrueba}:${registro.phone_number_id}:${registro.remite_numero}`);
-  const perfiles = await db.filter({ contacto_clave: clave, entorno: 'dev', grupo_prueba: grupoPrueba }, '-created_date', 2);
+  const db = base44.asServiceRole.entities.PerfilOnboardingGO;
+  const clave = await firmaOpacaGo(`contacto:${entorno}:${grupoPrueba}:${registro.phone_number_id}:${registro.remite_numero}`);
+  const perfiles = await db.filter({ contacto_clave: clave, entorno, grupo_prueba: grupoPrueba }, '-created_date', 2);
   if (perfiles.length > 1) throw new Error('Contacto duplicado.');
   return { db, perfil: perfiles[0] || null, tecnico, contexto, texto: guardado?.texto || entrada.texto, auditoria };
 }

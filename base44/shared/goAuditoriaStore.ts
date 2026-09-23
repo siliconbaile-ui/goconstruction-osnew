@@ -15,16 +15,16 @@ export function camposEventoGo(row) {
   return Object.fromEntries(['clave','entorno','grupo_prueba','sesion_id','persona_id','turno_id','wamid','telefono_normalizado','timestamp_evento','tipo','datos','simulado'].map(k => [k, row[k]]));
 }
 export async function registrarEventoGo(base44, turno, tipo, datos, paso = tipo) {
-  const db = base44.entities.EventoAuditoriaGO;
+  const db = base44.asServiceRole.entities.EventoAuditoriaGO;
   const clave = `${turno.clave}:${paso}`;
   const previo = await unoAuditoriaGo(db, { clave });
   if (previo) {
     if (previo.firma_integridad !== await firmarEventoGo(camposEventoGo(previo))) throw new Error('Integridad de auditoría inválida.');
     return previo;
   }
-  const registro = { clave, entorno: 'dev', grupo_prueba: turno.grupo_prueba, sesion_id: turno.sesion_id,
+  const registro = { clave, entorno: turno.entorno, grupo_prueba: turno.grupo_prueba, sesion_id: turno.sesion_id,
     persona_id: turno.persona_id, turno_id: turno.id, wamid: turno.wamid,
-    telefono_normalizado: turno.telefono_normalizado, timestamp_evento: new Date().toISOString(), tipo, datos, simulado: true };
+    telefono_normalizado: turno.telefono_normalizado, timestamp_evento: new Date().toISOString(), tipo, datos, simulado: turno.simulado };
   return db.create({ ...registro, firma_integridad: await firmarEventoGo(registro) });
 }
 // Serialización local complementaria. No equivale a una transacción entre workers distintos.
