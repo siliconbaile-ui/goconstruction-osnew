@@ -19,7 +19,8 @@ export function contextoAnteriorRegistroGo(conversacion) {
   for (const mensaje of conversacion.messages || []) {
     const original = entradaHistorialGo(mensaje);
     if (original) {
-      entrada = { ...original, id: mensaje.id }; pregunta = null;
+      const wamid = /\[kapso_message_id:([^\]]+)\]/.exec(mensaje.content)?.[1] || mensaje.id;
+      entrada = { ...original, id: wamid }; pregunta = null;
       if (original.registro_tecnico?.consentimiento === 'retirado') {
         for (const campo of CAMPOS_DECLARADOS_GO) { delete datos[campo]; delete fuentes[campo]; }
       }

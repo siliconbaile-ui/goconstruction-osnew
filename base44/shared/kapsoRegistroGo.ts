@@ -84,6 +84,13 @@ export async function finalizarRegistroGo(estado, salida, registro, herramientas
     throw new Error('La respuesta no cumple el formato conversacional breve.');
   if (estado.contexto.saludo_pase && !salida.cuerpo.includes(SALUDO_PASE_GO)) throw new Error('GO no usó el copy exacto del Pase de Obra de GO.');
   if (/Pase de Obra de (?!GO\b)/i.test(salida.cuerpo)) throw new Error('El copy no puede atribuir el pase a una persona.');
+  const referenciaInvitador = estado.tecnico.referencia?.invitador_id || estado.perfil?.invitador_id;
+  if (referenciaInvitador) {
+    const invitador = await estado.db.get(referenciaInvitador);
+    const nombre = invitador?.nombre?.trim();
+    if (nombre && salida.cuerpo.toLocaleLowerCase('es').includes(nombre.toLocaleLowerCase('es')))
+      throw new Error('La respuesta menciona al invitador; se retuvo sin enviar.');
+  }
   if (estado.contexto.enlace_emitido && !salida.cuerpo.includes(estado.contexto.enlace_emitido)) throw new Error('GO no entregó el enlace generado.');
   if (/https:\/\/wa\.me\//i.test(salida.cuerpo) && !estado.contexto.enlace_emitido) throw new Error('GO no puede inventar enlaces de invitación.');
   let perfil = estado.perfil;

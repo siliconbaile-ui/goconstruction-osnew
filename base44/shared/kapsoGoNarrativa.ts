@@ -38,10 +38,19 @@ export async function invocarGoWhatsApp(base44, registro, { pruebaId = '', alcan
     'metadata.remitente': registro.remite_numero,
     'metadata.prueba_id': pruebaId,
   };
-  const candidatas = await agents.listConversations({ q: JSON.stringify(clave), sort: '-created_date', limit: 1 });
-  let conversacion = candidatas.find(c => c.agent_name === AGENTE_GO && c.metadata?.canal === 'kapso_go'
-    && c.metadata?.phone_number_id === registro.phone_number_id && c.metadata?.remitente === registro.remite_numero
-    && c.metadata?.prueba_id === pruebaId);
+  const fija = auditoria?.turno?.conversation_id || auditoria?.anterior?.conversation_id;
+  let conversacion = fija ? await agents.getConversation(fija) : null;
+  if (!conversacion) {
+    const candidatas = await agents.listConversations({ q: JSON.stringify(clave), sort: '-created_date', limit: 1 });
+    conversacion = candidatas.find(c => c.agent_name === AGENTE_GO && c.metadata?.canal === 'kapso_go'
+      && c.metadata?.phone_number_id === registro.phone_number_id && c.metadata?.remitente === registro.remite_numero
+      && c.metadata?.prueba_id === pruebaId);
+  }
+  if (conversacion && (conversacion.agent_name !== AGENTE_GO || conversacion.metadata?.canal !== 'kapso_go'
+      || conversacion.metadata?.phone_number_id !== registro.phone_number_id
+      || conversacion.metadata?.remitente !== registro.remite_numero || conversacion.metadata?.prueba_id !== pruebaId
+      || (registroContexto && conversacion.metadata?.registro_grupo !== registroContexto.grupoPrueba)))
+    throw new Error('La conversación recuperada no pertenece a esta sesión de desarrollo.');
   if (!conversacion) {
     if (registro.opcion_elegida?.id?.startsWith('go:')) throw new Error('No se encontró la conversación de la opción elegida.');
     conversacion = await agents.createConversation({ agent_name: AGENTE_GO, metadata: {
