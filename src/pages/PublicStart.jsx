@@ -19,6 +19,10 @@ export default function PublicStart() {
           <p className="mt-3 text-xs leading-relaxed text-muted-foreground">Fotos y notas de voz como punto de partida; planos, EETT, avance, NC, RDI y pagos según las herramientas y permisos habilitados.</p>
         </div>
         <div className="space-y-3">
+          <Link to="/app" className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-primary px-4 text-center text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+            Iniciar con la app <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
+          <p className="text-center text-xs text-muted-foreground">¿Prefieres empezar sin cuenta? Conversa por WhatsApp.</p>
           <WhatsAppConnectLink className="w-full min-h-16 justify-start gap-3 rounded-2xl px-4">
             <span className="text-left"><span className="block text-sm font-semibold">Conversar con GO por WhatsApp</span><span className="block text-xs opacity-85">{GO_WHATSAPP_DISPLAY} · Sin registro previo</span></span>
           </WhatsAppConnectLink>

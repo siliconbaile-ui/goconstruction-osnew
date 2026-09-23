@@ -19,8 +19,25 @@ export default function WhatsAppOnboarding() {
   useEffect(() => {
     if (isAccess) { setOpen(false); return; }
     if (sessionStorage.getItem('go-whatsapp-onboarding-seen')) return;
-    const timer = window.setTimeout(() => { setStep(0); setOpen(true); }, 1400);
-    return () => window.clearTimeout(timer);
+    let timer;
+    const show = () => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        if (sessionStorage.getItem('go-whatsapp-onboarding-seen')) return;
+        setStep(0);
+        setOpen(true);
+      }, 1400);
+    };
+    const firstVisitToGo = pathname === '/app' && !localStorage.getItem('go-demo-completed') && !localStorage.getItem('go-demo-dismissed');
+    if (firstVisitToGo) {
+      window.addEventListener('go:welcome-dismissed', show);
+      window.addEventListener('go:demo-end', show);
+    } else show();
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener('go:welcome-dismissed', show);
+      window.removeEventListener('go:demo-end', show);
+    };
   }, [pathname, isAccess]);
   const remember = () => sessionStorage.setItem('go-whatsapp-onboarding-seen', '1');
   const close = () => { remember(); setOpen(false); };

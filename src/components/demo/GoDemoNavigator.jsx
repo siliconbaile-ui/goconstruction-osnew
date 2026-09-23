@@ -134,6 +134,7 @@ export default function GoDemoNavigator() {
   const skipWelcome = () => {
     setShowWelcome(false);
     try { localStorage.setItem(DISMISSED_KEY, '1'); } catch {}
+    window.dispatchEvent(new Event('go:welcome-dismissed'));
   };
 
   return (
