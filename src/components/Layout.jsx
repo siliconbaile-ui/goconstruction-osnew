@@ -56,7 +56,7 @@ export default function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="h-[100dvh] flex overflow-hidden bg-surface-base text-foreground">
+    <div className={`h-[100dvh] flex overflow-hidden bg-surface-base text-foreground ${location.pathname === '/app' ? 'go-control-theme' : ''}`}>
       {sidebarOpen && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />
       )}

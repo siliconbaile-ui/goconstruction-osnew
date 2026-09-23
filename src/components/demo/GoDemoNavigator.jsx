@@ -115,6 +115,11 @@ export default function GoDemoNavigator() {
   // Modal de bienvenida al entrar por primera vez a /app
   useEffect(() => {
     if (location.pathname !== '/app') return;
+    const justRegistered = sessionStorage.getItem('go-just-registered') === '1';
+    if (justRegistered) {
+      setShowWelcome(true);
+      return;
+    }
     try {
       const completed = localStorage.getItem(COMPLETED_KEY);
       const dismissed = localStorage.getItem(DISMISSED_KEY);
@@ -127,12 +132,14 @@ export default function GoDemoNavigator() {
 
   const startDemo = () => {
     setShowWelcome(false);
+    sessionStorage.removeItem('go-just-registered');
     try { localStorage.setItem(DISMISSED_KEY, '1'); } catch {}
     startGoMasterDemo();
   };
 
   const skipWelcome = () => {
     setShowWelcome(false);
+    sessionStorage.removeItem('go-just-registered');
     try { localStorage.setItem(DISMISSED_KEY, '1'); } catch {}
     window.dispatchEvent(new Event('go:welcome-dismissed'));
   };

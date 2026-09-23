@@ -3,7 +3,7 @@ import Logo from '@/components/marca/Logo';
 
 export default function GoDemoWelcome({ onStart, onSkip }) {
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-foreground/30 p-3 backdrop-blur-sm sm:p-6">
+    <div className="go-control-theme fixed inset-0 z-[100] flex items-center justify-center bg-surface-base/75 p-3 backdrop-blur-sm sm:p-6">
       <section role="dialog" aria-modal="true" aria-labelledby="go-welcome-title" aria-describedby="go-welcome-description" className="flex max-h-[calc(100dvh-1.5rem)] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-hairline bg-surface text-foreground shadow-2xl sm:max-h-[calc(100dvh-3rem)]">
         <div className="min-h-0 overflow-y-auto overscroll-contain p-5 sm:p-7">
           <div className="mb-5 flex flex-wrap items-center justify-between gap-3">

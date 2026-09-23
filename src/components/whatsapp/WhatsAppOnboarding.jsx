@@ -28,7 +28,7 @@ export default function WhatsAppOnboarding() {
         setOpen(true);
       }, 1400);
     };
-    const firstVisitToGo = pathname === '/app' && !localStorage.getItem('go-demo-completed') && !localStorage.getItem('go-demo-dismissed');
+    const firstVisitToGo = pathname === '/app' && (sessionStorage.getItem('go-just-registered') === '1' || (!localStorage.getItem('go-demo-completed') && !localStorage.getItem('go-demo-dismissed')));
     if (firstVisitToGo) {
       window.addEventListener('go:welcome-dismissed', show);
       window.addEventListener('go:demo-end', show);
@@ -44,7 +44,7 @@ export default function WhatsAppOnboarding() {
   if (isAccess) return null;
   return <>
     {mobile && <WhatsAppMobileSheet open={open} step={step} setStep={setStep} onClose={close} onConnect={remember} />}
-    <div className={`fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-4 z-40 flex flex-col items-end gap-3 lg:bottom-6 lg:right-6 ${mobile && (open || hasMobileMenu) ? 'hidden' : ''}`}>
+    <div className={`fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-4 z-40 flex flex-col items-end gap-3 lg:bottom-6 lg:right-6 ${pathname === '/app' ? 'go-control-theme' : ''} ${mobile && (open || hasMobileMenu) ? 'hidden' : ''}`}>
       {!mobile && open && <WhatsAppTourCard step={step} setStep={setStep} onClose={close} onConnect={remember} />}
       {!open && <WhatsAppConnectLink onOpen={remember} className="rounded-full border border-foreground/10 bg-ok px-4 text-sm text-primary-foreground shadow-lg">WhatsApp</WhatsAppConnectLink>}
     </div>

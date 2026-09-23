@@ -249,9 +249,6 @@ criterio técnico con los datos reales de tu obra
           {/* Mensajes */}
           <div ref={scrollRef} data-scroll-area
             className={`go-control-stream ${hasMessages ? 'go-control-has-messages' : ''} flex-1 overflow-y-auto min-h-0 px-3 sm:px-4 lg:px-8 py-4 sm:py-6 scroll-smooth`}>
-            <GoLoopIntro />
-            <GoLoopWorkspace onPrompt={send} disabled={sending || !activeId} />
-            <PanelControlRio onPrompt={send} />
             {!hasMessages ? (
               <div className="go-control-conversation"><WelcomeHero onPrompt={send} activo={sending} /></div>
             ) : (
@@ -269,9 +266,12 @@ criterio técnico con los datos reales de tu obra
                 )}
               </div>
             )}
-          </div>
+            <PanelControlRio onPrompt={send} />
+            <GoLoopIntro />
+            <GoLoopWorkspace onPrompt={send} disabled={sending || !activeId} />
+            </div>
 
-          {errorEnvio && (
+            {errorEnvio && (
             <div className="flex-shrink-0 px-3 sm:px-4 lg:px-8 pb-1">
               <div className="max-w-5xl mx-auto flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs border"
                 style={{ borderColor: 'hsl(var(--danger) / 0.4)', background: 'hsl(var(--danger) / 0.08)', color: 'hsl(var(--danger))' }}>

@@ -64,6 +64,7 @@ export default function Register() {
         cargo,
         empresa_nombre: empresa.trim(),
       });
+      sessionStorage.setItem('go-just-registered', '1');
       window.location.href = destino();
     } catch (err) {
       setError(err.message || "Código de verificación inválido");
