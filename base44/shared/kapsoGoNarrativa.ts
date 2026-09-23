@@ -1,4 +1,4 @@
-// Adaptador del canal: referencia al agente existente, sin copiar ni sustituir su configuración.
+// El canal comparte número, pero mantiene conversaciones y permisos distintos para consulta e incorporación.
 import { interpretarSalidaGo, resolverSeleccionGo } from './kapsoInteractivo.ts';
 import { RECORRIDO_GO, conservarSeguimientoGo, leerSeguimientoGo, pendientesDelHistorialGo } from './kapsoRecorridoGo.ts';
 import { prepararEntradaGo } from './kapsoEntradaGo.ts';
@@ -59,8 +59,19 @@ export async function invocarGoWhatsApp(base44, registro, { pruebaId = '', alcan
   if (origen) origen = await agents.getConversation(origen.id);
   const personaConocida = (origen?.messages || []).some(m => m.role === 'user' && typeof m.content === 'string'
     && m.content.includes('[kapso_message_id:') && !m.content.includes(marcaMensaje(registro)));
+  let seleccionOrigen = origen;
+  if (registro.opcion_elegida?.id?.startsWith('go:')) {
+    const idMensaje = /^go:([^:]+):\d+$/.exec(registro.opcion_elegida.id)?.[1];
+    if (idMensaje && !(origen?.messages || []).some(m => m.role === 'assistant' && m.id === idMensaje)) {
+      const candidatas = await agents.listConversations({ q: JSON.stringify(clave), sort: '-created_date', limit: 15 });
+      for (const c of candidatas.filter(pertenece)) {
+        const historial = await agents.getConversation(c.id);
+        if (historial.messages?.some(m => m.role === 'assistant' && m.id === idMensaje)) { seleccionOrigen = historial; break; }
+      }
+    }
+  }
   const textoElegido = registro.opcion_elegida?.id?.startsWith('go:')
-    ? resolverSeleccionGo(origen, registro.opcion_elegida) : '';
+    ? resolverSeleccionGo(seleccionOrigen, registro.opcion_elegida) : '';
   if (auditoria && textoElegido) {
     await auditoria.registrar('boton_elegido', { id: registro.opcion_elegida.id, texto_resuelto: textoElegido, validado: true }, 'boton_validado');
     if (pideDatosPrivadosGo(textoElegido)) return bloquearConsultaGo(auditoria);

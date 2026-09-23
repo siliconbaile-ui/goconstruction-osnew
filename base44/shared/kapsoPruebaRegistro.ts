@@ -46,7 +46,7 @@ export async function probarRegistroGo(base44, input) {
     registro: resultado.perfil_contexto, perfil: vistaPerfilDeclaradoGo(perfil), herramientas: resultado.herramientas,
     auditoria: resultado.auditoria, wamid_entrada: resultado.wamid_entrada, wamid_salida: resultado.wamid_salida,
     timestamp_salida: resultado.timestamp_salida, idempotente: resultado.idempotente || false,
-    origen: resultado.origen || 'orion_asistente',
+    origen: resultado.origen || 'go_vendedor',
     metricas: { lineas: resultado.respuesta.split('\n').length, preguntas: (resultado.respuesta.match(/\?/g) || []).length,
       caracteres: resultado.respuesta.length, botones: resultado.opciones.length } };
 }

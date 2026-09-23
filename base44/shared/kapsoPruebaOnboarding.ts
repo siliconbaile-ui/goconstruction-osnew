@@ -1,4 +1,4 @@
-import { invocarGoWhatsApp } from './kapsoGoNarrativa.ts';
+import { invocarGoWhatsApp, AGENTE_GO } from './kapsoGoNarrativa.ts';
 import { GO_PHONE_NUMBER_ID, normalizarMensaje, enviarRespuestaKapso } from './kapsoPuente.ts';
 import { CASOS_GO, entradaPruebaGo } from './kapsoEscenariosGo.ts';
 import { interpretarSalidaGo } from './kapsoInteractivo.ts';
@@ -27,9 +27,9 @@ export async function probarOnboardingGo(base44, input) {
     avance_real: 40, avance_programado: 60, estado: 'en_progreso', notas: 'Fixture sintético de desarrollo, sin efectos operacionales.' });
   const remitente = '12025550123';
   const agents = base44.agents;
-  const anteriores = await agents.listConversations({ q: JSON.stringify({ agent_name: 'orion_asistente', 'metadata.canal': 'kapso_go',
+  const anteriores = await agents.listConversations({ q: JSON.stringify({ agent_name: AGENTE_GO, 'metadata.canal': 'kapso_go',
     'metadata.phone_number_id': GO_PHONE_NUMBER_ID, 'metadata.remitente': remitente, 'metadata.prueba_id': pruebaId }), sort: '-created_date', limit: 1 });
-  const anterior = anteriores.find(c => c.metadata?.prueba_id === pruebaId && c.agent_name === 'orion_asistente');
+  const anterior = anteriores.find(c => c.metadata?.prueba_id === pruebaId && c.agent_name === AGENTE_GO);
   let elegido;
   if (caso === 'boton_piso') {
     if (!anterior) throw new Error('Primero ejecuta bienvenida.');
@@ -56,8 +56,8 @@ export async function probarOnboardingGo(base44, input) {
     preguntas: (respuesta.respuesta.match(/\?/g) || []).length, botones: respuesta.opciones.length };
   const verificaciones = { corto: metricas.caracteres <= 360 && metricas.lineas <= 3, una_pregunta: metricas.preguntas <= 1,
     botones_validos: metricas.botones <= 3 && envio.ok,
-    inicio_natural: caso !== 'bienvenida' || (metricas.botones === 0 && /jefe técnico/i.test(respuesta.respuesta) && /hoy/i.test(respuesta.respuesta)),
-    mismo_agente: conversacion.agent_name === 'orion_asistente', misma_conversacion: !anterior || anterior.id === conversacion.id,
+    inicio_natural: caso !== 'bienvenida' || (metricas.botones === 2 && /jefe técnico/i.test(respuesta.respuesta)),
+    mismo_agente: conversacion.agent_name === AGENTE_GO, misma_conversacion: !anterior || anterior.id === conversacion.id,
     contexto_persistido: leerSeguimientoGo(conversacion)?.message_id === respuesta.agent_message_id,
     sin_herramientas_ajenas: caso !== 'otra_obra' || herramientas.length === 0 };
   return { ok: Object.values(verificaciones).every(Boolean), data_env: 'dev', caso, prueba_id: pruebaId,

@@ -237,7 +237,7 @@ GO<span className="hidden sm:inline"> · jefe técnico de obra</span>
 criterio técnico con los datos reales de tu obra
               </span>
               <WhatsAppButton />
-              <Link to="/go?modo=avanzar" className="hidden sm:inline-flex min-h-9 items-center rounded-full bg-surface-raised px-3 text-[11px] font-semibold text-foreground">Avanzar con mi empresa</Link>
+              <Link to="/go?modo=avanzar" className="inline-flex min-h-9 items-center rounded-full bg-surface-raised px-2 sm:px-3 text-[11px] font-semibold text-foreground"><span className="sm:hidden">Empresa</span><span className="hidden sm:inline">Avanzar con mi empresa</span></Link>
               <button onClick={() => setPanelMovil(true)} aria-label="Abrir información de la obra"
                 className="lg:hidden flex min-h-12 min-w-12 sm:min-h-9 items-center justify-center gap-1.5 px-3 rounded-full text-[11px] font-semibold tracking-wide flex-shrink-0 bg-surface-raised text-foreground/85 active:opacity-80">
                 <Activity className="w-3.5 h-3.5" />
