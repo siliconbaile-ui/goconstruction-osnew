@@ -2,11 +2,12 @@ import ConversationPanel from '@/components/agent/ConversationPanel';
 import { useLocation } from 'react-router-dom';
 
 export default function AsistenteOrion() {
-  const { search } = useLocation();
-  const incorporacion = new URLSearchParams(search).get('modo') === 'avanzar';
+  const { pathname, search } = useLocation();
+  const incorporacion = pathname === '/app' && new URLSearchParams(search).get('modo') === 'avanzar';
+  const agentName = incorporacion ? 'go_incorporacion' : pathname === '/app' ? 'go_vendedor' : 'orion_asistente';
   return (
     <div className="go-control-page h-full overflow-hidden">
-      <ConversationPanel key={incorporacion ? 'incorporacion' : 'tecnica'} agentName={incorporacion ? 'go_incorporacion' : 'orion_asistente'} />
+      <ConversationPanel key={agentName} agentName={agentName} />
     </div>
   );
 }
