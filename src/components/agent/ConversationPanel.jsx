@@ -16,10 +16,10 @@ import agruparMensajes from '@/lib/agruparMensajes';
 import goSessionContext from '@/components/agent/goSessionContext';
 import GoLoopIntro from '@/components/agent/GoLoopIntro';
 import GoLoopWorkspace from '@/components/agent/GoLoopWorkspace';
+import GoIncorporacionGuide from './GoIncorporacionGuide';
 
-const AGENT_NAME = 'orion_asistente';
-
-export default function ConversationPanel() {
+export default function ConversationPanel({ agentName = 'orion_asistente' }) {
+  const incorporacion = agentName === 'go_incorporacion';
   const [conversations, setConversations] = useState([]);
   const [activeId, setActiveId] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -54,7 +54,7 @@ export default function ConversationPanel() {
 
   const loadConversations = useCallback(async () => {
     try {
-      const list = await base44.agents.listConversations({ agent_name: AGENT_NAME });
+      const list = await base44.agents.listConversations({ agent_name: agentName });
       setConversations(list || []);
       return list || [];
     } catch {
@@ -63,13 +63,13 @@ export default function ConversationPanel() {
     } finally {
       setLoadingConvs(false);
     }
-  }, []);
+  }, [agentName]);
 
   const startNewConversation = useCallback(async () => {
     try {
       const conv = await base44.agents.createConversation({
-        agent_name: AGENT_NAME,
-        metadata: await goSessionContext()
+        agent_name: agentName,
+        metadata: incorporacion ? { name: 'GO · incorporación' } : await goSessionContext()
       });
       setConversations(prev => [conv, ...prev]);
       setActiveId(conv.id);
@@ -79,7 +79,7 @@ export default function ConversationPanel() {
       console.error(e);
       return null;
     }
-  }, []);
+  }, [agentName, incorporacion]);
 
   useEffect(() => {
     (async () => {
@@ -133,6 +133,7 @@ export default function ConversationPanel() {
   }, [messages]);
 
   useEffect(() => {
+    if (incorporacion) return;
     (async () => {
       try {
         const [alerts, partidas, rdis, edps, pvs] = await Promise.all([
@@ -151,7 +152,7 @@ export default function ConversationPanel() {
         setProyecto(pvs[0] || null);
       } catch (e) { console.error(e); }
     })();
-  }, [messages]);
+  }, [messages, incorporacion]);
 
   const send = async (text, fileUrls = []) => {
     desbloquearVoz();
@@ -212,8 +213,8 @@ export default function ConversationPanel() {
 
   return (
     <div className="go-control-shell flex h-full min-h-0 overflow-hidden bg-surface-base text-foreground">
-      {colIzq && <AgentSidebar onPrompt={send} ficha={ficha} />}
-      <BotonColumna lado="izquierda" abierta={colIzq} onToggle={() => setColIzq(v => !v)} />
+      {!incorporacion && colIzq && <AgentSidebar onPrompt={send} ficha={ficha} />}
+      {!incorporacion && <BotonColumna lado="izquierda" abierta={colIzq} onToggle={() => setColIzq(v => !v)} />}
 
       {/* CENTRO */}
       <div className="go-control-center flex-1 flex flex-col min-w-0 min-h-0 p-0 sm:p-4 lg:px-0">
@@ -225,24 +226,24 @@ export default function ConversationPanel() {
             </div>
             <div className="min-w-0">
               <div className="text-sm font-semibold leading-tight truncate text-foreground">
-GO<span className="hidden sm:inline"> · jefe técnico de obra</span>
+GO<span className="hidden sm:inline"> · {incorporacion ? 'incorporación' : 'jefe técnico de obra'}</span>
               </div>
               <div className="flex items-center gap-1.5 text-[10px] font-mono tracking-widest" style={{ color: 'hsl(var(--ok))' }}>
                 <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: 'hsl(var(--ok))' }} />
-                <span className="whitespace-nowrap">EN VIVO<span className="hidden sm:inline"> · VIGILANDO</span></span>
+                <span className="whitespace-nowrap">EN VIVO{!incorporacion && <span className="hidden sm:inline"> · VIGILANDO</span>}</span>
               </div>
             </div>
             <div className="ml-auto flex items-center gap-1.5 sm:gap-3">
               <span className="hidden md:inline text-[11px] text-muted-foreground">
-criterio técnico con los datos reales de tu obra
+{incorporacion ? 'Conversemos sobre tu empresa' : 'criterio técnico con los datos reales de tu obra'}
               </span>
               <WhatsAppButton />
-              <Link to="/go?modo=avanzar" className="inline-flex min-h-9 items-center rounded-full bg-surface-raised px-2 sm:px-3 text-[11px] font-semibold text-foreground"><span className="sm:hidden">Empresa</span><span className="hidden sm:inline">Avanzar con mi empresa</span></Link>
-              <button onClick={() => setPanelMovil(true)} aria-label="Abrir información de la obra"
+              <Link to={incorporacion ? '/app' : '/app?modo=avanzar'} className="inline-flex min-h-9 items-center rounded-full bg-surface-raised px-2 sm:px-3 text-[11px] font-semibold text-foreground"><span className="sm:hidden">{incorporacion ? 'Obra' : 'Empresa'}</span><span className="hidden sm:inline">{incorporacion ? 'Volver a consulta técnica' : 'Avanzar con mi empresa'}</span></Link>
+              {!incorporacion && <button onClick={() => setPanelMovil(true)} aria-label="Abrir información de la obra"
                 className="lg:hidden flex min-h-12 min-w-12 sm:min-h-9 items-center justify-center gap-1.5 px-3 rounded-full text-[11px] font-semibold tracking-wide flex-shrink-0 bg-surface-raised text-foreground/85 active:opacity-80">
                 <Activity className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">OBRA</span>
-              </button>
+                </button>}
               <button onClick={startNewConversation} aria-label="Nueva conversación con GO"
                 className="flex min-h-12 min-w-12 sm:min-h-9 items-center justify-center gap-1.5 px-3 rounded-full text-[11px] font-semibold tracking-wide flex-shrink-0 bg-surface-raised text-primary active:opacity-80">
                 <Plus className="w-3.5 h-3.5" />
@@ -255,7 +256,7 @@ criterio técnico con los datos reales de tu obra
           <div ref={scrollRef} data-scroll-area
             className={`go-control-stream ${hasMessages ? 'go-control-has-messages' : ''} flex-1 overflow-y-auto min-h-0 px-3 sm:px-4 lg:px-8 py-4 sm:py-6 scroll-smooth`}>
             {!hasMessages ? (
-              <div className="go-control-conversation"><WelcomeHero onPrompt={send} activo={sending} /></div>
+              <div className="go-control-conversation">{incorporacion ? <GoIncorporacionGuide onPrompt={send} disabled={sending || !activeId} /> : <WelcomeHero onPrompt={send} activo={sending} />}</div>
             ) : (
               <div className="go-control-conversation w-full max-w-4xl mx-auto space-y-4 sm:space-y-6 pb-2">
                 {agruparMensajes(messages).map((m, index) => (
@@ -271,7 +272,7 @@ criterio técnico con los datos reales de tu obra
                 )}
               </div>
             )}
-            {!hasMessages && <>
+            {!hasMessages && !incorporacion && <>
               <PanelControlRio onPrompt={send} />
               <GoLoopIntro />
               <GoLoopWorkspace onPrompt={send} disabled={sending || !activeId} />
@@ -303,7 +304,7 @@ criterio técnico con los datos reales de tu obra
         </div>
       </div>
 
-      {panelMovil && (
+      {!incorporacion && panelMovil && (
         <div className="fixed inset-0 z-50 lg:hidden bg-surface-base">
           <ObraLivePanel
             movil
@@ -323,9 +324,9 @@ criterio técnico con los datos reales de tu obra
         </div>
       )}
 
-      <BotonColumna lado="derecha" abierta={colDer} onToggle={() => setColDer(v => !v)} />
+      {!incorporacion && <BotonColumna lado="derecha" abierta={colDer} onToggle={() => setColDer(v => !v)} />}
 
-      {colDer && <ObraLivePanel
+      {!incorporacion && colDer && <ObraLivePanel
         tab={rightTab}
         setTab={setRightTab}
         stats={stats}
