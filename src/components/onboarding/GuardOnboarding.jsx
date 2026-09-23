@@ -10,6 +10,7 @@ export default function GuardOnboarding() {
   const [estado, setEstado] = useState('cargando');
 
   useEffect(() => {
+    if (location.pathname === '/app') return;
     (async () => {
       try {
       const me = await base44.auth.me();
@@ -33,7 +34,10 @@ export default function GuardOnboarding() {
         setEstado('onboarding');
       }
     })();
-  }, []);
+  }, [location.pathname]);
+
+  // El asistente es el primer destino; la configuración sigue exigida en los módulos de obra.
+  if (location.pathname === '/app') return <Outlet />;
 
   if (estado === 'cargando') {
     return (
