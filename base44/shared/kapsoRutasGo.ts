@@ -14,7 +14,8 @@ function rutaAnteriorGo(conversacion) {
 
 export function resolverRutaGo(conversacion, texto, esPrimero) {
   const t = normalizarRespuestaGo(texto);
-  if (/\b(iniciar|empezar|comenzar|hacer|seguir|continuar) (el |mi |con el )?onboarding\b|\b(quiero registrarme|crear mi perfil)\b/.test(t)) return 'onboarding';
+  if (/\b(iniciar|empezar|comenzar|hacer|seguir|continuar) (el |mi |con el )?onboarding\b|\b(quiero registrarme|crear mi perfil|avanzar con mi empresa|centro de comandos)\b/.test(t)) return 'onboarding';
+  if (/\b(volver a go tecnico|salir del onboarding|solo consulta tecnica|hablar con go tecnico)\b/.test(t)) return 'libre';
   if (/\b(ver|mostrar|quiero|hacer|iniciar|seguir|continuar) (el |un |con el )?(recorrido|demo|demostracion)\b|\bcomo funciona\b|\bver plataforma\b/.test(t)) return 'demo';
   const anterior = rutaAnteriorGo(conversacion);
   if (anterior === 'inicio') return /^(si|claro|dale|muestrame|quiero verlo)$/.test(t) ? 'demo' : 'libre';

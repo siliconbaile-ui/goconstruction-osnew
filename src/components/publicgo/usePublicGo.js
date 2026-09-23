@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 
-export default function usePublicGo() {
+export default function usePublicGo(agentName = 'go_vendedor') {
   const [messages, setMessages] = useState([]), [busy, setBusy] = useState(false), [error, setError] = useState('');
   const conversation = useRef(null), unsubscribe = useRef(null), lock = useRef(false), mounted = useRef(true);
   useEffect(() => { mounted.current = true; return () => { mounted.current = false; unsubscribe.current?.(); }; }, []);
@@ -12,7 +12,7 @@ export default function usePublicGo() {
     lock.current = true; setBusy(true); setError('');
     try {
       if (!conversation.current) {
-        const created = await base44.agents.createConversation({ agent_name: 'go_vendedor', metadata: { name: 'GO · consulta pública de demostración' } });
+        const created = await base44.agents.createConversation({ agent_name: agentName, metadata: { name: agentName === 'go_incorporacion' ? 'GO · incorporación' : 'GO · consulta pública de demostración' } });
         if (!mounted.current) return false;
         conversation.current = created;
         unsubscribe.current = base44.agents.subscribeToConversation(created.id, receive);

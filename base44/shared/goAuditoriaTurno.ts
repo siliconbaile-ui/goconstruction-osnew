@@ -55,13 +55,13 @@ export async function iniciarAuditoriaGo(base44, mensaje, grupo, sesion, entorno
         await registrar('perfil_actualizado', { perfil_id: estado.perfil.id, contexto: estado.contexto.perfil }, 'perfil_preparado');
       }
     },
-    iniciarAgente: async conversationId => {
+    iniciarAgente: async (conversationId, agente = 'go_vendedor') => {
       turno = await turnos.update(turno.id, { conversation_id: conversationId }); auditoria.turno = turno;
-      await registrar('agente_inicio', { agente: 'orion_asistente', conversation_id: conversationId, estado: 'solicitado' });
+      await registrar('agente_inicio', { agente, conversation_id: conversationId, estado: 'solicitado' });
     },
     fallar: async error => {
       await registrar('error', { nombre: error.name || 'Error', mensaje: String(error.message || error), conversation_id: turno.conversation_id || '' });
-      if (turno.conversation_id) await registrar('agente_fin', { agente: 'orion_asistente', conversation_id: turno.conversation_id, estado: 'error' }, 'agente_error');
+      if (turno.conversation_id) await registrar('agente_fin', { conversation_id: turno.conversation_id, estado: 'error' }, 'agente_error');
       turno = await turnos.update(turno.id, { estado: 'error', error: String(error.message || error) }); auditoria.turno = turno;
     }
   };

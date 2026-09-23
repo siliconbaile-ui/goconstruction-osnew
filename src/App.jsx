@@ -8,6 +8,7 @@ import Register from '@/pages/Register';
 import ForgotPassword from '@/pages/ForgotPassword';
 import ResetPassword from '@/pages/ResetPassword';
 import PublicStart from '@/pages/PublicStart';
+import GoDosCaminos from '@/pages/GoDosCaminos';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
@@ -47,7 +48,7 @@ import WhatsAppOnboarding from '@/components/whatsapp/WhatsAppOnboarding';
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
   const { pathname } = useLocation();
-  const publicEntry = ['/', '/demo', '/login', '/register', '/forgot-password', '/reset-password'].includes(pathname);
+  const publicEntry = ['/', '/demo', '/go', '/login', '/register', '/forgot-password', '/reset-password'].includes(pathname);
 
   if (!publicEntry && (isLoadingPublicSettings || isLoadingAuth)) {
     return (
@@ -70,6 +71,7 @@ const AuthenticatedApp = () => {
     <Routes>
       <Route path="/" element={<PublicStart />} />
       <Route path="/demo" element={<Demo />} />
+      <Route path="/go" element={<GoDosCaminos />} />
       <Route path="/polpaico-os" element={<PolpaicoOS />} />
       <Route path="/control-calidad" element={<CasoControlCalidad />} />
       <Route path="/edp-pagos" element={<CasoEdpPagos />} />
