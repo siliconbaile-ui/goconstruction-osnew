@@ -117,6 +117,15 @@ export async function invocarGoWhatsApp(base44, registro, { pruebaId = '', alcan
         : 'Canal público: no existe vínculo de identidad verificado en este puente. Ninguna obra privada está autorizada para leer o escribir. Trabaja con lo compartido en este hilo; no uses herramientas de datos privados.';
     const contextoActual = contextoMensajeActualGo(leerSeguimientoGo(conversacion), entrada.texto, pendientesDelHistorialGo(conversacion));
     contextoActual.persona_conocida_en_este_hilo = personaConocida;
+    if (vinculo) {
+      const recientes = await base44.asServiceRole.entities.WebhookKapso.filter({
+        phone_number_id: registro.phone_number_id, remite_numero: registro.remite_numero, estado: 'respondido',
+      }, '-created_date', 8);
+      contextoActual.historial_whatsapp_vinculado = recientes.reverse().map(m => ({
+        mensaje: (m.contenido_texto || m.transcripcion || `[${m.tipo_mensaje}]`).slice(0, 450),
+        respuesta: (m.respuesta_texto || '').slice(0, 450),
+      }));
+    }
     contextoActual.instruccion_continuidad = personaConocida
       ? 'Ya hubo mensajes previos en este hilo: no vuelvas a decir Soy GO, Hola soy GO ni te presentes; responde naturalmente al mensaje actual.'
       : 'Primer mensaje en este hilo: presentación breve solo si llega sin situación concreta.';

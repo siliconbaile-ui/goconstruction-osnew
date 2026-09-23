@@ -20,7 +20,7 @@ export default function GoLinkControl({ status, onRefresh }) {
   return <section className="rounded-xl border border-hairline bg-surface p-4 space-y-3">
     <h3 className="text-sm font-semibold text-foreground">Vinculación de WhatsApp</h3>
     {status.vinculado ? <>
-      <p className="text-xs text-muted-foreground">Conectado al número terminado en {status.telefono}. Solo tú puedes consultar el historial desde tu cuenta; WhatsApp no obtiene acceso a datos privados de la obra.</p>
+      <p className="text-xs text-muted-foreground">Conectado al número terminado en {status.telefono}. Solo tú puedes consultar el historial desde tu cuenta; WhatsApp no obtiene acceso a datos privados de la obra. Desvincular no borra mensajes anteriores.</p>
       <button disabled={busy} onClick={() => act('revocar')} className="text-xs text-danger underline disabled:opacity-50">Desvincular WhatsApp</button>
     </> : <>
       <p className="text-xs text-muted-foreground">Genera un código temporal desde tu sesión y envíalo desde el WhatsApp que quieres vincular. Al vincular, podrás ver aquí las conversaciones de ese número, incluso las anteriores. No compartas el código.</p>
