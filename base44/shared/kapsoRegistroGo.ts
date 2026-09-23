@@ -26,7 +26,7 @@ export async function prepararRegistroGo(base44, registro, conversacion, entrada
   if (!perfil && !referencia && recibida?.estado === 'valido') referencia = recibida;
   let consentimiento = perfil?.consentimiento || anterior.tecnico.consentimiento || 'pendiente';
   if (retiro) consentimiento = 'retirado';
-  const preguntoPermiso = anterior.pregunta?.solicitud === 'consentimiento' && anterior.pregunta?.cuerpo?.includes(PREGUNTA_CONSENTIMIENTO_GO);
+  const preguntoPermiso = anterior.pregunta?.cuerpo?.includes(PREGUNTA_CONSENTIMIENTO_GO);
   if (preguntoPermiso && no && consentimiento !== 'aceptado') consentimiento = 'rechazado';
   if (!retiro && preguntoPermiso && si && consentimiento !== 'retirado' && !perfil) {
     perfil = await db.create({ ...filtro, estado: 'declarado', consentimiento: 'aceptado',
@@ -40,13 +40,14 @@ export async function prepararRegistroGo(base44, registro, conversacion, entrada
     consentimiento = 'aceptado'; confirmacion = 'Contexto declarado guardado con consentimiento; no verifica identidad ni permisos.';
   }
   const pedido = respuestaDirecta && ((/\b(enlace|link|pase)\b/i.test(texto) && /gener|crea|dame|compart|invit/i.test(texto)) || /quiero invitar/i.test(texto));
-  const continuacionPedido = anterior.tecnico.solicitud_pase && (si || no) && ['consentimiento', 'nombre_pase'].includes(anterior.pregunta?.solicitud);
+  const continuacionPedido = anterior.tecnico.solicitud_pase && (si || no)
+    && (anterior.pregunta?.cuerpo?.includes(PREGUNTA_CONSENTIMIENTO_GO)
+      || (perfil?.nombre && anterior.pregunta?.cuerpo?.includes(preguntaNombrePaseGo(perfil.nombre))));
   const solicitarPase = !retiro && (pedido || continuacionPedido) && consentimiento !== 'rechazado' && consentimiento !== 'retirado';
   if (solicitarPase && perfil?.consentimiento === 'aceptado') {
     const activo = perfil.pase_nonce && perfil.pase_hash && Date.parse(perfil.pase_expira || '') > Date.now();
     const preguntaEsperada = perfil.nombre ? preguntaNombrePaseGo(perfil.nombre) : '';
-    const respondioNombre = anterior.pregunta?.solicitud === 'nombre_pase' && preguntaEsperada
-      && anterior.pregunta.cuerpo?.includes(preguntaEsperada) && (si || no);
+    const respondioNombre = preguntaEsperada && anterior.pregunta?.cuerpo?.includes(preguntaEsperada) && (si || no);
     const neutral = pedido && /sin mi nombre|neutral|an[oó]nim/i.test(texto);
     if (activo || !perfil.nombre || respondioNombre || neutral) {
       const alias = neutral || (respondioNombre && no) ? 'una persona'

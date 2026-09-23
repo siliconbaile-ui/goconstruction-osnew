@@ -49,6 +49,10 @@ export default async function (req: Request): Promise<Response> {
         const cliente = createClientFromRequest(req);
         const usuario = await cliente.auth.me();
         if (usuario?.role !== 'admin') return Response.json({ error: 'Solo administrador.' }, { status: 403 });
+        if (diagnostico.modo === 'prueba_registro_go' &&
+          ((diagnostico.grupo_id && !/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(diagnostico.grupo_id)) ||
+           (diagnostico.sesion_id && !/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(diagnostico.sesion_id))))
+          return Response.json({ error: 'Grupo o sesión inválidos.' }, { status: 400 });
         if (['prueba_interactiva_go', 'codiseno_onboarding_go', 'prueba_onboarding_go', 'prueba_registro_go'].includes(diagnostico.modo)) {
           const headers = new Headers(req.headers);
           headers.set('X-Data-Env', 'dev');

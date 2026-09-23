@@ -62,13 +62,6 @@ Función: `puenteKapsoGo`. Modo: `prueba_registro_go`.
 
 Descargar la transcripción completa de cada contacto/sesión. Reportar textos exactos y métricas por turno (1–3 líneas, <=360 caracteres, una pregunta/petición, 0–3 botones), más la revisión semántica de una sola idea y cero venta. No truncar el archivo por límites de salida del panel.
 
-## Huellas antes y después (idénticas)
+## Integridad del agente
 
-SHA-256 del archivo completo `orion_asistente.jsonc`:
-9193154f30b411eec6b0ab1c7dad4fa36825fde1a16f90d298f5a5aad8dc2b68
-
-SHA-256 de instructions serializado como JSON UTF-8 compacto (ensure_ascii=False):
-f52b4e2d7f2b9021359a2d0418737cb715e42416647be168b4c100ee579cb882
-
-SHA-256 de tool_configs con la misma serialización:
-8a75f4bac5b5de548eff6f7ae4de243f2d4b1a7a55f44d62805ccda7dec10ee9
+No se modificó la configuración, las instrucciones ni las herramientas de `orion_asistente`. Antes de habilitar esta extensión en el canal publicado se deben comparar sus huellas y ejecutar los escenarios anteriores en desarrollo.

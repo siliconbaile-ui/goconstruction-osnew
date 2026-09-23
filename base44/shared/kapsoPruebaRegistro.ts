@@ -51,7 +51,7 @@ export async function probarRegistroGo(base44, input) {
   const perfil = (await base44.entities.PerfilOnboardingGO.filter(perfilFiltro, '-created_date', 1))[0] || null;
   return { ok: true, data_env: 'dev', envio_whatsapp: false, grupo_id: grupo, sesion_id: sesion, contacto,
     mensaje_id: mensajeId, conversation_id: resultado.agent_conversation_id, agent_message_id: resultado.agent_message_id,
-    usuario: texto, go: resultado.respuesta, opciones: resultado.opciones, seguimiento: resultado.seguimiento,
+    usuario: entrada.contenido_texto, go: resultado.respuesta, opciones: resultado.opciones, seguimiento: resultado.seguimiento,
     registro: resultado.perfil_contexto, perfil: vistaPerfilDeclaradoGo(perfil), herramientas: resultado.herramientas,
     metricas: { lineas: resultado.respuesta.split('\n').length, preguntas: (resultado.respuesta.match(/\?/g) || []).length,
       caracteres: resultado.respuesta.length, botones: resultado.opciones.length } };
