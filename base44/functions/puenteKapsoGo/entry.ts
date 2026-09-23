@@ -145,12 +145,10 @@ export default async function (req: Request): Promise<Response> {
                 throw e;
               }
             });
-            const envio = await enviarRespuestaKapso(phoneId, mensaje, resultado.respuesta, true, resultado.opciones);
-            if (!envio.ok) throw new Error(envio.error || 'No se pudo enviar la respuesta.');
             await base44.asServiceRole.entities.WebhookKapso.update(registro.id, {
               estado: 'respondido',
               respuesta_texto: resultado.opciones?.length ? JSON.stringify({ cuerpo: resultado.respuesta, opciones: resultado.opciones }) : resultado.respuesta,
-              respuesta_message_id: envio.message_id || resultado.respuesta_message_id || '',
+              respuesta_message_id: resultado.wamid_salida || resultado.respuesta_message_id || '',
               error_detalle: '',
               reintentos,
             });

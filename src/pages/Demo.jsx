@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { Lock, ArrowRight, ArrowLeft } from 'lucide-react';
 import Logo from '@/components/marca/Logo';
 import TablaDemo from '@/components/demo/TablaDemo';
+import RecorridoInteractivoGO from '@/components/demo/RecorridoInteractivoGO';
 
 const SEMAFORO = { critica: 'hsl(var(--danger))', advertencia: 'hsl(var(--warn))', info: 'hsl(var(--info))' };
 const usd = (n) => `$${Math.round(n || 0).toLocaleString('es-CL')}`;
@@ -68,7 +69,7 @@ export default function Demo() {
       <div className="max-w-5xl mx-auto p-4 space-y-4">
         <Logo size="md" />
 
-        <section className="orion-panel p-4 sm:p-5">
+        <section id="demo-avance" className="orion-panel p-4 sm:p-5 scroll-mt-20">
           <div className="text-[11px] font-mono tracking-widest text-muted-foreground mb-1">{proyecto.codigo} · {proyecto.mandante}</div>
           <h1 className="text-xl font-semibold mb-3">{proyecto.nombre}</h1>
           <div className="flex flex-wrap items-baseline gap-x-6 gap-y-2">
@@ -84,6 +85,8 @@ export default function Demo() {
             </div>
           </div>
         </section>
+
+        <RecorridoInteractivoGO data={data} />
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
           {KPIS.map(k => (
@@ -115,11 +118,11 @@ export default function Demo() {
           filas={data.partidas.map(p => [p.codigo, p.nombre, `${p.avance_real}%`, `${p.avance_programado}%`, p.estado_calidad, p.estado_pago, p.subcontratista || '—'])}
         />
 
-        <TablaDemo
+        <div id="demo-pagos" className="scroll-mt-20"><TablaDemo
           titulo="ESTADOS DE PAGO"
           columnas={['EDP', 'SUBCONTRATO', 'MONTO', 'ESTADO', 'MOTIVO BLOQUEO']}
           filas={data.edps.map(e => [e.numero_edp || '—', e.subcontratista || '—', usd(e.monto_usd), e.estado, e.motivo_bloqueo || '—'])}
-        />
+        /></div>
 
         <TablaDemo
           titulo="RDIS"
@@ -127,11 +130,11 @@ export default function Demo() {
           filas={data.rdis.map(r => [r.numero_rdi || '—', r.titulo, r.estado, r.prioridad, r.fecha_vencimiento || '—'])}
         />
 
-        <TablaDemo
+        <div id="demo-calidad" className="scroll-mt-20"><TablaDemo
           titulo="INSPECCIONES Y NO CONFORMIDADES"
           columnas={['N°', 'DESCRIPCIÓN', 'GRAVEDAD', 'ESTADO', 'NC']}
           filas={data.inspecciones.map(i => [i.numero_correlativo || '—', i.descripcion || '—', i.gravedad, i.estado, i.es_no_conformidad ? 'Sí' : 'No'])}
-        />
+        /></div>
 
         <div className="orion-panel p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center gap-3">
           <p className="text-xs text-muted-foreground flex-1">

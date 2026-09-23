@@ -11,13 +11,13 @@ export async function ejecutarTurnoAuditadoGo(base44, entrada, grupo, sesion, en
     const auditoria = await iniciarAuditoriaGo(base44, entrada, grupo, sesion, entorno);
     if (auditoria.duplicado) return { ...auditoria.resultado, idempotente: true };
     try {
-      if (entrada.etapa2) {
-        await guardarAudioEntranteGo(base44, auditoria, entrada);
-        if (entrada.aplicar_regla_id) await exigirReglaAplicableGo(base44, auditoria, entrada.aplicar_regla_id);
-      }
+      if (entrada.etapa2 && entrada.aplicar_regla_id) await exigirReglaAplicableGo(base44, auditoria, entrada.aplicar_regla_id);
       let resultado = await invocarGoWhatsApp(base44, entrada, {
         pruebaId: entorno === 'dev' ? sesion : '', registroContexto: { grupoPrueba: grupo, auditoria, etapa2: entrada.etapa2 === true, entorno } });
-      if (entrada.etapa2) resultado = await generarRespuestaAudioGo(base44, auditoria, entrada, resultado);
+      if (entrada.etapa2 && resultado.ruta_go === 'onboarding') {
+        await guardarAudioEntranteGo(base44, auditoria, entrada);
+        resultado = await generarRespuestaAudioGo(base44, auditoria, entrada, resultado);
+      }
       const enviarReal = entorno === 'prod';
       const envio = await enviarRespuestaKapso(GO_PHONE_NUMBER_ID, entrada, resultado.respuesta, enviarReal, resultado.opciones);
       if (!envio.ok) throw new Error(envio.error || 'No se pudo preparar la respuesta.');
