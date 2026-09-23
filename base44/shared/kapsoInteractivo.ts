@@ -14,7 +14,7 @@ export function interpretarSalidaGo(texto) {
       || titulos.has(opcion.titulo.trim())) throw new Error('Opción de GO inválida para WhatsApp.');
     titulos.add(opcion.titulo.trim());
   }
-  return { cuerpo: salida.cuerpo.trim(), opciones: salida.opciones };
+  return { cuerpo: salida.cuerpo.trim(), opciones: salida.opciones, seguimiento: salida.seguimiento };
 }
 
 export function resolverSeleccionGo(conversacion, seleccion) {
@@ -25,7 +25,9 @@ export function resolverSeleccionGo(conversacion, seleccion) {
   const opcion = interpretarSalidaGo(origen.content).opciones[Number(coincidencia[2])];
   if (!opcion) throw new Error('La opción elegida no existe en el mensaje original.');
   // El significado procede del mensaje original del agente, no del título recibido.
-  return `Opción elegida: ${opcion.titulo}. ${opcion.opcion}`;
+  const ultima = (conversacion.messages || []).filter(m => m.role === 'assistant' && m.content && !m.tool_calls?.length).at(-1);
+  const anterior = ultima?.id !== origen.id ? 'Es un botón de un turno anterior: revalida su intención actual, no ejecuta ni confirma acciones pendientes. ' : '';
+  return `${anterior}Opción elegida: ${opcion.titulo}. ${opcion.opcion}`;
 }
 
 export function construirSalidaKapso(phone, texto, opciones = []) {
