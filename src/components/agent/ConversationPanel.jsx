@@ -19,6 +19,9 @@ import GoLoopWorkspace from '@/components/agent/GoLoopWorkspace';
 import GoIncorporacionGuide from './GoIncorporacionGuide';
 import GoDemoGuide from './GoDemoGuide';
 
+const MARCA_APP = '[GO_APP_CONTEXT]';
+const MARCA_MENSAJE = '[GO_APP_USER_MESSAGE]';
+
 export default function ConversationPanel({ agentName = 'orion_asistente' }) {
   const incorporacion = agentName === 'go_incorporacion';
   const demo = agentName === 'go_vendedor';
@@ -165,9 +168,14 @@ export default function ConversationPanel({ agentName = 'orion_asistente' }) {
     setSending(true);
     setPendingStartId(activeId);
     setErrorEnvio(null);
-    const msg = { role: 'user', content: content || (demo ? 'Analiza lo que adjunté en el contexto de la obra demo, sin guardar registros.' : 'Analiza los documentos adjuntos, extrae los datos relevantes y crúzalos con la información de la obra.') };
+    const texto = content || (demo ? 'Analiza lo que adjunté en el contexto de la obra demo, sin guardar registros.' : 'Analiza los documentos adjuntos, extrae los datos relevantes y crúzalos con la información de la obra.');
+    const msg = { role: 'user', content: texto };
     if (fileUrls.length > 0) msg.file_urls = fileUrls;
     try {
+      if (incorporacion) {
+        const me = await base44.auth.me();
+        msg.content = `${MARCA_APP}\nSesión iniciada. Empresa: ${me.empresa_id ? 'vinculada' : 'pendiente'}. Cargo: ${me.cargo ? 'declarado' : 'pendiente'}. No pedir registro ni verificación de cuenta.\n${MARCA_MENSAJE}\n${texto}`;
+      }
       const conv = await base44.agents.getConversation(activeId);
       await base44.agents.addMessage(conv, msg);
     } catch (e) {
@@ -184,7 +192,7 @@ export default function ConversationPanel({ agentName = 'orion_asistente' }) {
     if (!errorEnvio) return;
     const { content, file_urls } = errorEnvio;
     setErrorEnvio(null);
-    send(content, file_urls || []);
+    send(incorporacion && content.startsWith(MARCA_APP) ? content.split(`${MARCA_MENSAJE}\n`)[1] : content, file_urls || []);
   };
 
   const ficha = {
@@ -264,7 +272,7 @@ GO<span className="hidden sm:inline"> · {incorporacion ? 'incorporación' : dem
               <div className="go-control-conversation w-full max-w-4xl mx-auto space-y-4 sm:space-y-6 pb-2">
                 {agruparMensajes(messages).map((m, index) => (
                   <div key={m.id || m.created_date || index} data-go-role={m.role === 'user' ? 'user' : 'assistant'} className="go-control-message">
-                    <MessageBubble message={m} conversacionId={activeId} />
+                    <MessageBubble message={incorporacion && m.role === 'user' && m.content?.startsWith(MARCA_APP) ? { ...m, content: m.content.split(`${MARCA_MENSAJE}\n`)[1] || '' } : m} conversacionId={activeId} incorporacion={incorporacion} />
                   </div>
                 ))}
                 {sending && (

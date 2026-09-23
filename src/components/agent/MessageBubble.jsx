@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import MarkdownContent from './MarkdownContent';
+import IncorporacionResponse from './IncorporacionResponse';
 import {
   ChevronDown, ChevronRight, Check, X, Loader2, AlertTriangle, FileText
 } from 'lucide-react';
@@ -141,7 +142,7 @@ function ToolCallDisplay({ toolCall }) {
   );
 }
 
-export default function MessageBubble({ message, conversacionId }) {
+export default function MessageBubble({ message, conversacionId, incorporacion = false }) {
   const isUser = message.role === 'user';
   return (
     <div className={`go-message-bubble flex ${isUser ? 'go-message-user justify-end' : 'go-message-assistant justify-start'}`}>
@@ -157,12 +158,12 @@ export default function MessageBubble({ message, conversacionId }) {
         <div
           className={`px-4 py-3 rounded-2xl ${isUser
             ? 'rounded-tr-sm bg-primary text-primary-foreground'
-            : 'rounded-tl-sm bg-surface border border-hairline text-foreground'}`}
+            : incorporacion ? '!p-0 bg-transparent text-foreground' : 'rounded-tl-sm bg-surface border border-hairline text-foreground'}`}
         >
           {message.content && (
             isUser
               ? <p className="text-sm whitespace-pre-wrap break-words leading-relaxed">{message.content}</p>
-              : <MarkdownContent content={message.content} />
+                             : incorporacion ? <IncorporacionResponse content={message.content} /> : <MarkdownContent content={message.content} />
           )}
           {message.file_urls?.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mt-2">
