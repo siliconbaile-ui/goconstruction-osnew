@@ -145,7 +145,7 @@ export default function MessageBubble({ message, conversacionId }) {
   const isUser = message.role === 'user';
   return (
     <div className={`go-message-bubble flex ${isUser ? 'go-message-user justify-end' : 'go-message-assistant justify-start'}`}>
-      <div className={`min-w-0 ${isUser ? 'max-w-[88%]' : 'w-full'}`}>
+      <div className={`min-w-0 ${isUser ? 'max-w-[88%] sm:max-w-[78%]' : 'w-full max-w-3xl'}`}>
         {!isUser && (
           <div className="flex items-center gap-2 mb-1.5">
             <div className="w-5 h-5 rounded-full flex items-center justify-center bg-primary">

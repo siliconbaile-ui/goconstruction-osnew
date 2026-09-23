@@ -1,12 +1,20 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Send, Loader2, Paperclip, X, FileText, Volume2, VolumeX } from 'lucide-react';
 import VoiceRecorder from './VoiceRecorder';
 
 export default function ChatComposer({ value, onChange, onSend, sending, onVoice, voiceMode, setVoiceMode, hablando }) {
   const fileRef = useRef(null);
+  const textareaRef = useRef(null);
   const [files, setFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
+
+  useEffect(() => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+    textarea.style.height = 'auto';
+    textarea.style.height = `${Math.min(textarea.scrollHeight, 160)}px`;
+  }, [value]);
 
   const handleFiles = async (e) => {
     const selected = Array.from(e.target.files || []);
@@ -32,7 +40,7 @@ export default function ChatComposer({ value, onChange, onSend, sending, onVoice
   };
 
   return (
-    <div className="go-control-composer-wrap flex-shrink-0 px-3 sm:px-4 lg:px-8 pt-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:pb-5">
+    <div className="go-control-composer-wrap flex-shrink-0 px-3 sm:px-4 lg:px-8 pt-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:pb-3">
       {files.length > 0 && (
         <div className="max-w-5xl mx-auto flex flex-wrap gap-2 mb-2">
           {files.map(f => (
@@ -47,15 +55,16 @@ export default function ChatComposer({ value, onChange, onSend, sending, onVoice
           ))}
         </div>
       )}
-      {/* Composer amplio: área de escritura de varias líneas y acciones abajo. */}
-      <div className="go-control-composer max-w-5xl mx-auto flex flex-col gap-2 px-3 sm:px-4 pt-3 pb-2.5 rounded-3xl bg-surface border border-hairline orion-elevated">
+      <div className="go-control-composer max-w-4xl mx-auto flex flex-col gap-2 px-3 sm:px-4 pt-2.5 pb-2.5 rounded-2xl bg-surface border border-hairline orion-elevated">
         <textarea
+          ref={textareaRef}
+          aria-label="Mensaje para GO"
           value={value}
           onChange={e => onChange(e.target.value)}
           onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); enviar(); } }}
-          rows={3}
-          placeholder="habla o escríbele a GO · pega una consulta, adjunta un plano o dicta desde terreno"
-          className="w-full bg-transparent outline-none resize-none text-base leading-relaxed px-1 min-h-[84px] max-h-56 text-foreground placeholder:text-muted-foreground"
+          rows={1}
+          placeholder="Escribe a GO · pregunta, adjunta un plano o dicta desde terreno"
+          className="w-full bg-transparent outline-none resize-none overflow-y-auto text-sm sm:text-base leading-relaxed px-1 min-h-12 max-h-40 text-foreground placeholder:text-muted-foreground"
         />
         <div className="flex items-center gap-1.5 sm:gap-2">
           <VoiceRecorder onTranscript={onVoice} onPartial={onChange} disabled={sending || uploading} />
@@ -82,9 +91,6 @@ export default function ChatComposer({ value, onChange, onSend, sending, onVoice
           </button>
         </div>
       </div>
-      <p className="max-w-5xl mx-auto text-[10px] text-center mt-2 hidden sm:block text-muted-foreground">
-        GO opera con los datos reales de tu obra, analiza tus documentos y registra cada acción que ejecuta.
-      </p>
     </div>
   );
 }

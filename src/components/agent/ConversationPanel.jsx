@@ -257,7 +257,7 @@ criterio técnico con los datos reales de tu obra
             {!hasMessages ? (
               <div className="go-control-conversation"><WelcomeHero onPrompt={send} activo={sending} /></div>
             ) : (
-              <div className="go-control-conversation w-full max-w-5xl mx-auto space-y-3 sm:space-y-4">
+              <div className="go-control-conversation w-full max-w-4xl mx-auto space-y-4 sm:space-y-6 pb-2">
                 {agruparMensajes(messages).map((m, index) => (
                   <div key={m.id || m.created_date || index} data-go-role={m.role === 'user' ? 'user' : 'assistant'} className="go-control-message">
                     <MessageBubble message={m} conversacionId={activeId} />
