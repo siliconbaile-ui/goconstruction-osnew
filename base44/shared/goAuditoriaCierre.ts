@@ -18,6 +18,13 @@ export async function cerrarAuditoriaGo(base44, auditoria, resultado) {
     eventos: (await base44.entities.EventoAuditoriaGO.filter({ turno_id: turno.id }, 'created_date', 100)).map(e => ({ entidad: 'EventoAuditoriaGO', id: e.id, tipo: e.tipo })) };
   const respuesta = { ...resultado, auditoria: referencias, wamid_entrada: turno.wamid, wamid_salida: wamidSalida,
     timestamp_salida: salidaPersistida.datos.timestamp_mensaje, envio_whatsapp: false, simulado: true };
+  const primerValor = resultado.socratico?.registros?.find(r => r.tipo === 'FIRST_VALUE');
+  if (primerValor) {
+    const valor = await base44.entities.ConocimientoObraGO.get(primerValor.id);
+    if (valor.turno_id !== turno.id || valor.persona_id !== turno.persona_id) throw new Error('FIRST_VALUE fuera del turno.');
+    await base44.entities.ConocimientoObraGO.update(valor.id, { datos: { ...valor.datos,
+      salida_simulada_persistida: true, wamid_salida: wamidSalida, evento_salida_id: salidaPersistida.id } });
+  }
   await base44.entities.ContactoAuditoriaGO.update(auditoria.persona.id, { estado_onboarding: siguiente, ultimo_wamid: turno.wamid });
   await base44.entities.TurnoAuditoriaGO.update(turno.id, { estado: 'completado', resultado: respuesta,
     estado_siguiente: siguiente, wamid_salida: wamidSalida, agent_message_id: resultado.agent_message_id || '', error: '' });

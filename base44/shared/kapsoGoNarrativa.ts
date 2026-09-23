@@ -4,6 +4,9 @@ import { RECORRIDO_GO, conservarSeguimientoGo, leerSeguimientoGo } from './kapso
 import { prepararEntradaGo } from './kapsoEntradaGo.ts';
 import { prepararRegistroGo, recuperarRegistroGo, finalizarRegistroGo } from './kapsoRegistroGo.ts';
 import { pideDatosPrivadosGo, bloquearConsultaGo } from './goBloqueoPrivado.ts';
+import { prepararSocraticoGo } from './goSocraticoContexto.ts';
+import { contratoSocraticoGo } from './goSocraticoContrato.ts';
+import { finalizarSocraticoGo } from './goSocraticoFinalizar.ts';
 export const AGENTE_GO = 'orion_asistente';
 const CAPA_NARRATIVA = RECORRIDO_GO;
 
@@ -76,8 +79,9 @@ export async function invocarGoWhatsApp(base44, registro, { pruebaId = '', alcan
     const mensaje = conversacion.messages.find(m => m.role === 'user' && m.content?.includes(marca));
     estadoRegistro = await recuperarRegistroGo(base44, registro, mensaje, registroContexto.grupoPrueba, auditoria);
   }
+  const entrada = !agregado || registroContexto?.etapa2 ? await prepararEntradaGo(base44, registro, textoElegido) : null;
+  const estadoSocratico = registroContexto?.etapa2 ? await prepararSocraticoGo(base44, auditoria, registro, entrada.texto) : null;
   if (!agregado) {
-    const entrada = await prepararEntradaGo(base44, registro, textoElegido);
     if (registroContexto) estadoRegistro = await prepararRegistroGo(base44, registro, conversacion, entrada, registroContexto.grupoPrueba, auditoria);
     const alcance = pruebaId && alcancePrueba
       ? `ESTE TURNO NO ES UN WEBHOOK PÚBLICO: es una prueba interna en dev con sesión del administrador autenticada y rol admin comprobado por el servidor antes de invocarte. Alcance autorizado exclusivamente de fixtures sintéticos: ${JSON.stringify(alcancePrueba)}. Puedes consultar con herramientas reales esos IDs/proyecto cuando la persona lo pida; no asumas el nombre hasta que lo diga. Solo lectura: NO ejecutar guardarEvidencia ni ninguna escritura en esta prueba. Foto sintética para observación transitoria. No listar otras obras ni búsquedas externas/Pinecone/Neo4j. No confundas esta sesión de prueba autorizada con vinculación de un remitente público; esa sigue pendiente.`
@@ -91,7 +95,7 @@ export async function invocarGoWhatsApp(base44, registro, { pruebaId = '', alcan
           seleccion: registro.opcion_elegida || null },
         coordenadas_gps: registro.coordenadas_gps || '',
         ...(estadoRegistro ? { registro_contexto: estadoRegistro.contexto } : {}),
-      })}\n\nContexto narrativo del canal (no sustituye tus instrucciones):\n${CAPA_NARRATIVA}\n\n${estadoRegistro?.instrucciones || ''}\n\nAlcance efectivo del adaptador:\n${alcance}\n\nContexto declarado del mismo hilo, nunca permisos:\n${JSON.stringify(leerSeguimientoGo(conversacion) || {})}`,
+      })}\n\nContexto narrativo del canal (no sustituye tus instrucciones):\n${CAPA_NARRATIVA}\n\n${estadoRegistro?.instrucciones || ''}\n\n${estadoSocratico ? contratoSocraticoGo(estadoSocratico.contexto) : ''}\n\nAlcance efectivo del adaptador:\n${alcance}\n\nContexto declarado del mismo hilo, nunca permisos:\n${JSON.stringify(leerSeguimientoGo(conversacion) || {})}`,
       ...(entrada.archivos.length ? { file_urls: entrada.archivos } : {}),
     });
   }
@@ -111,7 +115,8 @@ export async function invocarGoWhatsApp(base44, registro, { pruebaId = '', alcan
       const salida = interpretarSalidaGo(resultado.respuesta);
       const seguimiento = conservarSeguimientoGo(salida.seguimiento, resultado.agent_message_id);
       const perfilContexto = await finalizarRegistroGo(estadoRegistro, salida, registro, resultado.herramientas);
-      return { ...resultado, ...traza, seguimiento, ...(perfilContexto ? { perfil_contexto: perfilContexto } : {}), respuesta: salida.cuerpo,
+      const socratico = await finalizarSocraticoGo(estadoSocratico, salida, resultado.agent_message_id);
+      return { ...resultado, ...traza, seguimiento, ...(socratico ? { socratico } : {}), ...(perfilContexto ? { perfil_contexto: perfilContexto } : {}), respuesta: salida.cuerpo,
         opciones: salida.opciones.map((opcion, indice) => ({
           id: `go:${resultado.agent_message_id}:${indice}`, title: opcion.titulo, opcion: opcion.opcion,
         })) };

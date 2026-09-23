@@ -25,18 +25,24 @@ export async function probarRegistroGo(base44, input) {
   if (!/^wamid\.TEST\.[a-f0-9-]{36}$/i.test(wamid)) throw new Error('Solo se aceptan wamid sintéticos en desarrollo.');
   const seleccion = input.boton_id ? { id: String(input.boton_id), title: '' } : null;
   if (seleccion && !/^go:[^:]+:\d+$/.test(seleccion.id)) throw new Error('Botón inválido.');
+  if (input.etapa !== undefined && ![1, 2].includes(input.etapa)) throw new Error('Etapa inválida.');
+  if (input.audio_simulado && (input.etapa !== 2 || seleccion || input.foto)) throw new Error('Audio simulado requiere etapa 2 y un solo tipo de entrada.');
+  if (input.aplicar_regla_id && (input.etapa !== 2 || !/^[a-f0-9]{24}$/i.test(input.aplicar_regla_id))) throw new Error('Referencia de regla inválida.');
   const contenido = seleccion ? { type: 'interactive', interactive: { type: 'button_reply', button_reply: seleccion } }
+    : input.audio_simulado === true ? { type: 'audio', kapso: { transcript: texto } }
     : input.foto === true ? { type: 'image', caption: texto, image: { url: FOTO_QA_GO, mime_type: 'image/png' } }
     : { type: 'text', text: { body: texto } };
   const entrada = normalizarMensaje({ conversation: { id: `registro-${sesion}-${contacto}` },
     message: { id: wamid, from: remitente, ...contenido, timestamp: input.timestamp || new Date().toISOString() } }, GO_PHONE_NUMBER_ID);
   if (!entrada) throw new Error('Entrada o timestamp inválidos.');
+  if (input.etapa === 2) { entrada.etapa2 = true; entrada.aplicar_regla_id = input.aplicar_regla_id || ''; }
   const resultado = await ejecutarTurnoAuditadoGo(base44, entrada, grupo, sesion);
   if (resultado.ok === false) return { ...resultado, grupo_id: grupo, sesion_id: sesion, contacto, wamid };
   const perfil = (await base44.entities.PerfilOnboardingGO.filter(perfilFiltro, '-created_date', 1))[0] || null;
   return { ok: true, data_env: 'dev', envio_whatsapp: false, grupo_id: grupo, sesion_id: sesion, contacto,
     mensaje_id: mensajeId, conversation_id: resultado.agent_conversation_id, agent_message_id: resultado.agent_message_id,
-    usuario: entrada.contenido_texto, go: resultado.respuesta, opciones: resultado.opciones, seguimiento: resultado.seguimiento,
+    usuario: entrada.transcripcion || entrada.contenido_texto, go: resultado.respuesta, opciones: resultado.opciones, seguimiento: resultado.seguimiento,
+    ...(resultado.socratico ? { socratico: resultado.socratico } : {}), ...(resultado.audio ? { audio: resultado.audio } : {}),
     registro: resultado.perfil_contexto, perfil: vistaPerfilDeclaradoGo(perfil), herramientas: resultado.herramientas,
     auditoria: resultado.auditoria, wamid_entrada: resultado.wamid_entrada, wamid_salida: resultado.wamid_salida,
     timestamp_salida: resultado.timestamp_salida, idempotente: resultado.idempotente || false,

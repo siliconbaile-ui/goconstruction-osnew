@@ -1,6 +1,6 @@
 import { camposEventoGo, firmarEventoGo } from './goAuditoriaStore.ts';
 
-const ENTIDADES = ['ContactoAuditoriaGO', 'TurnoAuditoriaGO', 'EventoAuditoriaGO', 'PerfilOnboardingGO'];
+const ENTIDADES = ['ContactoAuditoriaGO', 'TurnoAuditoriaGO', 'EventoAuditoriaGO', 'PerfilOnboardingGO', 'ConocimientoObraGO'];
 async function leerTodoGo(db, filtro) {
   const salida = [];
   for (let skip = 0; ; skip += 100) {
@@ -18,6 +18,7 @@ export async function exportarAuditoriaGo(base44, grupo, sesion = '') {
   const transcripciones = turnos.map(t => ({ turno_id: t.id, persona_id: t.persona_id, sesion_id: t.sesion_id,
     wamid_entrada: t.wamid, timestamp_entrada: t.timestamp_mensaje, telefono_normalizado: t.telefono_normalizado,
     usuario: t.entrada, go: t.resultado?.respuesta ?? null, botones: t.resultado?.opciones || [],
+    audio: t.resultado?.audio || null, socratico: t.resultado?.socratico || null,
     origen_respuesta: t.resultado?.origen || (t.agent_message_id ? 'orion_asistente' : null),
     conversation_id: t.conversation_id || null, agent_message_id: t.agent_message_id || null,
     wamid_salida: t.wamid_salida || null, timestamp_salida: t.resultado?.timestamp_salida || null,

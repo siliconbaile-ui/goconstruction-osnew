@@ -15,6 +15,7 @@ export function interpretarSalidaGo(texto) {
     titulos.add(opcion.titulo.trim());
   }
   return { cuerpo: salida.cuerpo.trim(), opciones: salida.opciones, seguimiento: salida.seguimiento,
+    ...(salida.socratico && typeof salida.socratico === 'object' && !Array.isArray(salida.socratico) ? { socratico: salida.socratico } : {}),
     ...(salida.registro && typeof salida.registro === 'object' && !Array.isArray(salida.registro) ? { registro: salida.registro } : {}) };
 }
 

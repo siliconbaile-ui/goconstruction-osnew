@@ -14,7 +14,8 @@ export async function iniciarAuditoriaGo(base44, mensaje, grupo, sesion) {
   const clave = await hashGo(`dev:${grupo}:${mensaje.phone_number_id}:${mensaje.message_id}`);
   const entrada = { texto: mensaje.contenido_texto, tipo: mensaje.tipo_mensaje, archivo_url: mensaje.archivo_url,
     archivo_mime: mensaje.archivo_mime, transcripcion: mensaje.transcripcion, coordenadas_gps: mensaje.coordenadas_gps,
-    seleccion: mensaje.opcion_elegida || null, remitente: telefono, sesion_id: sesion };
+    seleccion: mensaje.opcion_elegida || null, remitente: telefono, sesion_id: sesion,
+    ...(mensaje.etapa2 ? { etapa: 2, aplicar_regla_id: mensaje.aplicar_regla_id || '' } : {}) };
   const huella = await hashGo(jsonCanonicoGo(entrada));
   let turno = await unoAuditoriaGo(turnos, { clave });
   const previos = await turnos.filter({ persona_id: persona.id, sesion_id: sesion, entorno: 'dev', grupo_prueba: grupo, estado: 'completado' }, '-created_date', 2);

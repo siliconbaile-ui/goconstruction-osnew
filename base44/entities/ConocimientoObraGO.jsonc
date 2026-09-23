@@ -1,0 +1,153 @@
+{
+  "name": "ConocimientoObraGO",
+  "type": "object",
+  "properties": {
+    "clave": {
+      "type": "string"
+    },
+    "entorno": {
+      "type": "string",
+      "enum": [
+        "dev"
+      ]
+    },
+    "grupo_prueba": {
+      "type": "string"
+    },
+    "persona_id": {
+      "type": "string"
+    },
+    "sesion_id": {
+      "type": "string"
+    },
+    "turno_id": {
+      "type": "string"
+    },
+    "wamid": {
+      "type": "string"
+    },
+    "timestamp_mensaje": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tipo": {
+      "type": "string",
+      "enum": [
+        "mapa_tarea",
+        "episodio",
+        "punto_decision",
+        "senal",
+        "regla_obra",
+        "evidencia",
+        "validacion",
+        "FIRST_VALUE",
+        "ronda_captura",
+        "consentimiento",
+        "integracion_propuesta"
+      ]
+    },
+    "estado": {
+      "type": "string",
+      "enum": [
+        "registrado",
+        "propuesta",
+        "confirmada_autor",
+        "validada_otros",
+        "contradicha",
+        "retirada"
+      ]
+    },
+    "obra_declarada": {
+      "type": "string"
+    },
+    "fuente_literal": {
+      "type": "string"
+    },
+    "datos": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "vinculos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "entidad": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "verificado": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "entidad",
+          "id",
+          "verificado"
+        ]
+      }
+    },
+    "version": {
+      "type": "number"
+    },
+    "anterior_id": {
+      "type": "string"
+    },
+    "regla_id": {
+      "type": "string"
+    },
+    "validador_persona_id": {
+      "type": "string"
+    },
+    "dia_captura": {
+      "type": "string"
+    },
+    "simulado": {
+      "type": "boolean",
+      "default": true
+    },
+    "identidad_verificada": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "clave",
+    "entorno",
+    "grupo_prueba",
+    "persona_id",
+    "sesion_id",
+    "turno_id",
+    "wamid",
+    "timestamp_mensaje",
+    "tipo",
+    "estado",
+    "fuente_literal",
+    "simulado",
+    "identidad_verificada"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
