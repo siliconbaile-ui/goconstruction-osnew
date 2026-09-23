@@ -28,6 +28,24 @@ export function conservarSeguimientoGo(seguimiento, messageId) {
   return limpio;
 }
 
+// Los pendientes son antecedentes del mismo hilo, no una agenda ni un permiso de acceso.
+export function pendientesDelHistorialGo(conversacion) {
+  const porTema = new Map();
+  for (const mensaje of conversacion.messages || []) {
+    if (mensaje.role !== 'assistant' || !mensaje.content || mensaje.tool_calls?.length) continue;
+    let sobre;
+    try { sobre = JSON.parse(mensaje.content.trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '')); }
+    catch { continue; }
+    const s = conservarSeguimientoGo(sobre.seguimiento, mensaje.id);
+    if (!s?.objetivo) continue;
+    const clave = `${s.obra_declarada.toLocaleLowerCase('es')}|${s.objetivo.toLocaleLowerCase('es')}`;
+    if (s.pendiente) porTema.set(clave, { obra_declarada: s.obra_declarada, objetivo: s.objetivo,
+      pendiente: s.pendiente, acuerdo: s.acuerdo, message_id: s.message_id });
+    else if (s.estado === 'operando') porTema.delete(clave);
+  }
+  return [...porTema.values()].slice(-5);
+}
+
 export function leerSeguimientoGo(conversacion) {
   for (const mensaje of [...(conversacion.messages || [])].reverse()) {
     if (mensaje.role !== 'assistant' || !mensaje.content || mensaje.tool_calls?.length) continue;

@@ -1,6 +1,6 @@
 // Adaptador del canal: referencia al agente existente, sin copiar ni sustituir su configuración.
 import { interpretarSalidaGo, resolverSeleccionGo } from './kapsoInteractivo.ts';
-import { RECORRIDO_GO, conservarSeguimientoGo, leerSeguimientoGo } from './kapsoRecorridoGo.ts';
+import { RECORRIDO_GO, conservarSeguimientoGo, leerSeguimientoGo, pendientesDelHistorialGo } from './kapsoRecorridoGo.ts';
 import { prepararEntradaGo } from './kapsoEntradaGo.ts';
 import { prepararRegistroGo, recuperarRegistroGo, finalizarRegistroGo } from './kapsoRegistroGo.ts';
 import { pideDatosPrivadosGo, bloquearConsultaGo } from './goBloqueoPrivado.ts';
@@ -66,6 +66,8 @@ export async function invocarGoWhatsApp(base44, registro, { pruebaId = '', alcan
   }
   conversacion = await agents.getConversation(conversacion.id);
   if (conversacion.agent_name !== AGENTE_GO) throw new Error('La conversación no pertenece al agente GO.');
+  const personaConocida = (conversacion.messages || []).some(m => m.role === 'user' && typeof m.content === 'string'
+    && m.content.includes('[kapso_message_id:') && !m.content.includes(marcaMensaje(registro)));
   const textoElegido = registro.opcion_elegida?.id?.startsWith('go:')
     ? resolverSeleccionGo(conversacion, registro.opcion_elegida) : '';
   if (auditoria && textoElegido) {
@@ -87,7 +89,11 @@ export async function invocarGoWhatsApp(base44, registro, { pruebaId = '', alcan
     const alcance = pruebaId && alcancePrueba
       ? `ESTE TURNO NO ES UN WEBHOOK PÚBLICO: es una prueba interna en dev con sesión del administrador autenticada y rol admin comprobado por el servidor antes de invocarte. Alcance autorizado exclusivamente de fixtures sintéticos: ${JSON.stringify(alcancePrueba)}. Puedes consultar con herramientas reales esos IDs/proyecto cuando la persona lo pida; no asumas el nombre hasta que lo diga. Solo lectura: NO ejecutar guardarEvidencia ni ninguna escritura en esta prueba. Foto sintética para observación transitoria. No listar otras obras ni búsquedas externas/Pinecone/Neo4j. No confundas esta sesión de prueba autorizada con vinculación de un remitente público; esa sigue pendiente.`
       : 'Canal público: no existe vínculo de identidad verificado en este puente. Ninguna obra privada está autorizada para leer o escribir. Trabaja con lo compartido en este hilo; no uses herramientas de datos privados.';
-    const contextoActual = contextoMensajeActualGo(leerSeguimientoGo(conversacion), entrada.texto);
+    const contextoActual = contextoMensajeActualGo(leerSeguimientoGo(conversacion), entrada.texto, pendientesDelHistorialGo(conversacion));
+    contextoActual.persona_conocida_en_este_hilo = personaConocida;
+    contextoActual.instruccion_continuidad = personaConocida
+      ? 'Ya hubo mensajes previos en este hilo: no vuelvas a decir Soy GO, Hola soy GO ni te presentes; responde naturalmente al mensaje actual.'
+      : 'Primer mensaje en este hilo: presentación breve solo si llega sin situación concreta.';
     await auditoria?.registrar('transicion', { evento: 'PRIORIDAD_MENSAJE_ACTUAL', contexto_inyectado: contextoActual,
       pendientes_reinyectados: Boolean(contextoActual.antecedentes_solicitados) }, 'prioridad_mensaje_actual');
     await auditoria?.iniciarAgente(conversacion.id);
@@ -117,6 +123,10 @@ export async function invocarGoWhatsApp(base44, registro, { pruebaId = '', alcan
       for (let i = 0; i < resultado.herramientas.length; i++) await auditoria?.registrar('herramienta_detectada',
         { ...resultado.herramientas[i], conversation_id: conversacion.id }, `herramienta:${i}`);
       const salida = interpretarSalidaGo(resultado.respuesta);
+      if (personaConocida) {
+        salida.cuerpo = salida.cuerpo.replace(/^(?:hola[,!. ]*)?(?:soy GO|me llamo GO|te habla GO|GO por aqu[ií])\b[^\n.!?]*[.!]?\s*/i, '').trim()
+          || '¿Qué está pasando hoy?';
+      }
       const seguimiento = conservarSeguimientoGo(salida.seguimiento, resultado.agent_message_id);
       const perfilContexto = await finalizarRegistroGo(estadoRegistro, salida, registro, resultado.herramientas);
       const socratico = await finalizarSocraticoGo(estadoSocratico, salida, resultado.agent_message_id);

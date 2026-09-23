@@ -55,7 +55,8 @@ export async function prepararRegistroGo(base44, registro, conversacion, entrada
       invitador_id: perfil.id, raiz_linaje_id: perfil.raiz_linaje_id || perfil.id, expira: perfil.pase_expira, otorgante: 'GO' });
   }
   const tecnico = { consentimiento, referencia, solicitud_pase: solicitarPase && !enlace, confirmacion, enlace_emitido: enlace };
-  const contexto = { perfil: vistaPerfilDeclaradoGo(perfil), consentimiento, confirmacion,
+  const contexto = { persona_conocida_en_este_hilo: (conversacion.messages || []).some(m => m.role === 'user' && typeof m.content === 'string' && m.content.includes('[kapso_message_id:')),
+    perfil: vistaPerfilDeclaradoGo(perfil), consentimiento, confirmacion,
     nueva_invitacion: recibida?.estado === 'valido', invitacion_invalida: recibida?.estado === 'invalido',
     saludo_pase: recibida?.estado === 'valido' ? SALUDO_PASE_GO : '',
     solicitud_pase: solicitarPase, enlace_emitido: enlace, identidad_verificada: false, acceso_privado: false, entorno: 'dev' };
