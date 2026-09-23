@@ -10,6 +10,7 @@ import { finalizarSocraticoGo } from './goSocraticoFinalizar.ts';
 import { contextoMensajeActualGo } from './goPrioridadMensaje.ts';
 import { entradaHistorialGo } from './kapsoRegistroBase.ts';
 import { resolverRutaGo, contextoDemostracionGo, instruccionesRutaGo } from './kapsoRutasGo.ts';
+import { vinculoDelContacto } from './goVinculacion.ts';
 export const AGENTE_GO = 'go_vendedor';
 export const AGENTE_ONBOARDING = 'go_incorporacion';
 const AGENTE_LEGADO = 'orion_asistente';
@@ -35,7 +36,8 @@ function respuestaDelTurno(conversacion, marca) {
 export async function invocarGoWhatsApp(base44, registro, { pruebaId = '', alcancePrueba = null, registroContexto = null } = {}) {
   const entorno = registroContexto?.entorno || (pruebaId ? 'dev' : 'prod');
   const auditoria = registroContexto?.auditoria || null;
-  if (auditoria && pideDatosPrivadosGo(registro.contenido_texto || registro.transcripcion || '')) return bloquearConsultaGo(auditoria);
+  const vinculo = !pruebaId && entorno === 'prod' ? await vinculoDelContacto(base44, registro) : null;
+  if (auditoria && pideDatosPrivadosGo(registro.contenido_texto || registro.transcripcion || '')) return bloquearConsultaGo(auditoria, Boolean(vinculo));
   const agents = pruebaId ? base44.agents : base44.asServiceRole.agents;
   const grupoPrueba = registroContexto?.grupoPrueba || (entorno === 'dev' ? pruebaId : 'prod');
   const clave = {
@@ -110,7 +112,9 @@ export async function invocarGoWhatsApp(base44, registro, { pruebaId = '', alcan
     const datosDemo = ruta === 'demo' ? await contextoDemostracionGo(base44) : null;
     const alcance = pruebaId && alcancePrueba && ruta !== 'demo' && ruta !== 'inicio'
       ? `ESTE TURNO NO ES UN WEBHOOK PÚBLICO: es una prueba interna en dev con sesión del administrador autenticada y rol admin comprobado por el servidor antes de invocarte. Alcance autorizado exclusivamente de fixtures sintéticos: ${JSON.stringify(alcancePrueba)}. Puedes consultar con herramientas reales esos IDs/proyecto cuando la persona lo pida; no asumas el nombre hasta que lo diga. Solo lectura: NO ejecutar guardarEvidencia ni ninguna escritura en esta prueba. Foto sintética para observación transitoria. No listar otras obras ni búsquedas externas/Pinecone/Neo4j. No confundas esta sesión de prueba autorizada con vinculación de un remitente público; esa sigue pendiente.`
-      : 'Canal público: no existe vínculo de identidad verificado en este puente. Ninguna obra privada está autorizada para leer o escribir. Trabaja con lo compartido en este hilo; no uses herramientas de datos privados.';
+      : vinculo
+        ? `Cuenta vinculada mediante código desde una sesión autenticada. Nombre de la cuenta: ${JSON.stringify(vinculo.nombre || '')}. Esta verificación solo personaliza la conversación: NO habilita consultar historial de la app, registros privados ni ejecutar cambios por WhatsApp. Trabaja con lo compartido en este hilo; no uses herramientas de datos privados.`
+        : 'Canal público: no existe vínculo de identidad verificado en este puente. Ninguna obra privada está autorizada para leer o escribir. Trabaja con lo compartido en este hilo; no uses herramientas de datos privados.';
     const contextoActual = contextoMensajeActualGo(leerSeguimientoGo(conversacion), entrada.texto, pendientesDelHistorialGo(conversacion));
     contextoActual.persona_conocida_en_este_hilo = personaConocida;
     contextoActual.instruccion_continuidad = personaConocida

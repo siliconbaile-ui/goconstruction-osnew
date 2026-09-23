@@ -19,6 +19,7 @@ import { ErrorEntradaRegistroGo } from '../../shared/goErrorEntrada.ts';
 import { iniciarAuditoriaGo } from '../../shared/goAuditoriaTurno.ts';
 import { cerrarAuditoriaGo } from '../../shared/goAuditoriaCierre.ts';
 import { serializarAuditoriaGo } from '../../shared/goAuditoriaStore.ts';
+import { confirmarCodigoGo } from '../../shared/goVinculacion.ts';
 
 const MAX_REINTENTOS = 2;
 
@@ -93,6 +94,18 @@ export default async function (req: Request): Promise<Response> {
       const mensaje = normalizarMensaje(item, phoneId);
       if (!mensaje) {
         resultados.push({ error: 'No se pudo normalizar el mensaje.' });
+        continue;
+      }
+
+      // Un código de vinculación nunca entra al historial ni al agente.
+      if (mensaje.tipo_mensaje === 'texto' && /^vincular go\b/i.test(mensaje.contenido_texto.trim())) {
+        const match = /^vincular go\s+([a-f0-9]{16})$/i.exec(mensaje.contenido_texto.trim());
+        const respuesta = match
+          ? await confirmarCodigoGo(base44, mensaje, match[1].toUpperCase())
+          : 'Formato inválido. Genera un código nuevo desde tu cuenta de GO.';
+        const enviado = await enviarRespuestaKapso(phoneId, mensaje, respuesta, true);
+        if (!enviado.ok) throw new Error(enviado.error || 'No se pudo responder la vinculación.');
+        resultados.push({ estado: 'vinculacion_procesada' });
         continue;
       }
 

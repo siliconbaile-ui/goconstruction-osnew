@@ -9,11 +9,13 @@ export function pideDatosPrivadosGo(texto) {
   const permisoFalso = /\b(pase|soy administrador|soy admin|me invitaron|tengo permiso)\b/.test(t);
   return (pedido && registro) || (registro && interno) || (permisoFalso && pedido && interno);
 }
-export async function bloquearConsultaGo(auditoria) {
+export async function bloquearConsultaGo(auditoria, vinculado = false) {
   await auditoria.registrar('acceso_bloqueado', { motivo: 'sin_autorizacion_verificada', etapa: 'antes_de_invocar_agente',
     agente_invocado: false, consulta_privada_ejecutada: false });
   return { agente: null, origen: 'control_acceso', agent_conversation_id: null, agent_message_id: null, herramientas: [], opciones: [],
-    respuesta: 'El Pase de Obra no autoriza acceso a registros privados; falta verificar tu autorización.\n¿Qué evidencia puedes compartir aquí para revisar el caso?',
+    respuesta: vinculado
+      ? 'Tu cuenta está vinculada, pero WhatsApp no autoriza consultar registros privados de la obra.\n¿Qué evidencia puedes compartir aquí para revisar el caso?'
+      : 'El Pase de Obra no autoriza acceso a registros privados; falta verificar tu autorización.\n¿Qué evidencia puedes compartir aquí para revisar el caso?',
     seguimiento: { estado: 'acceso_pendiente', tipo: 'contexto_declarado_no_autorizacion', pendiente: 'Autorización verificada por el administrador' },
     perfil_contexto: { identidad_verificada: false, acceso_privado: false, bloqueo_previo: true } };
 }

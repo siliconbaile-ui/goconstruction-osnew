@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { Loader2, Plus, Sparkles, Activity } from 'lucide-react';
+import { Loader2, Plus, Sparkles, Activity, History } from 'lucide-react';
 import MessageBubble from './MessageBubble';
 import AgentSidebar from './AgentSidebar';
 import ObraLivePanel from './ObraLivePanel';
@@ -18,6 +18,8 @@ import GoLoopIntro from '@/components/agent/GoLoopIntro';
 import GoLoopWorkspace from '@/components/agent/GoLoopWorkspace';
 import GoIncorporacionGuide from './GoIncorporacionGuide';
 import GoDemoGuide from './GoDemoGuide';
+import GoMemoryPanel from './GoMemoryPanel';
+import { goWhatsappContext, GO_MEMORY_MARK, GO_MESSAGE_MARK } from '@/lib/goWhatsappContext';
 
 const MARCA_APP = '[GO_APP_CONTEXT]';
 const MARCA_MENSAJE = '[GO_APP_USER_MESSAGE]';
@@ -40,6 +42,7 @@ export default function ConversationPanel({ agentName = 'orion_asistente' }) {
   const [errorEnvio, setErrorEnvio] = useState(null);
   const [pendingStartId, setPendingStartId] = useState(null);
   const [panelMovil, setPanelMovil] = useState(false);
+  const [memoryOpen, setMemoryOpen] = useState(false);
   // Al entrar, el chat manda: ambas columnas parten contraídas.
   const [colIzq, setColIzq] = useState(false);
   const [colDer, setColDer] = useState(false);
@@ -175,6 +178,9 @@ export default function ConversationPanel({ agentName = 'orion_asistente' }) {
       if (incorporacion) {
         const me = await base44.auth.me();
         msg.content = `${MARCA_APP}\nSesión iniciada. Empresa: ${me.empresa_id ? 'vinculada' : 'pendiente'}. Cargo: ${me.cargo ? 'declarado' : 'pendiente'}. No pedir registro ni verificación de cuenta.\n${MARCA_MENSAJE}\n${texto}`;
+      } else if (!demo) {
+        const contexto = await goWhatsappContext();
+        if (contexto) msg.content = `${contexto}${texto}`;
       }
       const conv = await base44.agents.getConversation(activeId);
       await base44.agents.addMessage(conv, msg);
@@ -182,7 +188,7 @@ export default function ConversationPanel({ agentName = 'orion_asistente' }) {
       console.error(e);
       setInput(content);
       setPendingStartId(null);
-      setErrorEnvio(msg);
+      setErrorEnvio({ role: 'user', content: texto, file_urls: fileUrls });
     } finally {
       setSending(false);
     }
@@ -192,7 +198,7 @@ export default function ConversationPanel({ agentName = 'orion_asistente' }) {
     if (!errorEnvio) return;
     const { content, file_urls } = errorEnvio;
     setErrorEnvio(null);
-    send(incorporacion && content.startsWith(MARCA_APP) ? content.split(`${MARCA_MENSAJE}\n`)[1] : content, file_urls || []);
+    send(content, file_urls || []);
   };
 
   const ficha = {
@@ -249,6 +255,7 @@ GO<span className="hidden sm:inline"> · {incorporacion ? 'incorporación' : dem
 {incorporacion ? 'Conversemos sobre tu empresa' : demo ? 'BES-2026-01 · datos de demostración' : 'criterio técnico con los datos reales de tu obra'}
               </span>
               <WhatsAppButton />
+              <button onClick={() => setMemoryOpen(true)} aria-label="Abrir memoria de GO" className="inline-flex min-h-10 items-center gap-1 rounded-full bg-surface-raised px-2 sm:px-3 text-xs text-foreground"><History className="h-4 w-4" /><span className="hidden sm:inline">Memoria</span></button>
               <Link to={incorporacion ? '/app' : '/app?modo=avanzar'} className="inline-flex min-h-9 items-center rounded-full bg-surface-raised px-2 sm:px-3 text-[11px] font-semibold text-foreground"><span className="sm:hidden">{incorporacion ? 'Obra' : 'Empresa'}</span><span className="hidden sm:inline">{incorporacion ? 'Volver a consulta técnica' : 'Avanzar con mi empresa'}</span></Link>
               {!incorporacion && !demo && <button onClick={() => setPanelMovil(true)} aria-label="Abrir información de la obra"
                 className="lg:hidden flex min-h-12 min-w-12 sm:min-h-9 items-center justify-center gap-1.5 px-3 rounded-full text-[11px] font-semibold tracking-wide flex-shrink-0 bg-surface-raised text-foreground/85 active:opacity-80">
@@ -272,7 +279,7 @@ GO<span className="hidden sm:inline"> · {incorporacion ? 'incorporación' : dem
               <div className="go-control-conversation w-full max-w-4xl mx-auto space-y-4 sm:space-y-6 pb-2">
                 {agruparMensajes(messages).map((m, index) => (
                   <div key={m.id || m.created_date || index} data-go-role={m.role === 'user' ? 'user' : 'assistant'} className="go-control-message">
-                    <MessageBubble message={incorporacion && m.role === 'user' && m.content?.startsWith(MARCA_APP) ? { ...m, content: m.content.split(`${MARCA_MENSAJE}\n`)[1] || '' } : m} conversacionId={activeId} incorporacion={incorporacion} />
+                    <MessageBubble message={m.role === 'user' && m.content?.startsWith(GO_MEMORY_MARK) ? { ...m, content: m.content.split(`${GO_MESSAGE_MARK}\n`)[1] || '' } : incorporacion && m.role === 'user' && m.content?.startsWith(MARCA_APP) ? { ...m, content: m.content.split(`${MARCA_MENSAJE}\n`)[1] || '' } : m} conversacionId={activeId} incorporacion={incorporacion} />
                   </div>
                 ))}
                 {sending && (
@@ -337,6 +344,7 @@ GO<span className="hidden sm:inline"> · {incorporacion ? 'incorporación' : dem
 
       {!incorporacion && !demo && <BotonColumna lado="derecha" abierta={colDer} onToggle={() => setColDer(v => !v)} />}
 
+      {memoryOpen && <GoMemoryPanel onClose={() => setMemoryOpen(false)} />}
       {!incorporacion && !demo && colDer && <ObraLivePanel
         tab={rightTab}
         setTab={setRightTab}

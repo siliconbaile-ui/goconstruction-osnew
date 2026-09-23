@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
+import { goWhatsappContext } from '@/lib/goWhatsappContext';
 
 const PREFIX = '[GO_MODULO]\n';
 const DIVIDER = '\n[CONSULTA]\n';
@@ -38,7 +39,8 @@ export default function useGoModuleChat(area, snapshot) {
         agent_name: 'orion_asistente', metadata: { name: `GO · ${area}`, canal: 'app', modulo: area }
       });
       if (!conversation) setConversation(conv);
-      await base44.agents.addMessage(conv, { role: 'user', content: `${PREFIX}Sección ${area}. Registros visibles (muestra limitada; verificar antes de decidir): ${snapshot}\nNo ejecutes cambios sin confirmación humana.${DIVIDER}${text.trim()}` });
+      const contexto = await goWhatsappContext();
+      await base44.agents.addMessage(conv, { role: 'user', content: `${PREFIX}Sección ${area}. Registros visibles (muestra limitada; verificar antes de decidir): ${snapshot}\nNo ejecutes cambios sin confirmación humana.\n${contexto}${DIVIDER}${text.trim()}` });
       return true;
     } catch {
       setError('No se pudo enviar. Inténtalo nuevamente.');

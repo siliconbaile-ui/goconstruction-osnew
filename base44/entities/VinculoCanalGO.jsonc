@@ -1,0 +1,66 @@
+{
+  "name": "VinculoCanalGO",
+  "type": "object",
+  "properties": {
+    "usuario_id": {
+      "type": "string"
+    },
+    "nombre": {
+      "type": "string"
+    },
+    "estado": {
+      "type": "string",
+      "enum": [
+        "pendiente",
+        "activo",
+        "revocado"
+      ]
+    },
+    "codigo_hash": {
+      "type": "string"
+    },
+    "expira_en": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "telefono": {
+      "type": "string"
+    },
+    "phone_number_id": {
+      "type": "string"
+    },
+    "contacto_clave": {
+      "type": "string"
+    },
+    "vinculado_en": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "usuario_id",
+    "estado"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
