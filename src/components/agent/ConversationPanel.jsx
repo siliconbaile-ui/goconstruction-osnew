@@ -32,6 +32,7 @@ export default function ConversationPanel() {
   const [topAlerts, setTopAlerts] = useState([]);
   const [voiceMode, setVoiceMode] = useState(false);
   const [errorEnvio, setErrorEnvio] = useState(null);
+  const [pendingStartId, setPendingStartId] = useState(null);
   const [panelMovil, setPanelMovil] = useState(false);
   // Al entrar, el chat manda: ambas columnas parten contraídas.
   const [colIzq, setColIzq] = useState(false);
@@ -157,6 +158,7 @@ export default function ConversationPanel() {
     if ((!content && fileUrls.length === 0) || !activeId || sending) return;
     setInput('');
     setSending(true);
+    setPendingStartId(activeId);
     setErrorEnvio(null);
     const msg = { role: 'user', content: content || 'Analiza los documentos adjuntos, extrae los datos relevantes y crúzalos con la información de la obra.' };
     if (fileUrls.length > 0) msg.file_urls = fileUrls;
@@ -166,6 +168,7 @@ export default function ConversationPanel() {
     } catch (e) {
       console.error(e);
       setInput(content);
+      setPendingStartId(null);
       setErrorEnvio(msg);
     } finally {
       setSending(false);
@@ -204,7 +207,7 @@ export default function ConversationPanel() {
     );
   }
 
-  const hasMessages = messages.length > 0;
+  const hasMessages = messages.length > 0 || pendingStartId === activeId;
 
   return (
     <div className="go-control-shell flex h-full min-h-0 overflow-hidden bg-surface-base text-foreground">
@@ -252,7 +255,7 @@ criterio técnico con los datos reales de tu obra
             {!hasMessages ? (
               <div className="go-control-conversation"><WelcomeHero onPrompt={send} activo={sending} /></div>
             ) : (
-              <div className="go-control-conversation max-w-5xl mx-auto space-y-3 sm:space-y-4">
+              <div className="go-control-conversation w-full max-w-5xl mx-auto space-y-3 sm:space-y-4">
                 {agruparMensajes(messages).map((m, index) => (
                   <div key={m.id || m.created_date || index} data-go-role={m.role === 'user' ? 'user' : 'assistant'} className="go-control-message">
                     <MessageBubble message={m} conversacionId={activeId} />
@@ -266,9 +269,11 @@ criterio técnico con los datos reales de tu obra
                 )}
               </div>
             )}
-            <PanelControlRio onPrompt={send} />
-            <GoLoopIntro />
-            <GoLoopWorkspace onPrompt={send} disabled={sending || !activeId} />
+            {!hasMessages && <>
+              <PanelControlRio onPrompt={send} />
+              <GoLoopIntro />
+              <GoLoopWorkspace onPrompt={send} disabled={sending || !activeId} />
+            </>}
             </div>
 
             {errorEnvio && (
