@@ -56,7 +56,7 @@ export async function probarOnboardingGo(base44, input) {
     preguntas: (respuesta.respuesta.match(/\?/g) || []).length, botones: respuesta.opciones.length };
   const verificaciones = { corto: metricas.caracteres <= 360 && metricas.lineas <= 3, una_pregunta: metricas.preguntas <= 1,
     botones_validos: metricas.botones <= 3 && envio.ok,
-    inicio_natural: caso !== 'bienvenida' || (metricas.botones === 2 && /jefe técnico/i.test(respuesta.respuesta)),
+    inicio_natural: caso !== 'bienvenida' || (metricas.botones === 3 && /jefe técnico/i.test(respuesta.respuesta)),
     mismo_agente: conversacion.agent_name === AGENTE_GO, misma_conversacion: !anterior || anterior.id === conversacion.id,
     contexto_persistido: leerSeguimientoGo(conversacion)?.message_id === respuesta.agent_message_id,
     sin_herramientas_ajenas: caso !== 'otra_obra' || herramientas.length === 0 };
