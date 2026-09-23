@@ -14,7 +14,8 @@ export function interpretarSalidaGo(texto) {
       || titulos.has(opcion.titulo.trim())) throw new Error('Opción de GO inválida para WhatsApp.');
     titulos.add(opcion.titulo.trim());
   }
-  return { cuerpo: salida.cuerpo.trim(), opciones: salida.opciones, seguimiento: salida.seguimiento };
+  return { cuerpo: salida.cuerpo.trim(), opciones: salida.opciones, seguimiento: salida.seguimiento,
+    ...(salida.registro && typeof salida.registro === 'object' && !Array.isArray(salida.registro) ? { registro: salida.registro } : {}) };
 }
 
 export function resolverSeleccionGo(conversacion, seleccion) {

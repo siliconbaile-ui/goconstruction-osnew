@@ -33,7 +33,8 @@ export function transcripcionCompletaGo(conversacion) {
         && !mensaje.tool_calls?.length && (mensaje.usage || mensaje.checkpoint_id)) {
         const salida = interpretarSalidaGo(mensaje.content);
         actual.respuestas.push({ agent_message_id: mensaje.id, cuerpo: salida.cuerpo,
-          opciones: salida.opciones, seguimiento: salida.seguimiento });
+          opciones: salida.opciones.map((opcion, indice) => ({ ...opcion, id: `go:${mensaje.id}:${indice}` })),
+          seguimiento: salida.seguimiento, ...(salida.registro ? { registro: salida.registro } : {}) });
       }
     }
   }

@@ -14,6 +14,7 @@ import { invocarGoWhatsApp, AGENTE_GO } from '../../shared/kapsoGoNarrativa.ts';
 import { probarRecorridoInteractivo } from '../../shared/kapsoPruebaInteractiva.ts';
 import { codisenarOnboardingGo } from '../../shared/kapsoCodisenoGo.ts';
 import { probarOnboardingGo } from '../../shared/kapsoPruebaOnboarding.ts';
+import { probarRegistroGo } from '../../shared/kapsoPruebaRegistro.ts';
 
 const MAX_REINTENTOS = 2;
 
@@ -44,14 +45,15 @@ export default async function (req: Request): Promise<Response> {
     // No acepta eventos entrantes ni sustituye la firma de la ruta webhook.
     if (!firma && req.headers.get('Authorization')) {
       const diagnostico = JSON.parse(new TextDecoder().decode(rawBody));
-      if (['prueba_agente_go', 'prueba_interactiva_go', 'codiseno_onboarding_go', 'prueba_onboarding_go'].includes(diagnostico.modo)) {
+      if (['prueba_agente_go', 'prueba_interactiva_go', 'codiseno_onboarding_go', 'prueba_onboarding_go', 'prueba_registro_go'].includes(diagnostico.modo)) {
         const cliente = createClientFromRequest(req);
         const usuario = await cliente.auth.me();
         if (usuario?.role !== 'admin') return Response.json({ error: 'Solo administrador.' }, { status: 403 });
-        if (['prueba_interactiva_go', 'codiseno_onboarding_go', 'prueba_onboarding_go'].includes(diagnostico.modo)) {
+        if (['prueba_interactiva_go', 'codiseno_onboarding_go', 'prueba_onboarding_go', 'prueba_registro_go'].includes(diagnostico.modo)) {
           const headers = new Headers(req.headers);
           headers.set('X-Data-Env', 'dev');
           const clientePrueba = createClientFromRequest(new Request(req.url, { headers }));
+          if (diagnostico.modo === 'prueba_registro_go') return Response.json(await probarRegistroGo(clientePrueba, diagnostico));
           if (diagnostico.modo === 'prueba_onboarding_go') return Response.json(await probarOnboardingGo(clientePrueba, diagnostico));
           return Response.json(diagnostico.modo === 'codiseno_onboarding_go'
             ? await codisenarOnboardingGo(clientePrueba, diagnostico)

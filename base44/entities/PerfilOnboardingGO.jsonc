@@ -1,0 +1,134 @@
+{
+  "name": "PerfilOnboardingGO",
+  "type": "object",
+  "properties": {
+    "contacto_clave": {
+      "type": "string",
+      "description": "HMAC del canal y remitente, separado por entorno; nunca un tel\u00e9fono en claro"
+    },
+    "entorno": {
+      "type": "string",
+      "enum": [
+        "dev",
+        "prod"
+      ]
+    },
+    "grupo_prueba": {
+      "type": "string"
+    },
+    "estado": {
+      "type": "string",
+      "enum": [
+        "declarado",
+        "retirado"
+      ]
+    },
+    "consentimiento": {
+      "type": "string",
+      "enum": [
+        "aceptado",
+        "retirado"
+      ]
+    },
+    "consentimiento_version": {
+      "type": "string"
+    },
+    "consentimiento_fecha": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "consentimiento_message_id": {
+      "type": "string"
+    },
+    "consentimiento_pregunta_id": {
+      "type": "string"
+    },
+    "nombre": {
+      "type": "string"
+    },
+    "empresa": {
+      "type": "string"
+    },
+    "cargo": {
+      "type": "string"
+    },
+    "obra": {
+      "type": "string"
+    },
+    "frente": {
+      "type": "string"
+    },
+    "procedencia_campos": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Mensaje y fecha de cada declaraci\u00f3n; no copias de expedientes privados"
+    },
+    "procedencia": {
+      "type": "string",
+      "enum": [
+        "directo",
+        "pase"
+      ]
+    },
+    "invitador_id": {
+      "type": "string",
+      "description": "Referencia interna al perfil que invit\u00f3; no otorga derechos"
+    },
+    "raiz_linaje_id": {
+      "type": "string"
+    },
+    "invitacion_origen_hash": {
+      "type": "string"
+    },
+    "entrada_message_id": {
+      "type": "string"
+    },
+    "pase_hash": {
+      "type": "string"
+    },
+    "pase_nonce": {
+      "type": "string"
+    },
+    "pase_expira": {
+      "type": "string"
+    },
+    "pase_nombre_publico": {
+      "type": "string",
+      "description": "Nombre expresamente autorizado para aparecer ante invitados, o etiqueta neutral"
+    },
+    "pase_consentimiento_message_id": {
+      "type": "string"
+    },
+    "pase_ultimo_message_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "contacto_clave",
+    "entorno",
+    "estado",
+    "consentimiento"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
