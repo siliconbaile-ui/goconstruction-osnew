@@ -63,7 +63,7 @@ export default function ChatComposer({ value, onChange, onSend, sending, onVoice
           onChange={e => onChange(e.target.value)}
           onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); enviar(); } }}
           rows={1}
-          placeholder="Escribe a GO · pregunta, adjunta un plano o dicta desde terreno"
+          placeholder="Escribe tu consulta a GO…"
           className="w-full bg-transparent outline-none resize-none overflow-y-auto text-sm sm:text-base leading-relaxed px-1 min-h-12 max-h-40 text-foreground placeholder:text-muted-foreground"
         />
         <div className="flex items-center gap-1.5 sm:gap-2">

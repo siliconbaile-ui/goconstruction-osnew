@@ -752,7 +752,7 @@ button, a, [role="button"] {
     border-radius: 18px;
     background: #263648;
     box-shadow: 0 0 0 4px #F28C2814, 0 12px 30px #09111999;
-    animation: go-control-glow 2.8s ease-in-out infinite;
+    animation: none;
   }
   .go-control-composer textarea {
     height: 48px;
@@ -802,6 +802,21 @@ button, a, [role="button"] {
   .go-control-tabs a:hover { background: #2A3A4C; color: #F5F7FA !important; }
   .go-control-tabs a:active { opacity: .65; }
   .go-control-tabs a:first-child > span:first-of-type { display: none; }
+}
+
+@media (max-width: 639px) {
+  .go-control-stream:not(.go-control-has-messages) { display: flex; flex-direction: column; }
+  .go-control-stream:not(.go-control-has-messages) .go-control-conversation { margin-block: auto; }
+  .go-control-welcome > :not(.go-mobile-guide),
+  .go-control-stream > .go-control-panel,
+  .go-control-stream > .go-control-agents,
+  .go-control-stream > .go-control-workers { display: none; }
+  .go-control-agentbar { gap: 6px; padding-inline: 10px !important; }
+  .go-control-agentbar .ml-auto { gap: 4px; }
+  .go-control-agentbar .ml-auto > a:first-of-type { min-height: 40px; min-width: 40px; padding: 0; }
+  .go-control-agentbar .ml-auto > a:first-of-type span { display: none; }
+  .go-control-agentbar .ml-auto > a:nth-of-type(2) { min-height: 40px; padding-inline: 8px; }
+  .go-control-agentbar .ml-auto > button { min-height: 40px; min-width: 40px; padding-inline: 8px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

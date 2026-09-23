@@ -3,6 +3,7 @@ import { ArrowRight } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { sintoniaPorCargo } from '@/lib/sintonia';
 import { labelCargo } from '@/lib/cargos';
+import GoMobileGuide from './GoMobileGuide';
 
 const ETAPAS = ['OBSERVA', 'APRENDE', 'ACTÚA', 'VERIFICA', 'MEJORA'];
 
@@ -18,6 +19,7 @@ export default function WelcomeHero({ onPrompt, activo }) {
 
   return (
     <div className="go-control-welcome max-w-3xl mx-auto">
+      <GoMobileGuide onPrompt={onPrompt} disabled={activo} />
       {/* Mensaje de apertura · sintonizado al cargo */}
       <div className="go-control-hero flex gap-3 mb-5">
         <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 bg-primary">
