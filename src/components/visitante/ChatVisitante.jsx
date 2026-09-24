@@ -4,7 +4,7 @@ import { Loader2, ArrowUp, Sparkles, BadgeCheck, Mic, Paperclip, SquarePen } fro
 import MarkdownContent from '@/components/agent/MarkdownContent';
 
 const AGENT_NAME = 'go_vendedor';
-const AMBER = '#E8912E';
+const AMBER = 'hsl(var(--warn))';
 
 const SUGERENCIAS = [
   '¿Qué hace exactamente la plataforma?',

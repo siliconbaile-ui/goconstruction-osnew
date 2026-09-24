@@ -28,7 +28,7 @@ export default function ConsultaTecnica({ proyectoId }) {
 
   return (
     <OrionCard className="p-5">
-      <div className="font-mono text-xs mb-3 uppercase" style={{ color: '#4A6FA5' }}>
+      <div className="font-mono text-xs mb-3 uppercase" style={{ color: 'hsl(var(--muted-foreground))' }}>
         Q&amp;A TÉCNICO · RESPUESTA CON PÁGINA CITADA
       </div>
       <div className="flex gap-2 mb-4">
@@ -38,18 +38,18 @@ export default function ConsultaTecnica({ proyectoId }) {
           onKeyDown={e => e.key === 'Enter' && consultar()}
           placeholder="¿Qué tubería exige la EETT para la caldera? ¿Qué recubrimiento lleva la losa del piso 3?"
           className="flex-1 px-3 py-2.5 rounded text-sm text-white font-mono min-w-0"
-          style={{ background: '#0A1628', border: '1px solid #1E2D4A' }}
+          style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}
         />
         <button onClick={consultar} disabled={cargando || !pregunta.trim()}
           className="px-4 py-2.5 rounded text-sm font-medium text-white flex items-center gap-2 disabled:opacity-50 flex-shrink-0"
-          style={{ background: '#003399' }}>
+          style={{ background: 'hsl(var(--primary))' }}>
           {cargando ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
           Consultar
         </button>
       </div>
 
       {cargando && (
-        <div className="font-mono text-xs" style={{ color: '#4A6FA5' }}>
+        <div className="font-mono text-xs" style={{ color: 'hsl(var(--muted-foreground))' }}>
           Buscando en planos, EETT y normativas indexadas...
         </div>
       )}
@@ -58,41 +58,41 @@ export default function ConsultaTecnica({ proyectoId }) {
         <div className="space-y-3">
           <div className="flex items-center gap-2 flex-wrap font-mono text-[10px]">
             {ms !== null && (
-              <span className="px-2 py-0.5 rounded" style={{ background: '#0A1628', border: '1px solid #1E2D4A', color: ms < 3000 ? '#27AE60' : '#F39C12' }}>
+              <span className="px-2 py-0.5 rounded" style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))', color: ms < 3000 ? 'hsl(var(--ok))' : 'hsl(var(--warn))' }}>
                 {(ms / 1000).toFixed(1)}s
               </span>
             )}
             <span className="px-2 py-0.5 rounded flex items-center gap-1" style={{
               background: res.sin_respuesta ? 'rgba(211,84,0,0.1)' : 'rgba(39,174,96,0.1)',
               border: `1px solid ${res.sin_respuesta ? 'rgba(211,84,0,0.35)' : 'rgba(39,174,96,0.35)'}`,
-              color: res.sin_respuesta ? '#D35400' : '#27AE60',
+              color: res.sin_respuesta ? 'hsl(var(--danger))' : 'hsl(var(--ok))',
             }}>
               {res.sin_respuesta ? <AlertTriangle className="w-3 h-3" /> : <ShieldCheck className="w-3 h-3" />}
               {res.sin_respuesta ? 'SIN RESPALDO DOCUMENTAL' : `VERIFICADO · CONFIANZA ${Math.round(res.confianza || 0)}%`}
             </span>
             {res.contradiccion_detectada && (
-              <span className="px-2 py-0.5 rounded" style={{ background: 'rgba(243,156,18,0.1)', border: '1px solid rgba(243,156,18,0.35)', color: '#F39C12' }}>
+              <span className="px-2 py-0.5 rounded" style={{ background: 'rgba(243,156,18,0.1)', border: '1px solid rgba(243,156,18,0.35)', color: 'hsl(var(--warn))' }}>
                 CONTRADICCIÓN ENTRE DOCUMENTOS → EMITIR RDI
               </span>
             )}
           </div>
 
           <div className="p-4 rounded text-sm text-slate-200 leading-relaxed whitespace-pre-wrap"
-            style={{ background: '#0A1628', border: '1px solid #1E2D4A' }}>
+            style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}>
             {res.respuesta || res.error}
           </div>
 
           {res.citas?.length > 0 && (
             <div className="space-y-2">
-              <div className="font-mono text-[10px] uppercase tracking-wider" style={{ color: '#4A6FA5' }}>
+              <div className="font-mono text-[10px] uppercase tracking-wider" style={{ color: 'hsl(var(--muted-foreground))' }}>
                 Respaldo documental
               </div>
               {res.citas.map((c, i) => (
                 <div key={i} className="p-3 rounded" style={{ background: 'rgba(0,51,153,0.08)', border: '1px solid rgba(0,51,153,0.35)' }}>
-                  <div className="flex items-center gap-2 mb-1 font-mono text-[10px]" style={{ color: '#5B8DEF' }}>
+                  <div className="flex items-center gap-2 mb-1 font-mono text-[10px]" style={{ color: 'hsl(var(--info))' }}>
                     <Quote className="w-3 h-3" />
                     <span className="truncate">{c.documento}</span>
-                    <span className="ml-auto px-1.5 py-0.5 rounded flex-shrink-0" style={{ background: '#0A1628', color: '#27AE60' }}>
+                    <span className="ml-auto px-1.5 py-0.5 rounded flex-shrink-0" style={{ background: 'hsl(var(--surface-0))', color: 'hsl(var(--ok))' }}>
                       PÁG. {c.pagina}
                     </span>
                   </div>

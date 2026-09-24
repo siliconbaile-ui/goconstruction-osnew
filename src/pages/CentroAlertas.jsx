@@ -105,12 +105,12 @@ export default function CentroAlertas() {
     <div className="go-module-page p-4 lg:p-6 space-y-5">
       <div className="flex items-start justify-between gap-3 flex-wrap">
         <div>
-          <div className="font-mono text-xs mb-1" style={{ color: '#4A6FA5' }}>MÓDULO P0 · VIGILANCIA CONTINUA</div>
+          <div className="font-mono text-xs mb-1" style={{ color: 'hsl(var(--muted-foreground))' }}>MÓDULO P0 · VIGILANCIA CONTINUA</div>
           <h1 className="text-xl font-bold text-white">Centro de Alertas — Escalamiento Jerárquico</h1>
         </div>
         <button onClick={ejecutarBarrido} disabled={ejecutando}
           className="flex items-center gap-2 px-3 py-2 rounded text-sm font-medium text-white disabled:opacity-50"
-          style={{ background: '#003399' }}>
+          style={{ background: 'hsl(var(--primary))' }}>
           {ejecutando ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
           {ejecutando ? 'Ejecutando barrido...' : 'Ejecutar barrido ahora'}
         </button>
@@ -119,13 +119,13 @@ export default function CentroAlertas() {
       <GoModuleAssist area="Alertas" priorities={insights.priorities} snapshot={insights.snapshot} loading={loading} />
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {[
-          { label: 'ABIERTAS', value: abiertas.length, color: abiertas.length > 0 ? '#F39C12' : '#27AE60' },
-          { label: 'CRÍTICAS', value: criticas, color: criticas > 0 ? '#D35400' : '#27AE60' },
-          { label: '>24H SIN RESPUESTA', value: stale, color: stale > 0 ? '#D35400' : '#27AE60' },
-          { label: 'ESCALADAS', value: escaladas, color: escaladas > 0 ? '#003399' : '#4A6FA5' },
+          { label: 'ABIERTAS', value: abiertas.length, color: abiertas.length > 0 ? 'hsl(var(--warn))' : 'hsl(var(--ok))' },
+          { label: 'CRÍTICAS', value: criticas, color: criticas > 0 ? 'hsl(var(--danger))' : 'hsl(var(--ok))' },
+          { label: '>24H SIN RESPUESTA', value: stale, color: stale > 0 ? 'hsl(var(--danger))' : 'hsl(var(--ok))' },
+          { label: 'ESCALADAS', value: escaladas, color: escaladas > 0 ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground))' },
         ].map(s => (
           <OrionCard key={s.label} className="p-4">
-            <div className="font-mono text-[10px] uppercase tracking-wider mb-2" style={{ color: '#4A6FA5' }}>{s.label}</div>
+            <div className="font-mono text-[10px] uppercase tracking-wider mb-2" style={{ color: 'hsl(var(--muted-foreground))' }}>{s.label}</div>
             <div className="text-2xl font-bold" style={{ color: s.color }}>{s.value}</div>
           </OrionCard>
         ))}
@@ -133,8 +133,8 @@ export default function CentroAlertas() {
 
       {stale > 0 && (
         <div className="rounded-lg p-3 flex items-center gap-3" style={{ background: 'rgba(211,84,0,0.08)', border: '1px solid rgba(211,84,0,0.3)' }}>
-          <Bell className="w-4 h-4 flex-shrink-0" style={{ color: '#D35400' }} />
-          <span className="text-sm" style={{ color: '#D35400' }}>
+          <Bell className="w-4 h-4 flex-shrink-0" style={{ color: 'hsl(var(--danger))' }} />
+          <span className="text-sm" style={{ color: 'hsl(var(--danger))' }}>
             <strong>REGLA DE ESCALAMIENTO:</strong> {stale} alerta(s) sin respuesta por más de 24h — el escalamiento automático las eleva al siguiente nivel jerárquico cada hora.
           </span>
         </div>
@@ -148,17 +148,17 @@ export default function CentroAlertas() {
         ].map(f => (
           <button key={f.key} onClick={() => setFiltroEstado(f.key)}
             className={`px-3 py-1.5 rounded text-xs font-mono transition-colors ${filtroEstado === f.key ? 'text-white' : 'text-slate-400 hover:text-white'}`}
-            style={filtroEstado === f.key ? { background: '#003399' } : { background: '#0D1526', border: '1px solid #1E2D4A' }}>
+            style={filtroEstado === f.key ? { background: 'hsl(var(--primary))' } : { background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}>
             {f.label}
           </button>
         ))}
-        <div className="w-px mx-1" style={{ background: '#1E2D4A' }} />
+        <div className="w-px mx-1" style={{ background: 'hsl(var(--surface-2))' }} />
         {['todos', 'critica', 'advertencia', 'info'].map(n => (
           <button key={n} onClick={() => setFiltroNivel(n)}
             className={`px-3 py-1.5 rounded text-xs font-mono transition-colors ${filtroNivel === n ? 'text-white' : 'text-slate-400 hover:text-white'}`}
             style={filtroNivel === n
-              ? { background: n === 'todos' ? '#003399' : NIVEL_STYLE[n].color }
-              : { background: '#0D1526', border: '1px solid #1E2D4A' }}>
+              ? { background: n === 'todos' ? 'hsl(var(--primary))' : NIVEL_STYLE[n].color }
+              : { background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}>
             {n === 'todos' ? 'Todos los niveles' : NIVEL_STYLE[n].label}
           </button>
         ))}
@@ -169,7 +169,7 @@ export default function CentroAlertas() {
           <OrionCard className="p-8 text-center text-slate-500 font-mono text-xs">CARGANDO ALERTAS...</OrionCard>
         ) : filtradas.length === 0 ? (
           <OrionCard className="p-8 text-center">
-            <ShieldCheck className="w-10 h-10 mx-auto mb-3" style={{ color: '#27AE60', opacity: 0.4 }} />
+            <ShieldCheck className="w-10 h-10 mx-auto mb-3" style={{ color: 'hsl(var(--ok))', opacity: 0.4 }} />
             <p className="text-slate-500 font-mono text-xs">SIN ALERTAS EN ESTE FILTRO · OPERACIÓN NORMAL</p>
           </OrionCard>
         ) : (

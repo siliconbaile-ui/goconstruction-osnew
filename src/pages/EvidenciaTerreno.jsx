@@ -43,18 +43,18 @@ export default function EvidenciaTerreno() {
 
   const insights = goModuleInsights('Terreno', inspecciones);
   const stats = [
-    { label: 'EVIDENCIAS', value: inspecciones.length, color: '#4A6FA5' },
-    { label: 'NO CONFORMIDADES', value: inspecciones.filter(i => i.es_no_conformidad).length, color: '#D35400' },
-    { label: 'GEORREFERENCIADAS', value: inspecciones.filter(i => i.coordenadas_gps).length, color: '#27AE60' },
-    { label: 'SIN GPS', value: inspecciones.filter(i => !i.coordenadas_gps).length, color: '#F39C12' },
+    { label: 'EVIDENCIAS', value: inspecciones.length, color: 'hsl(var(--muted-foreground))' },
+    { label: 'NO CONFORMIDADES', value: inspecciones.filter(i => i.es_no_conformidad).length, color: 'hsl(var(--danger))' },
+    { label: 'GEORREFERENCIADAS', value: inspecciones.filter(i => i.coordenadas_gps).length, color: 'hsl(var(--ok))' },
+    { label: 'SIN GPS', value: inspecciones.filter(i => !i.coordenadas_gps).length, color: 'hsl(var(--warn))' },
   ];
 
   return (
     <div className="go-module-page p-4 lg:p-6 space-y-5">
       <div>
-        <div className="font-mono text-xs mb-1" style={{ color: '#4A6FA5' }}>MÓDULO 4 · EVIDENCIA VISUAL</div>
+        <div className="font-mono text-xs mb-1" style={{ color: 'hsl(var(--muted-foreground))' }}>MÓDULO 4 · EVIDENCIA VISUAL</div>
         <h1 className="text-xl font-bold text-white">Bitácora Visual Georreferenciada</h1>
-        <p className="text-sm mt-1" style={{ color: '#4A6FA5' }}>
+        <p className="text-sm mt-1" style={{ color: 'hsl(var(--muted-foreground))' }}>
           Una foto, un GPS, una inspección técnica automática. Ningún hormigón se vacía sobre enfierradura sin verificar.
         </p>
       </div>
@@ -63,7 +63,7 @@ export default function EvidenciaTerreno() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {stats.map(s => (
           <OrionCard key={s.label} className="p-4">
-            <div className="font-mono text-[10px] uppercase tracking-wider mb-2" style={{ color: '#4A6FA5' }}>{s.label}</div>
+            <div className="font-mono text-[10px] uppercase tracking-wider mb-2" style={{ color: 'hsl(var(--muted-foreground))' }}>{s.label}</div>
             <div className="text-2xl font-bold" style={{ color: s.color }}>{s.value}</div>
           </OrionCard>
         ))}
@@ -89,7 +89,7 @@ export default function EvidenciaTerreno() {
         ].map(f => (
           <button key={f.key} onClick={() => setFiltro(f.key)}
             className={`px-3 py-1.5 rounded text-xs font-mono ${filtro === f.key ? 'text-white' : 'text-slate-400 hover:text-white'}`}
-            style={filtro === f.key ? { background: '#003399' } : { background: '#0D1526', border: '1px solid #1E2D4A' }}>
+            style={filtro === f.key ? { background: 'hsl(var(--primary))' } : { background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}>
             {f.label}
           </button>
         ))}

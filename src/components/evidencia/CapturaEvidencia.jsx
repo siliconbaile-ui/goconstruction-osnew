@@ -93,11 +93,11 @@ Entrega:
 
   return (
     <OrionCard className="p-5">
-      <div className="font-mono text-xs mb-4 uppercase" style={{ color: '#4A6FA5' }}>CAPTURA GEORREFERENCIADA · ANTI FIERRO FANTASMA</div>
+      <div className="font-mono text-xs mb-4 uppercase" style={{ color: 'hsl(var(--muted-foreground))' }}>CAPTURA GEORREFERENCIADA · ANTI FIERRO FANTASMA</div>
 
       <div className="mb-3">
-        <label className="text-xs font-mono mb-1 block" style={{ color: '#4A6FA5' }}>Partida (recomendado)</label>
-        <select value={partidaId} onChange={e => setPartidaId(e.target.value)} className="w-full px-3 py-2 rounded text-sm text-white font-mono" style={{ background: '#0A1628', border: '1px solid #1E2D4A' }}>
+        <label className="text-xs font-mono mb-1 block" style={{ color: 'hsl(var(--muted-foreground))' }}>Partida (recomendado)</label>
+        <select value={partidaId} onChange={e => setPartidaId(e.target.value)} className="w-full px-3 py-2 rounded text-sm text-white font-mono" style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}>
           <option value="">Sin partida</option>
           {partidas.map(p => <option key={p.id} value={p.id}>{p.nombre}</option>)}
         </select>
@@ -108,7 +108,7 @@ Entrega:
         onClick={() => inputRef.current?.click()}
         disabled={ocupado || !proyecto}
         className="w-full flex items-center justify-center gap-2 px-4 py-4 rounded text-sm font-semibold text-white disabled:opacity-50"
-        style={{ background: '#003399' }}
+        style={{ background: 'hsl(var(--primary))' }}
       >
         {ocupado ? <Loader2 className="w-4 h-4 animate-spin" /> : <Camera className="w-4 h-4" />}
         {fase === 'subiendo' ? 'Subiendo foto y leyendo GPS...' :
@@ -117,22 +117,22 @@ Entrega:
          'Tomar foto de terreno'}
       </button>
 
-      {error && <p className="mt-2 text-xs" style={{ color: '#D35400' }}>{error}</p>}
+      {error && <p className="mt-2 text-xs" style={{ color: 'hsl(var(--danger))' }}>{error}</p>}
 
       {fase === 'revision' && analisis && (
         <div className="mt-4 space-y-3">
-          <img src={fotoUrl} alt="Evidencia" className="w-full max-h-64 object-cover rounded" style={{ border: '1px solid #1E2D4A' }} />
-          <div className="flex items-center gap-2 font-mono text-[10px]" style={{ color: gps ? '#27AE60' : '#D35400' }}>
+          <img src={fotoUrl} alt="Evidencia" className="w-full max-h-64 object-cover rounded" style={{ border: '1px solid hsl(var(--surface-2))' }} />
+          <div className="flex items-center gap-2 font-mono text-[10px]" style={{ color: gps ? 'hsl(var(--ok))' : 'hsl(var(--danger))' }}>
             <MapPin className="w-3 h-3" />
             {gps ? `GPS ${gps}` : 'SIN GPS · evidencia sin georreferencia'}
           </div>
           <div className="p-3 rounded text-xs space-y-2" style={{ background: 'rgba(0,51,153,0.08)', border: '1px solid rgba(0,51,153,0.35)' }}>
-            <div className="font-mono text-[10px] flex items-center gap-1" style={{ color: '#5B8DEF' }}>
+            <div className="font-mono text-[10px] flex items-center gap-1" style={{ color: 'hsl(var(--info))' }}>
               <Sparkles className="w-3 h-3" /> INSPECCIÓN ITO · ORION
             </div>
             <div className="text-slate-300">{analisis.descripcion}</div>
-            <div className="text-slate-300"><span className="font-mono text-[10px]" style={{ color: '#4A6FA5' }}>HALLAZGO: </span>{analisis.hallazgo}</div>
-            <div className="text-slate-300"><span className="font-mono text-[10px]" style={{ color: '#4A6FA5' }}>VERIFICAR: </span>{analisis.verificar}</div>
+            <div className="text-slate-300"><span className="font-mono text-[10px]" style={{ color: 'hsl(var(--muted-foreground))' }}>HALLAZGO: </span>{analisis.hallazgo}</div>
+            <div className="text-slate-300"><span className="font-mono text-[10px]" style={{ color: 'hsl(var(--muted-foreground))' }}>VERIFICAR: </span>{analisis.verificar}</div>
             <div className="flex gap-2 flex-wrap">
               <span className="px-2 py-0.5 rounded text-[10px] font-mono border bg-slate-500/10 text-slate-400 border-slate-500/30">{String(analisis.gravedad).toUpperCase()}</span>
               {analisis.es_no_conformidad && <span className="px-2 py-0.5 rounded text-[10px] font-mono border bg-orange-600/10 text-orange-400 border-orange-500/30">NO CONFORMIDAD</span>}
@@ -140,10 +140,10 @@ Entrega:
             </div>
           </div>
           <div className="flex gap-2">
-            <button onClick={registrar} className="flex items-center gap-1.5 px-4 py-2 rounded text-sm font-medium text-white" style={{ background: '#003399' }}>
+            <button onClick={registrar} className="flex items-center gap-1.5 px-4 py-2 rounded text-sm font-medium text-white" style={{ background: 'hsl(var(--primary))' }}>
               <Check className="w-4 h-4" /> Registrar inspección
             </button>
-            <button onClick={() => { setFase('idle'); setAnalisis(null); setFotoUrl(null); }} className="px-4 py-2 rounded text-sm text-slate-400" style={{ background: '#0A1628', border: '1px solid #1E2D4A' }}>Descartar</button>
+            <button onClick={() => { setFase('idle'); setAnalisis(null); setFotoUrl(null); }} className="px-4 py-2 rounded text-sm text-slate-400" style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}>Descartar</button>
           </div>
         </div>
       )}

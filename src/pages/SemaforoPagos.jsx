@@ -118,10 +118,10 @@ export default function SemaforoPagos() {
     <div className="go-module-page p-4 lg:p-6 space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <div className="font-mono text-xs mb-1" style={{ color: '#4A6FA5' }}>MÓDULO P0 · ASISTIDO</div>
+          <div className="font-mono text-xs mb-1" style={{ color: 'hsl(var(--muted-foreground))' }}>MÓDULO P0 · ASISTIDO</div>
           <h1 className="text-xl font-bold text-white">Semáforo de Pagos y Subcontratos</h1>
         </div>
-        <button onClick={() => setShowForm(true)} className="flex items-center gap-2 px-3 py-2 rounded text-sm font-medium text-white" style={{ background: '#003399' }}>
+        <button onClick={() => setShowForm(true)} className="flex items-center gap-2 px-3 py-2 rounded text-sm font-medium text-white" style={{ background: 'hsl(var(--primary))' }}>
           <Plus className="w-4 h-4" /> Generar EDP
         </button>
       </div>
@@ -130,13 +130,13 @@ export default function SemaforoPagos() {
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {[
-          { label: 'TOTAL EDPs', value: edps.length, color: '#4A6FA5' },
-          { label: 'BLOQUEADOS', value: edps.filter(e => e.estado === 'bloqueado_calidad').length, color: '#D35400' },
-          { label: 'MONTO BLOQUEADO', value: `$${totalBloqueado.toLocaleString()}`, color: '#D35400' },
-          { label: 'APROBADO / PAGADO', value: `$${totalAprobado.toLocaleString()}`, color: '#27AE60' },
+          { label: 'TOTAL EDPs', value: edps.length, color: 'hsl(var(--muted-foreground))' },
+          { label: 'BLOQUEADOS', value: edps.filter(e => e.estado === 'bloqueado_calidad').length, color: 'hsl(var(--danger))' },
+          { label: 'MONTO BLOQUEADO', value: `$${totalBloqueado.toLocaleString()}`, color: 'hsl(var(--danger))' },
+          { label: 'APROBADO / PAGADO', value: `$${totalAprobado.toLocaleString()}`, color: 'hsl(var(--ok))' },
         ].map(s => (
           <OrionCard key={s.label} className="p-4">
-            <div className="font-mono text-[10px] uppercase tracking-wider mb-2" style={{ color: '#4A6FA5' }}>{s.label}</div>
+            <div className="font-mono text-[10px] uppercase tracking-wider mb-2" style={{ color: 'hsl(var(--muted-foreground))' }}>{s.label}</div>
             <div className="text-xl font-bold truncate" style={{ color: s.color }}>{s.value}</div>
           </OrionCard>
         ))}
@@ -144,8 +144,8 @@ export default function SemaforoPagos() {
 
       {edps.filter(e => e.estado === 'bloqueado_calidad').length > 0 && (
         <div className="rounded-lg p-4 flex items-start gap-3" style={{ background: 'rgba(211,84,0,0.08)', border: '1px solid rgba(211,84,0,0.35)' }}>
-          <Lock className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: '#D35400' }} />
-          <div className="text-sm" style={{ color: '#D35400' }}>
+          <Lock className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: 'hsl(var(--danger))' }} />
+          <div className="text-sm" style={{ color: 'hsl(var(--danger))' }}>
             <strong>REGLA ADN — NO QUALITY, NO PAY:</strong> {edps.filter(e => e.estado === 'bloqueado_calidad').length} EDP(s) bloqueados por no-conformidades de calidad abiertas. El sistema impide técnicamente generar cobros sobre partidas con NCs activas.
           </div>
         </div>
@@ -161,7 +161,7 @@ export default function SemaforoPagos() {
         ].map(f => (
           <button key={f.key} onClick={() => setFiltro(f.key)}
             className={`px-3 py-1.5 rounded text-xs font-mono transition-colors ${filtro === f.key ? 'text-white' : 'text-slate-400 hover:text-white'}`}
-            style={filtro === f.key ? { background: '#003399' } : { background: '#0D1526', border: '1px solid #1E2D4A' }}>
+            style={filtro === f.key ? { background: 'hsl(var(--primary))' } : { background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}>
             {f.label}
           </button>
         ))}
@@ -170,38 +170,38 @@ export default function SemaforoPagos() {
       {/* Form */}
       {showForm && (
         <OrionCard className="p-5">
-          <div className="font-mono text-xs mb-1 uppercase" style={{ color: '#4A6FA5' }}>GENERAR ESTADO DE PAGO</div>
-          <div className="text-xs mb-4" style={{ color: '#D35400' }}>
+          <div className="font-mono text-xs mb-1 uppercase" style={{ color: 'hsl(var(--muted-foreground))' }}>GENERAR ESTADO DE PAGO</div>
+          <div className="text-xs mb-4" style={{ color: 'hsl(var(--danger))' }}>
             ⚠ El sistema verificará automáticamente el estado de calidad de la partida antes de generar el EDP.
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
             <div>
-              <label className="text-xs font-mono mb-1 block" style={{ color: '#4A6FA5' }}>Partida *</label>
-              <select value={form.partida_id} onChange={e => setForm(p => ({ ...p, partida_id: e.target.value }))} className="w-full px-3 py-2 rounded text-sm text-white font-mono" style={{ background: '#0A1628', border: '1px solid #1E2D4A' }}>
+              <label className="text-xs font-mono mb-1 block" style={{ color: 'hsl(var(--muted-foreground))' }}>Partida *</label>
+              <select value={form.partida_id} onChange={e => setForm(p => ({ ...p, partida_id: e.target.value }))} className="w-full px-3 py-2 rounded text-sm text-white font-mono" style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}>
                 <option value="">Seleccionar partida...</option>
                 {partidas.map(p => <option key={p.id} value={p.id}>{p.nombre}</option>)}
               </select>
             </div>
             <div>
-              <label className="text-xs font-mono mb-1 block" style={{ color: '#4A6FA5' }}>Subcontratista</label>
-              <input value={form.subcontratista} onChange={e => setForm(p => ({ ...p, subcontratista: e.target.value }))} className="w-full px-3 py-2 rounded text-sm text-white font-mono" style={{ background: '#0A1628', border: '1px solid #1E2D4A' }} />
+              <label className="text-xs font-mono mb-1 block" style={{ color: 'hsl(var(--muted-foreground))' }}>Subcontratista</label>
+              <input value={form.subcontratista} onChange={e => setForm(p => ({ ...p, subcontratista: e.target.value }))} className="w-full px-3 py-2 rounded text-sm text-white font-mono" style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }} />
             </div>
             <div>
-              <label className="text-xs font-mono mb-1 block" style={{ color: '#4A6FA5' }}>Monto (USD)</label>
-              <input type="number" value={form.monto_usd} onChange={e => setForm(p => ({ ...p, monto_usd: +e.target.value }))} className="w-full px-3 py-2 rounded text-sm text-white font-mono" style={{ background: '#0A1628', border: '1px solid #1E2D4A' }} />
+              <label className="text-xs font-mono mb-1 block" style={{ color: 'hsl(var(--muted-foreground))' }}>Monto (USD)</label>
+              <input type="number" value={form.monto_usd} onChange={e => setForm(p => ({ ...p, monto_usd: +e.target.value }))} className="w-full px-3 py-2 rounded text-sm text-white font-mono" style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }} />
             </div>
             <div>
-              <label className="text-xs font-mono mb-1 block" style={{ color: '#4A6FA5' }}>% Avance del Hito</label>
-              <input type="number" value={form.porcentaje_avance} onChange={e => setForm(p => ({ ...p, porcentaje_avance: +e.target.value }))} className="w-full px-3 py-2 rounded text-sm text-white font-mono" style={{ background: '#0A1628', border: '1px solid #1E2D4A' }} min={0} max={100} />
+              <label className="text-xs font-mono mb-1 block" style={{ color: 'hsl(var(--muted-foreground))' }}>% Avance del Hito</label>
+              <input type="number" value={form.porcentaje_avance} onChange={e => setForm(p => ({ ...p, porcentaje_avance: +e.target.value }))} className="w-full px-3 py-2 rounded text-sm text-white font-mono" style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }} min={0} max={100} />
             </div>
             <div className="sm:col-span-2">
-              <label className="text-xs font-mono mb-1 block" style={{ color: '#4A6FA5' }}>Observaciones</label>
-              <textarea value={form.observaciones} onChange={e => setForm(p => ({ ...p, observaciones: e.target.value }))} rows={2} className="w-full px-3 py-2 rounded text-sm text-white font-mono resize-none" style={{ background: '#0A1628', border: '1px solid #1E2D4A' }} />
+              <label className="text-xs font-mono mb-1 block" style={{ color: 'hsl(var(--muted-foreground))' }}>Observaciones</label>
+              <textarea value={form.observaciones} onChange={e => setForm(p => ({ ...p, observaciones: e.target.value }))} rows={2} className="w-full px-3 py-2 rounded text-sm text-white font-mono resize-none" style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }} />
             </div>
           </div>
           <div className="flex gap-2">
-            <button onClick={generarEDP} className="px-4 py-2 rounded text-sm font-medium text-white" style={{ background: '#003399' }}>Generar EDP</button>
-            <button onClick={() => setShowForm(false)} className="px-4 py-2 rounded text-sm font-medium text-slate-400 hover:text-white" style={{ background: '#0A1628', border: '1px solid #1E2D4A' }}>Cancelar</button>
+            <button onClick={generarEDP} className="px-4 py-2 rounded text-sm font-medium text-white" style={{ background: 'hsl(var(--primary))' }}>Generar EDP</button>
+            <button onClick={() => setShowForm(false)} className="px-4 py-2 rounded text-sm font-medium text-slate-400 hover:text-white" style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}>Cancelar</button>
           </div>
         </OrionCard>
       )}
@@ -237,7 +237,7 @@ export default function SemaforoPagos() {
                         <span className="font-mono text-sm font-bold text-white">${(edp.monto_usd || 0).toLocaleString()} USD</span>
                       </div>
                       <div className="text-sm text-slate-300">{partida?.nombre || 'Partida no encontrada'}</div>
-                      <div className="text-xs mt-1 flex flex-wrap gap-x-3" style={{ color: '#4A6FA5' }}>
+                      <div className="text-xs mt-1 flex flex-wrap gap-x-3" style={{ color: 'hsl(var(--muted-foreground))' }}>
                         {edp.subcontratista && <span>Subcontratista: {edp.subcontratista}</span>}
                         <span>Avance hito: {edp.porcentaje_avance}%</span>
                         <span>Calidad: {edp.calidad_verificada ? '✓ Verificada' : '✗ Pendiente'}</span>
@@ -248,21 +248,21 @@ export default function SemaforoPagos() {
 
                 {bloqueado && edp.motivo_bloqueo && (
                   <div className="mb-3 p-3 rounded text-xs" style={{ background: 'rgba(211,84,0,0.08)', border: '1px solid rgba(211,84,0,0.25)' }}>
-                    <div className="font-mono text-[10px] mb-1" style={{ color: '#D35400' }}>MOTIVO BLOQUEO:</div>
+                    <div className="font-mono text-[10px] mb-1" style={{ color: 'hsl(var(--danger))' }}>MOTIVO BLOQUEO:</div>
                     <div className="text-slate-300">{edp.motivo_bloqueo}</div>
                   </div>
                 )}
 
                 {edp.administrador_firma && (
-                  <div className="text-xs font-mono" style={{ color: '#27AE60' }}>
+                  <div className="text-xs font-mono" style={{ color: 'hsl(var(--ok))' }}>
                     ✓ Firmado por: {edp.administrador_firma} · {formatFecha(edp.fecha_firma)}
                   </div>
                 )}
 
                 {/* Acciones */}
                 {edp.estado === 'borrador' && (
-                  <div className="mt-3 pt-3 flex gap-2 flex-wrap" style={{ borderTop: '1px solid #1E2D4A' }}>
-                    <button onClick={() => setFirmando(edp.id)} className="px-3 py-1.5 rounded text-xs font-mono text-white flex items-center gap-1" style={{ background: '#003399' }}>
+                  <div className="mt-3 pt-3 flex gap-2 flex-wrap" style={{ borderTop: '1px solid hsl(var(--surface-2))' }}>
+                    <button onClick={() => setFirmando(edp.id)} className="px-3 py-1.5 rounded text-xs font-mono text-white flex items-center gap-1" style={{ background: 'hsl(var(--primary))' }}>
                       Enviar a firma
                     </button>
                     <button onClick={() => rechazar(edp.id)} className="px-3 py-1.5 rounded text-xs font-mono text-orange-400" style={{ background: 'rgba(211,84,0,0.1)', border: '1px solid rgba(211,84,0,0.3)' }}>
@@ -271,8 +271,8 @@ export default function SemaforoPagos() {
                   </div>
                 )}
                 {edp.estado === 'pendiente_firma' && (
-                  <div className="mt-3 pt-3 flex gap-2 flex-wrap" style={{ borderTop: '1px solid #1E2D4A' }}>
-                    <button onClick={() => aprobar(edp.id)} className="px-3 py-1.5 rounded text-xs font-mono text-white flex items-center gap-1" style={{ background: '#27AE60' }}>
+                  <div className="mt-3 pt-3 flex gap-2 flex-wrap" style={{ borderTop: '1px solid hsl(var(--surface-2))' }}>
+                    <button onClick={() => aprobar(edp.id)} className="px-3 py-1.5 rounded text-xs font-mono text-white flex items-center gap-1" style={{ background: 'hsl(var(--ok))' }}>
                       <CheckCircle className="w-3 h-3" /> Aprobar EDP
                     </button>
                     <button onClick={() => rechazar(edp.id)} className="px-3 py-1.5 rounded text-xs font-mono text-orange-400" style={{ background: 'rgba(211,84,0,0.1)', border: '1px solid rgba(211,84,0,0.3)' }}>
@@ -281,10 +281,10 @@ export default function SemaforoPagos() {
                   </div>
                 )}
                 {firmando === edp.id && (
-                  <div className="mt-3 flex gap-2" style={{ borderTop: '1px solid #1E2D4A', paddingTop: '12px' }}>
-                    <input value={firmaNombre} onChange={e => setFirmaNombre(e.target.value)} placeholder="Nombre del administrador que firma" className="flex-1 px-3 py-1.5 rounded text-xs font-mono text-white" style={{ background: '#0A1628', border: '1px solid #1E2D4A' }} />
-                    <button onClick={() => firmar(edp.id)} className="px-3 py-1.5 rounded text-xs font-mono text-white" style={{ background: '#003399' }}>Registrar Firma</button>
-                    <button onClick={() => setFirmando(null)} className="px-2 rounded text-xs text-slate-400" style={{ background: '#0A1628', border: '1px solid #1E2D4A' }}>✕</button>
+                  <div className="mt-3 flex gap-2" style={{ borderTop: '1px solid hsl(var(--surface-2))', paddingTop: '12px' }}>
+                    <input value={firmaNombre} onChange={e => setFirmaNombre(e.target.value)} placeholder="Nombre del administrador que firma" className="flex-1 px-3 py-1.5 rounded text-xs font-mono text-white" style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }} />
+                    <button onClick={() => firmar(edp.id)} className="px-3 py-1.5 rounded text-xs font-mono text-white" style={{ background: 'hsl(var(--primary))' }}>Registrar Firma</button>
+                    <button onClick={() => setFirmando(null)} className="px-2 rounded text-xs text-slate-400" style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}>✕</button>
                   </div>
                 )}
               </OrionCard>

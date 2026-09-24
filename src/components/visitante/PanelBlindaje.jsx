@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { TrendingUp, ShieldCheck, FileText, PlayCircle } from 'lucide-react';
 import Logo from '@/components/marca/Logo';
 
-const AMBER = '#E8912E';
+const AMBER = 'hsl(var(--warn))';
 
 const FEATURES = [
   { icon: TrendingUp, title: 'Avance y Curva S', desc: 'Programado vs real, vigilia 24/7' },

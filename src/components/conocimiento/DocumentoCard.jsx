@@ -2,10 +2,10 @@ import { FileText, Loader2, CheckCircle, AlertTriangle, Trash2, ExternalLink } f
 import OrionCard from '@/components/OrionCard';
 
 const ESTADO = {
-  pendiente: { label: 'PENDIENTE', color: '#F39C12', icon: AlertTriangle },
-  indexando: { label: 'INDEXANDO', color: '#5B8DEF', icon: Loader2 },
-  indexado: { label: 'INDEXADO', color: '#27AE60', icon: CheckCircle },
-  error: { label: 'ERROR', color: '#D35400', icon: AlertTriangle },
+  pendiente: { label: 'PENDIENTE', color: 'hsl(var(--warn))', icon: AlertTriangle },
+  indexando: { label: 'INDEXANDO', color: 'hsl(var(--info))', icon: Loader2 },
+  indexado: { label: 'INDEXADO', color: 'hsl(var(--ok))', icon: CheckCircle },
+  error: { label: 'ERROR', color: 'hsl(var(--danger))', icon: AlertTriangle },
 };
 
 export default function DocumentoCard({ doc, onDelete, onReindexar }) {
@@ -16,7 +16,7 @@ export default function DocumentoCard({ doc, onDelete, onReindexar }) {
     <OrionCard className="p-4">
       <div className="flex items-start gap-3">
         <div className="w-9 h-9 rounded flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(0,51,153,0.15)' }}>
-          <FileText className="w-4 h-4" style={{ color: '#5B8DEF' }} />
+          <FileText className="w-4 h-4" style={{ color: 'hsl(var(--info))' }} />
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap mb-1">
@@ -32,24 +32,24 @@ export default function DocumentoCard({ doc, onDelete, onReindexar }) {
               {meta.label}
             </span>
           </div>
-          {doc.resumen && <p className="text-xs leading-relaxed line-clamp-2" style={{ color: '#4A6FA5' }}>{doc.resumen}</p>}
-          <div className="flex flex-wrap gap-x-3 gap-y-1 mt-1.5 font-mono text-[10px]" style={{ color: '#2D4A6E' }}>
+          {doc.resumen && <p className="text-xs leading-relaxed line-clamp-2" style={{ color: 'hsl(var(--muted-foreground))' }}>{doc.resumen}</p>}
+          <div className="flex flex-wrap gap-x-3 gap-y-1 mt-1.5 font-mono text-[10px]" style={{ color: 'hsl(var(--surface-2))' }}>
             {doc.paginas_totales ? <span>{doc.paginas_totales} pág.</span> : null}
             {doc.version && <span>v{doc.version}</span>}
             {doc.nombre_archivo && <span className="truncate max-w-[180px]">{doc.nombre_archivo}</span>}
           </div>
         </div>
         <div className="flex flex-col gap-1 flex-shrink-0">
-          <a href={doc.file_url} target="_blank" rel="noreferrer" className="p-1.5 rounded hover:bg-white/5" style={{ color: '#4A6FA5' }} title="Abrir documento">
+          <a href={doc.file_url} target="_blank" rel="noreferrer" className="p-1.5 rounded hover:bg-white/5" style={{ color: 'hsl(var(--muted-foreground))' }} title="Abrir documento">
             <ExternalLink className="w-3.5 h-3.5" />
           </a>
-          <button onClick={() => onDelete(doc.id)} className="p-1.5 rounded hover:bg-white/5" style={{ color: '#4A6FA5' }} title="Eliminar">
+          <button onClick={() => onDelete(doc.id)} className="p-1.5 rounded hover:bg-white/5" style={{ color: 'hsl(var(--muted-foreground))' }} title="Eliminar">
             <Trash2 className="w-3.5 h-3.5" />
           </button>
         </div>
       </div>
       {doc.estado_indexacion === 'error' && (
-        <button onClick={() => onReindexar(doc)} className="mt-3 px-3 py-1.5 rounded text-[10px] font-mono text-white" style={{ background: '#003399' }}>
+        <button onClick={() => onReindexar(doc)} className="mt-3 px-3 py-1.5 rounded text-[10px] font-mono text-white" style={{ background: 'hsl(var(--primary))' }}>
           Reintentar indexación
         </button>
       )}

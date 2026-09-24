@@ -56,13 +56,13 @@ export default function MonitorAvance() {
     <div className="p-4 lg:p-6 space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <div className="font-mono text-xs mb-1" style={{ color: '#4A6FA5' }}>MÓDULO P0 · AUTÓNOMO</div>
+          <div className="font-mono text-xs mb-1" style={{ color: 'hsl(var(--muted-foreground))' }}>MÓDULO P0 · AUTÓNOMO</div>
           <h1 className="text-xl font-bold text-white">Monitor de Avance vs. Programa</h1>
         </div>
         <button
           onClick={() => setShowForm(true)}
           className="flex items-center gap-2 px-3 py-2 rounded text-sm font-medium text-white"
-          style={{ background: '#003399' }}
+          style={{ background: 'hsl(var(--primary))' }}
         >
           <Plus className="w-4 h-4" /> Nueva Partida
         </button>
@@ -70,8 +70,8 @@ export default function MonitorAvance() {
 
       {desviadas.length > 0 && (
         <div className="rounded-lg p-4 flex items-center gap-3" style={{ background: 'rgba(211,84,0,0.1)', border: '1px solid rgba(211,84,0,0.4)' }}>
-          <AlertTriangle className="w-5 h-5 flex-shrink-0" style={{ color: '#D35400' }} />
-          <span className="text-sm" style={{ color: '#D35400' }}>
+          <AlertTriangle className="w-5 h-5 flex-shrink-0" style={{ color: 'hsl(var(--danger))' }} />
+          <span className="text-sm" style={{ color: 'hsl(var(--danger))' }}>
             <strong>{desviadas.length}</strong> partidas con desviación &gt;5% — Escalamiento automático a Gerencia Media activado.
           </span>
         </div>
@@ -90,7 +90,7 @@ export default function MonitorAvance() {
             className={`px-3 py-1.5 rounded text-xs font-mono transition-colors ${
               filtro === f.key ? 'text-white' : 'text-slate-400 hover:text-white'
             }`}
-            style={filtro === f.key ? { background: '#003399' } : { background: '#0D1526', border: '1px solid #1E2D4A' }}
+            style={filtro === f.key ? { background: 'hsl(var(--primary))' } : { background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}
           >
             {f.label}
           </button>
@@ -100,7 +100,7 @@ export default function MonitorAvance() {
       {/* Form nueva partida */}
       {showForm && (
         <OrionCard className="p-5">
-          <div className="font-mono text-xs mb-4 uppercase" style={{ color: '#4A6FA5' }}>NUEVA PARTIDA</div>
+          <div className="font-mono text-xs mb-4 uppercase" style={{ color: 'hsl(var(--muted-foreground))' }}>NUEVA PARTIDA</div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-4">
             {[
               { key: 'codigo', label: 'Código', type: 'text' },
@@ -111,22 +111,22 @@ export default function MonitorAvance() {
               { key: 'avance_real', label: 'Avance Real (%)', type: 'number' },
             ].map(f => (
               <div key={f.key}>
-                <label className="text-xs font-mono mb-1 block" style={{ color: '#4A6FA5' }}>{f.label}</label>
+                <label className="text-xs font-mono mb-1 block" style={{ color: 'hsl(var(--muted-foreground))' }}>{f.label}</label>
                 <input
                   type={f.type}
                   value={nueva[f.key]}
                   onChange={e => setNueva(prev => ({ ...prev, [f.key]: f.type === 'number' ? +e.target.value : e.target.value }))}
                   className="w-full px-3 py-2 rounded text-sm text-white font-mono"
-                  style={{ background: '#0A1628', border: '1px solid #1E2D4A' }}
+                  style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}
                 />
               </div>
             ))}
           </div>
           <div className="flex gap-2">
-            <button onClick={crearPartida} className="px-4 py-2 rounded text-sm font-medium text-white" style={{ background: '#003399' }}>
+            <button onClick={crearPartida} className="px-4 py-2 rounded text-sm font-medium text-white" style={{ background: 'hsl(var(--primary))' }}>
               Registrar Partida
             </button>
-            <button onClick={() => setShowForm(false)} className="px-4 py-2 rounded text-sm font-medium text-slate-400 hover:text-white" style={{ background: '#0A1628', border: '1px solid #1E2D4A' }}>
+            <button onClick={() => setShowForm(false)} className="px-4 py-2 rounded text-sm font-medium text-slate-400 hover:text-white" style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}>
               Cancelar
             </button>
           </div>
@@ -138,9 +138,9 @@ export default function MonitorAvance() {
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr style={{ borderBottom: '1px solid #1E2D4A' }}>
+              <tr style={{ borderBottom: '1px solid hsl(var(--surface-2))' }}>
                 {['Estado', 'Código', 'Partida', 'Real', 'Prog.', 'Desviación', 'Responsable', 'Calidad', 'Acciones'].map(h => (
-                  <th key={h} className="text-left px-4 py-3 font-mono text-[10px] uppercase tracking-wider" style={{ color: '#4A6FA5' }}>
+                  <th key={h} className="text-left px-4 py-3 font-mono text-[10px] uppercase tracking-wider" style={{ color: 'hsl(var(--muted-foreground))' }}>
                     {h}
                   </th>
                 ))}
@@ -156,7 +156,7 @@ export default function MonitorAvance() {
                   const desv = calcularDesviacion(p.avance_real, p.avance_programado);
                   const sem = semaforo(desv);
                   return (
-                    <tr key={p.id} className="hover:bg-white/3 transition-colors" style={{ borderBottom: '1px solid #0F1D35' }}>
+                    <tr key={p.id} className="hover:bg-white/3 transition-colors" style={{ borderBottom: '1px solid hsl(var(--surface-0))' }}>
                       <td className="px-4 py-3">
                         <SemaforoIndicator color={sem} size="md" />
                       </td>
@@ -169,7 +169,7 @@ export default function MonitorAvance() {
                             value={editAvance}
                             onChange={e => setEditAvance(e.target.value)}
                             className="w-16 px-2 py-1 rounded text-xs font-mono text-white"
-                            style={{ background: '#0A1628', border: '1px solid #003399' }}
+                            style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--primary))' }}
                             min={0} max={100}
                           />
                         ) : (
@@ -195,10 +195,10 @@ export default function MonitorAvance() {
                       <td className="px-4 py-3">
                         {editingId === p.id ? (
                           <div className="flex gap-1">
-                            <button onClick={() => saveAvance(p.id)} className="px-2 py-1 rounded text-[10px] font-mono text-white" style={{ background: '#27AE60' }}>
+                            <button onClick={() => saveAvance(p.id)} className="px-2 py-1 rounded text-[10px] font-mono text-white" style={{ background: 'hsl(var(--ok))' }}>
                               OK
                             </button>
-                            <button onClick={() => setEditingId(null)} className="px-2 py-1 rounded text-[10px] font-mono text-slate-400" style={{ background: '#0A1628', border: '1px solid #1E2D4A' }}>
+                            <button onClick={() => setEditingId(null)} className="px-2 py-1 rounded text-[10px] font-mono text-slate-400" style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}>
                               ✕
                             </button>
                           </div>
@@ -206,7 +206,7 @@ export default function MonitorAvance() {
                           <button
                             onClick={() => { setEditingId(p.id); setEditAvance(String(p.avance_real || 0)); }}
                             className="px-2 py-1 rounded text-[10px] font-mono text-slate-400 hover:text-white transition-colors"
-                            style={{ background: '#0A1628', border: '1px solid #1E2D4A' }}
+                            style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}
                           >
                             ACTUALIZAR
                           </button>

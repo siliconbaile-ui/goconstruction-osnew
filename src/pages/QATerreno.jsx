@@ -92,13 +92,13 @@ export default function QATerreno() {
     <div className="p-4 lg:p-6 space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <div className="font-mono text-xs mb-1" style={{ color: '#4A6FA5' }}>MÓDULO P0 · ASISTIDO</div>
+          <div className="font-mono text-xs mb-1" style={{ color: 'hsl(var(--muted-foreground))' }}>MÓDULO P0 · ASISTIDO</div>
           <h1 className="text-xl font-bold text-white">Control de Calidad Digital · QA Terreno</h1>
         </div>
         <button
           onClick={() => setShowForm(true)}
           className="flex items-center gap-2 px-3 py-2 rounded text-sm font-medium text-white"
-          style={{ background: '#003399' }}
+          style={{ background: 'hsl(var(--primary))' }}
         >
           <Plus className="w-4 h-4" /> Registrar Inspección
         </button>
@@ -107,13 +107,13 @@ export default function QATerreno() {
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {[
-          { label: 'TOTAL INSPECCIONES', value: inspecciones.length, color: '#4A6FA5' },
-          { label: 'NC ABIERTAS', value: nc_abiertas, color: nc_abiertas > 0 ? '#D35400' : '#27AE60' },
-          { label: 'APROBADAS', value: inspecciones.filter(i => i.estado === 'aprobada').length, color: '#27AE60' },
-          { label: 'RECHAZADAS', value: inspecciones.filter(i => i.estado === 'rechazada').length, color: '#D35400' },
+          { label: 'TOTAL INSPECCIONES', value: inspecciones.length, color: 'hsl(var(--muted-foreground))' },
+          { label: 'NC ABIERTAS', value: nc_abiertas, color: nc_abiertas > 0 ? 'hsl(var(--danger))' : 'hsl(var(--ok))' },
+          { label: 'APROBADAS', value: inspecciones.filter(i => i.estado === 'aprobada').length, color: 'hsl(var(--ok))' },
+          { label: 'RECHAZADAS', value: inspecciones.filter(i => i.estado === 'rechazada').length, color: 'hsl(var(--danger))' },
         ].map(s => (
           <OrionCard key={s.label} className="p-4">
-            <div className="font-mono text-[10px] uppercase tracking-wider mb-2" style={{ color: '#4A6FA5' }}>{s.label}</div>
+            <div className="font-mono text-[10px] uppercase tracking-wider mb-2" style={{ color: 'hsl(var(--muted-foreground))' }}>{s.label}</div>
             <div className="text-2xl font-bold" style={{ color: s.color }}>{s.value}</div>
           </OrionCard>
         ))}
@@ -121,8 +121,8 @@ export default function QATerreno() {
 
       {nc_abiertas > 0 && (
         <div className="rounded-lg p-4 flex items-start gap-3" style={{ background: 'rgba(211,84,0,0.08)', border: '1px solid rgba(211,84,0,0.35)' }}>
-          <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: '#D35400' }} />
-          <div className="text-sm" style={{ color: '#D35400' }}>
+          <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: 'hsl(var(--danger))' }} />
+          <div className="text-sm" style={{ color: 'hsl(var(--danger))' }}>
             <strong>REGLA ADN:</strong> {nc_abiertas} no-conformidades abiertas bloquean estados de pago asociados. Cerrar con evidencia fotográfica.
           </div>
         </div>
@@ -141,7 +141,7 @@ export default function QATerreno() {
             key={f.key}
             onClick={() => setFiltroEstado(f.key)}
             className={`px-3 py-1.5 rounded text-xs font-mono transition-colors ${filtroEstado === f.key ? 'text-white' : 'text-slate-400 hover:text-white'}`}
-            style={filtroEstado === f.key ? { background: '#003399' } : { background: '#0D1526', border: '1px solid #1E2D4A' }}
+            style={filtroEstado === f.key ? { background: 'hsl(var(--primary))' } : { background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}
           >
             {f.label}
           </button>
@@ -151,71 +151,71 @@ export default function QATerreno() {
       {/* Form */}
       {showForm && (
         <OrionCard className="p-5">
-          <div className="font-mono text-xs mb-4 uppercase" style={{ color: '#4A6FA5' }}>REGISTRO INSPECCIÓN DE CALIDAD</div>
+          <div className="font-mono text-xs mb-4 uppercase" style={{ color: 'hsl(var(--muted-foreground))' }}>REGISTRO INSPECCIÓN DE CALIDAD</div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
             <div>
-              <label className="text-xs font-mono mb-1 block" style={{ color: '#4A6FA5' }}>Partida</label>
+              <label className="text-xs font-mono mb-1 block" style={{ color: 'hsl(var(--muted-foreground))' }}>Partida</label>
               <select
                 value={form.partida_id}
                 onChange={e => setForm(p => ({ ...p, partida_id: e.target.value }))}
                 className="w-full px-3 py-2 rounded text-sm text-white font-mono"
-                style={{ background: '#0A1628', border: '1px solid #1E2D4A' }}
+                style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}
               >
                 <option value="">Seleccionar partida...</option>
                 {partidas.map(p => <option key={p.id} value={p.id}>{p.codigo ? `[${p.codigo}] ` : ''}{p.nombre}</option>)}
               </select>
             </div>
             <div>
-              <label className="text-xs font-mono mb-1 block" style={{ color: '#4A6FA5' }}>Tipo</label>
-              <select value={form.tipo} onChange={e => setForm(p => ({ ...p, tipo: e.target.value }))} className="w-full px-3 py-2 rounded text-sm text-white font-mono" style={{ background: '#0A1628', border: '1px solid #1E2D4A' }}>
+              <label className="text-xs font-mono mb-1 block" style={{ color: 'hsl(var(--muted-foreground))' }}>Tipo</label>
+              <select value={form.tipo} onChange={e => setForm(p => ({ ...p, tipo: e.target.value }))} className="w-full px-3 py-2 rounded text-sm text-white font-mono" style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}>
                 {['checklist', 'foto', 'nota_voz', 'inspeccion_formal'].map(t => <option key={t} value={t}>{t.replace('_', ' ')}</option>)}
               </select>
             </div>
             <div>
-              <label className="text-xs font-mono mb-1 block" style={{ color: '#4A6FA5' }}>Gravedad</label>
-              <select value={form.gravedad} onChange={e => setForm(p => ({ ...p, gravedad: e.target.value }))} className="w-full px-3 py-2 rounded text-sm text-white font-mono" style={{ background: '#0A1628', border: '1px solid #1E2D4A' }}>
+              <label className="text-xs font-mono mb-1 block" style={{ color: 'hsl(var(--muted-foreground))' }}>Gravedad</label>
+              <select value={form.gravedad} onChange={e => setForm(p => ({ ...p, gravedad: e.target.value }))} className="w-full px-3 py-2 rounded text-sm text-white font-mono" style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}>
                 {['leve', 'moderada', 'critica'].map(g => <option key={g} value={g}>{g}</option>)}
               </select>
             </div>
             <div>
-              <label className="text-xs font-mono mb-1 block" style={{ color: '#4A6FA5' }}>Pilar</label>
-              <select value={form.pilar} onChange={e => setForm(p => ({ ...p, pilar: e.target.value }))} className="w-full px-3 py-2 rounded text-sm text-white font-mono" style={{ background: '#0A1628', border: '1px solid #1E2D4A' }}>
+              <label className="text-xs font-mono mb-1 block" style={{ color: 'hsl(var(--muted-foreground))' }}>Pilar</label>
+              <select value={form.pilar} onChange={e => setForm(p => ({ ...p, pilar: e.target.value }))} className="w-full px-3 py-2 rounded text-sm text-white font-mono" style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}>
                 {['procesos', 'personas', 'tecnologia'].map(pi => <option key={pi} value={pi}>{pi}</option>)}
               </select>
             </div>
             <div>
-              <label className="text-xs font-mono mb-1 block" style={{ color: '#4A6FA5' }}>Inspector</label>
-              <input value={form.inspector} onChange={e => setForm(p => ({ ...p, inspector: e.target.value }))} className="w-full px-3 py-2 rounded text-sm text-white font-mono" style={{ background: '#0A1628', border: '1px solid #1E2D4A' }} placeholder="Nombre inspector" />
+              <label className="text-xs font-mono mb-1 block" style={{ color: 'hsl(var(--muted-foreground))' }}>Inspector</label>
+              <input value={form.inspector} onChange={e => setForm(p => ({ ...p, inspector: e.target.value }))} className="w-full px-3 py-2 rounded text-sm text-white font-mono" style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }} placeholder="Nombre inspector" />
             </div>
             <div>
-              <label className="text-xs font-mono mb-1 block" style={{ color: '#4A6FA5' }}>Responsable</label>
-              <input value={form.responsable} onChange={e => setForm(p => ({ ...p, responsable: e.target.value }))} className="w-full px-3 py-2 rounded text-sm text-white font-mono" style={{ background: '#0A1628', border: '1px solid #1E2D4A' }} placeholder="Responsable cierre" />
+              <label className="text-xs font-mono mb-1 block" style={{ color: 'hsl(var(--muted-foreground))' }}>Responsable</label>
+              <input value={form.responsable} onChange={e => setForm(p => ({ ...p, responsable: e.target.value }))} className="w-full px-3 py-2 rounded text-sm text-white font-mono" style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }} placeholder="Responsable cierre" />
             </div>
             <div>
-              <label className="text-xs font-mono mb-1 block" style={{ color: '#4A6FA5' }}>Fecha Límite Cierre</label>
-              <input type="date" value={form.fecha_limite_cierre} onChange={e => setForm(p => ({ ...p, fecha_limite_cierre: e.target.value }))} className="w-full px-3 py-2 rounded text-sm text-white font-mono" style={{ background: '#0A1628', border: '1px solid #1E2D4A' }} />
+              <label className="text-xs font-mono mb-1 block" style={{ color: 'hsl(var(--muted-foreground))' }}>Fecha Límite Cierre</label>
+              <input type="date" value={form.fecha_limite_cierre} onChange={e => setForm(p => ({ ...p, fecha_limite_cierre: e.target.value }))} className="w-full px-3 py-2 rounded text-sm text-white font-mono" style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }} />
             </div>
             <div className="flex items-center gap-2 pt-5">
               <input type="checkbox" id="nc" checked={form.es_no_conformidad} onChange={e => setForm(p => ({ ...p, es_no_conformidad: e.target.checked }))} className="w-4 h-4 rounded" />
-              <label htmlFor="nc" className="text-sm font-mono" style={{ color: '#D35400' }}>Es No-Conformidad (bloquea pago)</label>
+              <label htmlFor="nc" className="text-sm font-mono" style={{ color: 'hsl(var(--danger))' }}>Es No-Conformidad (bloquea pago)</label>
             </div>
             <div className="sm:col-span-2">
-              <label className="text-xs font-mono mb-1 block" style={{ color: '#4A6FA5' }}>Descripción / Observación</label>
+              <label className="text-xs font-mono mb-1 block" style={{ color: 'hsl(var(--muted-foreground))' }}>Descripción / Observación</label>
               <textarea
                 value={form.descripcion}
                 onChange={e => setForm(p => ({ ...p, descripcion: e.target.value }))}
                 rows={3}
                 className="w-full px-3 py-2 rounded text-sm text-white font-mono resize-none"
-                style={{ background: '#0A1628', border: '1px solid #1E2D4A' }}
+                style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}
                 placeholder="Describe el hallazgo de calidad..."
               />
             </div>
           </div>
           <div className="flex gap-2">
-            <button onClick={crear} className="px-4 py-2 rounded text-sm font-medium text-white" style={{ background: '#003399' }}>
+            <button onClick={crear} className="px-4 py-2 rounded text-sm font-medium text-white" style={{ background: 'hsl(var(--primary))' }}>
               Registrar Inspección
             </button>
-            <button onClick={() => setShowForm(false)} className="px-4 py-2 rounded text-sm font-medium text-slate-400 hover:text-white" style={{ background: '#0A1628', border: '1px solid #1E2D4A' }}>
+            <button onClick={() => setShowForm(false)} className="px-4 py-2 rounded text-sm font-medium text-slate-400 hover:text-white" style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}>
               Cancelar
             </button>
           </div>
@@ -253,7 +253,7 @@ export default function QATerreno() {
                         </span>
                       </div>
                       <div className="text-sm text-white mb-1">{insp.descripcion || insp.observacion || 'Sin descripción'}</div>
-                      <div className="text-xs space-y-0.5" style={{ color: '#4A6FA5' }}>
+                      <div className="text-xs space-y-0.5" style={{ color: 'hsl(var(--muted-foreground))' }}>
                         {partida && <span>Partida: {partida.nombre} · </span>}
                         {insp.inspector && <span>Inspector: {insp.inspector} · </span>}
                         {insp.responsable && <span>Responsable: {insp.responsable}</span>}
@@ -277,32 +277,32 @@ export default function QATerreno() {
 
                 {/* Acciones según estado */}
                 {['abierta', 'en_revision'].includes(insp.estado) && (
-                  <div className="mt-3 pt-3 flex gap-2 flex-wrap" style={{ borderTop: '1px solid #1E2D4A' }}>
-                    <button onClick={() => aprobar(insp.id)} className="px-3 py-1.5 rounded text-xs font-mono text-white flex items-center gap-1" style={{ background: '#27AE60' }}>
+                  <div className="mt-3 pt-3 flex gap-2 flex-wrap" style={{ borderTop: '1px solid hsl(var(--surface-2))' }}>
+                    <button onClick={() => aprobar(insp.id)} className="px-3 py-1.5 rounded text-xs font-mono text-white flex items-center gap-1" style={{ background: 'hsl(var(--ok))' }}>
                       <CheckCircle className="w-3 h-3" /> Aprobar
                     </button>
                     <button onClick={() => rechazar(insp.id)} className="px-3 py-1.5 rounded text-xs font-mono text-orange-400 flex items-center gap-1" style={{ background: 'rgba(211,84,0,0.15)', border: '1px solid rgba(211,84,0,0.3)' }}>
                       <XCircle className="w-3 h-3" /> Rechazar (NC)
                     </button>
-                    <button onClick={() => setCerrando(insp.id)} className="px-3 py-1.5 rounded text-xs font-mono text-slate-300 flex items-center gap-1" style={{ background: '#0A1628', border: '1px solid #1E2D4A' }}>
+                    <button onClick={() => setCerrando(insp.id)} className="px-3 py-1.5 rounded text-xs font-mono text-slate-300 flex items-center gap-1" style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}>
                       Cerrar con evidencia
                     </button>
                   </div>
                 )}
 
                 {cerrando === insp.id && (
-                  <div className="mt-3 flex gap-2" style={{ borderTop: '1px solid #1E2D4A', paddingTop: '12px' }}>
+                  <div className="mt-3 flex gap-2" style={{ borderTop: '1px solid hsl(var(--surface-2))', paddingTop: '12px' }}>
                     <input
                       value={evidencia}
                       onChange={e => setEvidencia(e.target.value)}
                       placeholder="URL de evidencia fotográfica (requerida)"
                       className="flex-1 px-3 py-1.5 rounded text-xs font-mono text-white"
-                      style={{ background: '#0A1628', border: '1px solid #1E2D4A' }}
+                      style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}
                     />
-                    <button onClick={() => cerrarInspeccion(insp.id)} className="px-3 py-1.5 rounded text-xs font-mono text-white" style={{ background: '#003399' }}>
+                    <button onClick={() => cerrarInspeccion(insp.id)} className="px-3 py-1.5 rounded text-xs font-mono text-white" style={{ background: 'hsl(var(--primary))' }}>
                       Registrar Cierre
                     </button>
-                    <button onClick={() => setCerrando(null)} className="px-2 py-1.5 rounded text-xs font-mono text-slate-400" style={{ background: '#0A1628', border: '1px solid #1E2D4A' }}>✕</button>
+                    <button onClick={() => setCerrando(null)} className="px-2 py-1.5 rounded text-xs font-mono text-slate-400" style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}>✕</button>
                   </div>
                 )}
               </OrionCard>

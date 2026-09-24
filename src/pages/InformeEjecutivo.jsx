@@ -117,20 +117,20 @@ Entrega:
     <div className="p-4 lg:p-6 space-y-5">
       <div className="flex items-start justify-between gap-3 flex-wrap">
         <div>
-          <div className="font-mono text-xs mb-1" style={{ color: '#4A6FA5' }}>MÓDULO P1 · ALTA DIRECCIÓN</div>
+          <div className="font-mono text-xs mb-1" style={{ color: 'hsl(var(--muted-foreground))' }}>MÓDULO P1 · ALTA DIRECCIÓN</div>
           <h1 className="text-xl font-bold text-white">Informe Ejecutivo — Síntesis Inteligente</h1>
         </div>
         <div className="flex items-center gap-2">
           {proyectos.length > 1 && (
             <select value={proyectoId} onChange={e => setProyectoId(e.target.value)}
               className="px-3 py-2 rounded text-sm text-white font-mono"
-              style={{ background: '#0A1628', border: '1px solid #1E2D4A' }}>
+              style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}>
               {proyectos.map(p => <option key={p.id} value={p.id}>{p.nombre}</option>)}
             </select>
           )}
           <button onClick={generar} disabled={generando || !proyectoId}
             className="flex items-center gap-2 px-3 py-2 rounded text-sm font-medium text-white disabled:opacity-50"
-            style={{ background: '#003399' }}>
+            style={{ background: 'hsl(var(--primary))' }}>
             {generando ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
             {generando ? 'Analizando obra...' : 'Generar informe'}
           </button>
@@ -148,7 +148,7 @@ Entrega:
         <OrionCard className="p-8 text-center">
           <FileBarChart className="w-10 h-10 mx-auto mb-3 opacity-20 text-slate-400" />
           <p className="text-slate-500 font-mono text-xs mb-1">SIN INFORMES GENERADOS</p>
-          <p className="text-xs" style={{ color: '#4A6FA5' }}>Orion consolidará avance, calidad, RDIs, pagos y alertas en un informe listo para directorio.</p>
+          <p className="text-xs" style={{ color: 'hsl(var(--muted-foreground))' }}>Orion consolidará avance, calidad, RDIs, pagos y alertas en un informe listo para directorio.</p>
         </OrionCard>
       ) : (
         <div className="space-y-4">

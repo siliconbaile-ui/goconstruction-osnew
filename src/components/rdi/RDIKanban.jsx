@@ -3,9 +3,9 @@ import { GripVertical } from 'lucide-react';
 import { prioridadColor, formatFecha } from '@/lib/orionUtils';
 
 const COLUMNAS = [
-  { id: 'pendiente', titulo: 'PENDIENTE', estados: ['abierto', 'vencido'], drop: 'abierto', color: '#F39C12' },
-  { id: 'en_progreso', titulo: 'EN PROGRESO', estados: ['en_revision'], drop: 'en_revision', color: '#5B8DEF' },
-  { id: 'resuelto', titulo: 'RESUELTO', estados: ['respondido', 'cerrado'], drop: 'respondido', color: '#27AE60' },
+  { id: 'pendiente', titulo: 'PENDIENTE', estados: ['abierto', 'vencido'], drop: 'abierto', color: 'hsl(var(--warn))' },
+  { id: 'en_progreso', titulo: 'EN PROGRESO', estados: ['en_revision'], drop: 'en_revision', color: 'hsl(var(--info))' },
+  { id: 'resuelto', titulo: 'RESUELTO', estados: ['respondido', 'cerrado'], drop: 'respondido', color: 'hsl(var(--ok))' },
 ];
 
 export default function RDIKanban({ rdis, partidas, onMove }) {
@@ -23,11 +23,11 @@ export default function RDIKanban({ rdis, partidas, onMove }) {
         {COLUMNAS.map(col => {
           const items = rdis.filter(r => col.estados.includes(r.estado));
           return (
-            <div key={col.id} className="rounded-lg" style={{ background: '#0A1120', border: '1px solid #1E2D4A' }}>
-              <div className="flex items-center gap-2 px-3 py-2.5" style={{ borderBottom: '1px solid #1E2D4A' }}>
+            <div key={col.id} className="rounded-lg" style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}>
+              <div className="flex items-center gap-2 px-3 py-2.5" style={{ borderBottom: '1px solid hsl(var(--surface-2))' }}>
                 <span className="w-2 h-2 rounded-full" style={{ background: col.color }} />
                 <span className="font-mono text-[11px] tracking-wider text-white">{col.titulo}</span>
-                <span className="ml-auto font-mono text-[10px] px-1.5 py-0.5 rounded" style={{ background: '#0D1526', color: '#4A6FA5', border: '1px solid #1E2D4A' }}>
+                <span className="ml-auto font-mono text-[10px] px-1.5 py-0.5 rounded" style={{ background: 'hsl(var(--surface-0))', color: 'hsl(var(--muted-foreground))', border: '1px solid hsl(var(--surface-2))' }}>
                   {items.length}
                 </span>
               </div>
@@ -40,7 +40,7 @@ export default function RDIKanban({ rdis, partidas, onMove }) {
                     style={snapshot.isDraggingOver ? { background: 'rgba(0,51,153,0.08)' } : {}}
                   >
                     {items.length === 0 && !snapshot.isDraggingOver && (
-                      <div className="text-center py-8 font-mono text-[10px]" style={{ color: '#2D4A6E' }}>
+                      <div className="text-center py-8 font-mono text-[10px]" style={{ color: 'hsl(var(--surface-2))' }}>
                         ARRASTRA UNA TARJETA AQUÍ
                       </div>
                     )}
@@ -55,21 +55,21 @@ export default function RDIKanban({ rdis, partidas, onMove }) {
                               {...prov.dragHandleProps}
                               className="rounded-lg p-3"
                               style={{
-                                background: '#0D1526',
-                                border: `1px solid ${snap.isDragging ? '#003399' : '#1E2D4A'}`,
+                                background: 'hsl(var(--surface-0))',
+                                border: `1px solid ${snap.isDragging ? 'hsl(var(--primary))' : 'hsl(var(--surface-2))'}`,
                                 boxShadow: snap.isDragging ? '0 8px 24px rgba(0,0,0,0.5)' : 'none',
                                 ...prov.draggableProps.style,
                               }}
                             >
                               <div className="flex items-center gap-2 mb-1.5">
-                                <GripVertical className="w-3 h-3 flex-shrink-0" style={{ color: '#2D4A6E' }} />
+                                <GripVertical className="w-3 h-3 flex-shrink-0" style={{ color: 'hsl(var(--surface-2))' }} />
                                 <span className="font-mono text-[11px] font-bold text-white">{rdi.numero_rdi || '—'}</span>
                                 <span className={`ml-auto px-1.5 py-0.5 rounded text-[9px] font-mono border ${prioridadColor(rdi.prioridad)}`}>
                                   {rdi.prioridad?.toUpperCase()}
                                 </span>
                               </div>
                               <div className="text-xs font-medium text-white leading-snug mb-1.5">{rdi.titulo}</div>
-                              <div className="space-y-0.5 font-mono text-[10px]" style={{ color: '#4A6FA5' }}>
+                              <div className="space-y-0.5 font-mono text-[10px]" style={{ color: 'hsl(var(--muted-foreground))' }}>
                                 {partida && <div className="truncate">◆ {partida.nombre}</div>}
                                 {rdi.especialista_asignado
                                   ? <div>→ {rdi.especialista_asignado}</div>

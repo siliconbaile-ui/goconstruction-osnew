@@ -80,13 +80,13 @@ export default function Configuracion() {
 
   const Field = ({ label, field, type = 'text', options }) => (
     <div>
-      <label className="text-xs font-mono mb-1 block" style={{ color: '#4A6FA5' }}>{label}</label>
+      <label className="text-xs font-mono mb-1 block" style={{ color: 'hsl(var(--muted-foreground))' }}>{label}</label>
       {options ? (
         <select
           value={editando?.[field] || ''}
           onChange={e => setEditando(prev => ({ ...prev, [field]: e.target.value }))}
           className="w-full px-3 py-2 rounded text-sm text-white font-mono"
-          style={{ background: '#0A1628', border: '1px solid #1E2D4A' }}
+          style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}
         >
           {options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
         </select>
@@ -96,7 +96,7 @@ export default function Configuracion() {
           value={editando?.[field] || ''}
           onChange={e => setEditando(prev => ({ ...prev, [field]: type === 'number' ? +e.target.value : e.target.value }))}
           className="w-full px-3 py-2 rounded text-sm text-white font-mono"
-          style={{ background: '#0A1628', border: '1px solid #1E2D4A' }}
+          style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}
         />
       )}
     </div>
@@ -106,14 +106,14 @@ export default function Configuracion() {
     <div className="p-4 lg:p-6 space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <div className="font-mono text-xs mb-1" style={{ color: '#4A6FA5' }}>MÓDULO P2 · ASISTIDO</div>
+          <div className="font-mono text-xs mb-1" style={{ color: 'hsl(var(--muted-foreground))' }}>MÓDULO P2 · ASISTIDO</div>
           <h1 className="text-xl font-bold text-white">Motor de Onboarding de Obra Piloto</h1>
         </div>
         <div className="flex gap-2">
-          <Link to="/onboarding" className="flex items-center gap-2 px-3 py-2 rounded text-sm font-medium text-slate-300" style={{ background: '#0D1526', border: '1px solid #1E2D4A' }}>
+          <Link to="/onboarding" className="flex items-center gap-2 px-3 py-2 rounded text-sm font-medium text-slate-300" style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}>
             <Rocket className="w-4 h-4" /> Incorporar Empresa
           </Link>
-          <button onClick={() => setShowNew(true)} className="flex items-center gap-2 px-3 py-2 rounded text-sm font-medium text-white" style={{ background: '#003399' }}>
+          <button onClick={() => setShowNew(true)} className="flex items-center gap-2 px-3 py-2 rounded text-sm font-medium text-white" style={{ background: 'hsl(var(--primary))' }}>
             <Plus className="w-4 h-4" /> Nueva Obra
           </button>
         </div>
@@ -132,7 +132,7 @@ export default function Configuracion() {
               key={p.id}
               onClick={() => setEditando(p)}
               className={`px-3 py-1.5 rounded text-xs font-mono whitespace-nowrap transition-colors ${editando?.id === p.id ? 'text-white' : 'text-slate-400 hover:text-white'}`}
-              style={editando?.id === p.id ? { background: '#003399' } : { background: '#0D1526', border: '1px solid #1E2D4A' }}
+              style={editando?.id === p.id ? { background: 'hsl(var(--primary))' } : { background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}
             >
               {p.nombre}
             </button>
@@ -143,7 +143,7 @@ export default function Configuracion() {
       {/* Nueva obra form */}
       {showNew && (
         <OrionCard className="p-5">
-          <div className="font-mono text-xs mb-4 uppercase" style={{ color: '#4A6FA5' }}>CONFIGURAR NUEVA OBRA</div>
+          <div className="font-mono text-xs mb-4 uppercase" style={{ color: 'hsl(var(--muted-foreground))' }}>CONFIGURAR NUEVA OBRA</div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
             {[
               { key: 'nombre', label: 'Nombre de Obra *', type: 'text' },
@@ -156,16 +156,16 @@ export default function Configuracion() {
               { key: 'fecha_fin_programada', label: 'Fecha Fin Programada', type: 'date' },
             ].map(f => (
               <div key={f.key}>
-                <label className="text-xs font-mono mb-1 block" style={{ color: '#4A6FA5' }}>{f.label}</label>
-                <input type={f.type} value={form[f.key]} onChange={e => setForm(p => ({ ...p, [f.key]: f.type === 'number' ? +e.target.value : e.target.value }))} className="w-full px-3 py-2 rounded text-sm text-white font-mono" style={{ background: '#0A1628', border: '1px solid #1E2D4A' }} />
+                <label className="text-xs font-mono mb-1 block" style={{ color: 'hsl(var(--muted-foreground))' }}>{f.label}</label>
+                <input type={f.type} value={form[f.key]} onChange={e => setForm(p => ({ ...p, [f.key]: f.type === 'number' ? +e.target.value : e.target.value }))} className="w-full px-3 py-2 rounded text-sm text-white font-mono" style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }} />
               </div>
             ))}
           </div>
           <div className="flex gap-2">
-            <button onClick={crear} disabled={guardando} className="px-4 py-2 rounded text-sm font-medium text-white" style={{ background: '#003399' }}>
+            <button onClick={crear} disabled={guardando} className="px-4 py-2 rounded text-sm font-medium text-white" style={{ background: 'hsl(var(--primary))' }}>
               {guardando ? 'Creando...' : 'Crear Obra'}
             </button>
-            <button onClick={() => setShowNew(false)} className="px-4 py-2 rounded text-sm font-medium text-slate-400" style={{ background: '#0A1628', border: '1px solid #1E2D4A' }}>Cancelar</button>
+            <button onClick={() => setShowNew(false)} className="px-4 py-2 rounded text-sm font-medium text-slate-400" style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}>Cancelar</button>
           </div>
         </OrionCard>
       )}
@@ -176,8 +176,8 @@ export default function Configuracion() {
         <OrionCard className="p-12 text-center">
           <Building2 className="w-12 h-12 mx-auto mb-4 opacity-20 text-slate-400" />
           <p className="text-white font-semibold mb-2">Sin obras configuradas</p>
-          <p className="text-sm mb-4" style={{ color: '#4A6FA5' }}>Crea la primera obra para activar el Centro de Comando.</p>
-          <button onClick={() => setShowNew(true)} className="px-4 py-2 rounded text-sm font-medium text-white" style={{ background: '#003399' }}>
+          <p className="text-sm mb-4" style={{ color: 'hsl(var(--muted-foreground))' }}>Crea la primera obra para activar el Centro de Comando.</p>
+          <button onClick={() => setShowNew(true)} className="px-4 py-2 rounded text-sm font-medium text-white" style={{ background: 'hsl(var(--primary))' }}>
             + Nueva Obra
           </button>
         </OrionCard>
@@ -185,7 +185,7 @@ export default function Configuracion() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
           {/* Checklist */}
           <OrionCard className="p-5">
-            <div className="font-mono text-xs mb-4 uppercase" style={{ color: '#4A6FA5' }}>COMPLETITUD DE CONFIGURACIÓN</div>
+            <div className="font-mono text-xs mb-4 uppercase" style={{ color: 'hsl(var(--muted-foreground))' }}>COMPLETITUD DE CONFIGURACIÓN</div>
             <div className="mb-4">
               <div className="flex justify-between items-center mb-2">
                 <span className="font-mono text-sm text-white font-bold">{pctCompletitud}%</span>
@@ -197,16 +197,16 @@ export default function Configuracion() {
                   {pctCompletitud >= 80 ? 'OPERATIVA' : 'EN CONFIG.'}
                 </span>
               </div>
-              <div className="w-full rounded-full h-2" style={{ background: '#0A1628' }}>
+              <div className="w-full rounded-full h-2" style={{ background: 'hsl(var(--surface-0))' }}>
                 <div
                   className="h-2 rounded-full transition-all"
                   style={{
                     width: `${pctCompletitud}%`,
-                    background: pctCompletitud >= 80 ? '#27AE60' : pctCompletitud >= 50 ? '#F39C12' : '#D35400'
+                    background: pctCompletitud >= 80 ? 'hsl(var(--ok))' : pctCompletitud >= 50 ? 'hsl(var(--warn))' : 'hsl(var(--danger))'
                   }}
                 />
               </div>
-              <p className="text-xs mt-2" style={{ color: '#4A6FA5' }}>
+              <p className="text-xs mt-2" style={{ color: 'hsl(var(--muted-foreground))' }}>
                 Mínimo 80% requerido para activar módulos.
               </p>
             </div>
@@ -217,9 +217,9 @@ export default function Configuracion() {
                   <div key={item.key} className="flex items-center gap-2 text-xs">
                     {ok
                       ? <CheckCircle className="w-3.5 h-3.5 flex-shrink-0 text-emerald-400" />
-                      : <div className="w-3.5 h-3.5 rounded-full border flex-shrink-0" style={{ borderColor: '#D35400' }} />
+                      : <div className="w-3.5 h-3.5 rounded-full border flex-shrink-0" style={{ borderColor: 'hsl(var(--danger))' }} />
                     }
-                    <span style={{ color: ok ? '#fff' : '#4A6FA5' }}>{item.label}</span>
+                    <span style={{ color: ok ? '#fff' : 'hsl(var(--muted-foreground))' }}>{item.label}</span>
                   </div>
                 );
               })}
@@ -229,7 +229,7 @@ export default function Configuracion() {
           {/* Configuración */}
           <div className="lg:col-span-2 space-y-4">
             <OrionCard className="p-5">
-              <div className="font-mono text-xs mb-4 uppercase" style={{ color: '#4A6FA5' }}>DATOS DE LA OBRA</div>
+              <div className="font-mono text-xs mb-4 uppercase" style={{ color: 'hsl(var(--muted-foreground))' }}>DATOS DE LA OBRA</div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Field label="Nombre de Obra" field="nombre" />
                 <Field label="Código Interno" field="codigo" />
@@ -255,17 +255,17 @@ export default function Configuracion() {
                 ]} />
               </div>
               <div className="mt-3">
-                <label className="text-xs font-mono mb-1 block" style={{ color: '#4A6FA5' }}>Descripción</label>
+                <label className="text-xs font-mono mb-1 block" style={{ color: 'hsl(var(--muted-foreground))' }}>Descripción</label>
                 <textarea
                   value={editando?.descripcion || ''}
                   onChange={e => setEditando(prev => ({ ...prev, descripcion: e.target.value }))}
                   rows={3}
                   className="w-full px-3 py-2 rounded text-sm text-white font-mono resize-none"
-                  style={{ background: '#0A1628', border: '1px solid #1E2D4A' }}
+                  style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}
                 />
               </div>
               <div className="mt-4">
-                <button onClick={guardar} disabled={guardando} className="px-4 py-2 rounded text-sm font-medium text-white flex items-center gap-2" style={{ background: '#003399' }}>
+                <button onClick={guardar} disabled={guardando} className="px-4 py-2 rounded text-sm font-medium text-white flex items-center gap-2" style={{ background: 'hsl(var(--primary))' }}>
                   {guardando ? <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />Guardando...</> : <><CheckCircle className="w-4 h-4" />Guardar Configuración</>}
                 </button>
               </div>

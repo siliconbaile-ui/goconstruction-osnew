@@ -32,15 +32,15 @@ export default function EvidenciaGrid({ inspecciones, partidas }) {
                 <span className="px-2 py-0.5 rounded text-[10px] font-mono border bg-blue-500/10 text-blue-400 border-blue-500/30">{i.estado?.toUpperCase()}</span>
               </div>
               <div className="text-sm text-white leading-snug">{i.descripcion || '—'}</div>
-              {i.observacion && <div className="text-xs whitespace-pre-line" style={{ color: '#4A6FA5' }}>{i.observacion}</div>}
-              <div className="flex flex-wrap gap-x-3 gap-y-1 font-mono text-[10px]" style={{ color: '#2D4A6E' }}>
+              {i.observacion && <div className="text-xs whitespace-pre-line" style={{ color: 'hsl(var(--muted-foreground))' }}>{i.observacion}</div>}
+              <div className="flex flex-wrap gap-x-3 gap-y-1 font-mono text-[10px]" style={{ color: 'hsl(var(--surface-2))' }}>
                 {i.coordenadas_gps ? (
                   <a href={`https://www.google.com/maps?q=${encodeURIComponent(i.coordenadas_gps)}`} target="_blank" rel="noreferrer"
-                    className="flex items-center gap-1" style={{ color: '#27AE60' }}>
+                    className="flex items-center gap-1" style={{ color: 'hsl(var(--ok))' }}>
                     <MapPin className="w-3 h-3" /> {i.coordenadas_gps}
                   </a>
                 ) : (
-                  <span className="flex items-center gap-1" style={{ color: '#D35400' }}><MapPin className="w-3 h-3" /> SIN GPS</span>
+                  <span className="flex items-center gap-1" style={{ color: 'hsl(var(--danger))' }}><MapPin className="w-3 h-3" /> SIN GPS</span>
                 )}
                 {partida && <span>{partida.nombre}</span>}
                 <span>{formatFecha(i.created_date)}</span>

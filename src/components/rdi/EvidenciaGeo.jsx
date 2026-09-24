@@ -40,25 +40,25 @@ export default function EvidenciaGeo({ valor, onChange }) {
 
   return (
     <div>
-      <label className="text-xs font-mono mb-1 block" style={{ color: '#4A6FA5' }}>Evidencia georreferenciada</label>
+      <label className="text-xs font-mono mb-1 block" style={{ color: 'hsl(var(--muted-foreground))' }}>Evidencia georreferenciada</label>
       <input ref={inputRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={capturar} />
 
       {!valor.evidencia_url ? (
         <button onClick={() => inputRef.current?.click()} disabled={cargando}
           className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded text-sm text-white disabled:opacity-50"
-          style={{ background: 'rgba(0,51,153,0.2)', border: '1px dashed #1E2D4A' }}>
+          style={{ background: 'rgba(0,51,153,0.2)', border: '1px dashed hsl(var(--surface-2))' }}>
           {cargando ? <Loader2 className="w-4 h-4 animate-spin" /> : <Camera className="w-4 h-4" />}
           {cargando ? 'Subiendo foto y leyendo GPS...' : 'Tomar foto en terreno'}
         </button>
       ) : (
-        <div className="flex items-center gap-3 p-2 rounded" style={{ background: '#0A1628', border: '1px solid #1E2D4A' }}>
+        <div className="flex items-center gap-3 p-2 rounded" style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}>
           <img src={valor.evidencia_url} alt="Evidencia" className="w-12 h-12 object-cover rounded flex-shrink-0" />
-          <div className="flex-1 min-w-0 font-mono text-[10px]" style={{ color: valor.coordenadas_gps ? '#27AE60' : '#D35400' }}>
+          <div className="flex-1 min-w-0 font-mono text-[10px]" style={{ color: valor.coordenadas_gps ? 'hsl(var(--ok))' : 'hsl(var(--danger))' }}>
             <div className="flex items-center gap-1 truncate">
               <MapPin className="w-3 h-3 flex-shrink-0" />
               {valor.coordenadas_gps || 'SIN GPS'}
             </div>
-            {valor.precision_gps_m ? <div style={{ color: '#4A6FA5' }}>±{valor.precision_gps_m} m</div> : null}
+            {valor.precision_gps_m ? <div style={{ color: 'hsl(var(--muted-foreground))' }}>±{valor.precision_gps_m} m</div> : null}
           </div>
           <button onClick={() => onChange({ evidencia_url: '', coordenadas_gps: '', precision_gps_m: undefined })}
             className="p-1.5 rounded text-slate-400 hover:text-white flex-shrink-0">
@@ -66,7 +66,7 @@ export default function EvidenciaGeo({ valor, onChange }) {
           </button>
         </div>
       )}
-      {error && <p className="mt-1 text-[10px]" style={{ color: '#D35400' }}>{error}</p>}
+      {error && <p className="mt-1 text-[10px]" style={{ color: 'hsl(var(--danger))' }}>{error}</p>}
     </div>
   );
 }

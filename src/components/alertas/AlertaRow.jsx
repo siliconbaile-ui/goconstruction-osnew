@@ -21,54 +21,54 @@ export default function AlertaRow({ alerta, partida, horas, busy, onReconocer, o
             <span className="px-2 py-0.5 rounded text-[10px] font-mono" style={{ background: nivel.bg, color: nivel.color, border: `1px solid ${nivel.border}` }}>
               {nivel.label}
             </span>
-            <span className="font-mono text-[10px] uppercase tracking-wider" style={{ color: '#4A6FA5' }}>
+            <span className="font-mono text-[10px] uppercase tracking-wider" style={{ color: 'hsl(var(--muted-foreground))' }}>
               {TIPO_META[alerta.tipo]?.label || alerta.tipo}
             </span>
             {alerta.escalada && (
-              <span className="px-2 py-0.5 rounded text-[10px] font-mono flex items-center gap-1" style={{ background: 'rgba(211,84,0,0.1)', color: '#D35400', border: '1px solid rgba(211,84,0,0.3)' }}>
+              <span className="px-2 py-0.5 rounded text-[10px] font-mono flex items-center gap-1" style={{ background: 'rgba(211,84,0,0.1)', color: 'hsl(var(--danger))', border: '1px solid rgba(211,84,0,0.3)' }}>
                 <ArrowUpCircle className="w-3 h-3" /> ESCALADA
               </span>
             )}
             {stale && (
-              <span className="px-2 py-0.5 rounded text-[10px] font-mono flex items-center gap-1" style={{ background: 'rgba(211,84,0,0.1)', color: '#D35400', border: '1px solid rgba(211,84,0,0.3)' }}>
+              <span className="px-2 py-0.5 rounded text-[10px] font-mono flex items-center gap-1" style={{ background: 'rgba(211,84,0,0.1)', color: 'hsl(var(--danger))', border: '1px solid rgba(211,84,0,0.3)' }}>
                 <Clock className="w-3 h-3" /> {Math.floor(horas)}H SIN RESPUESTA
               </span>
             )}
           </div>
 
           <div className="text-sm font-medium text-white leading-snug">{alerta.titulo}</div>
-          {alerta.mensaje && <div className="text-xs mt-1" style={{ color: '#7A97BD' }}>{alerta.mensaje}</div>}
+          {alerta.mensaje && <div className="text-xs mt-1" style={{ color: 'hsl(var(--muted-foreground))' }}>{alerta.mensaje}</div>}
 
-          <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-[11px] font-mono" style={{ color: '#4A6FA5' }}>
+          <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-[11px] font-mono" style={{ color: 'hsl(var(--muted-foreground))' }}>
             <span>Destinatario: {ROL_LABEL[alerta.destinatario_rol] || alerta.destinatario_rol}</span>
             {partida && <span>Partida: {partida.nombre}</span>}
             <span>Hace {horas < 1 ? '<1' : Math.floor(horas)}h</span>
           </div>
 
           {abierta && (
-            <div className="flex flex-wrap gap-2 mt-3 pt-3" style={{ borderTop: '1px solid #1E2D4A' }}>
+            <div className="flex flex-wrap gap-2 mt-3 pt-3" style={{ borderTop: '1px solid hsl(var(--surface-2))' }}>
               {alerta.estado === 'activa' && (
                 <button onClick={() => onReconocer(alerta)} disabled={busy}
                   className="px-3 py-1.5 rounded text-xs font-mono flex items-center gap-1 disabled:opacity-50"
-                  style={{ background: 'rgba(243,156,18,0.1)', border: '1px solid rgba(243,156,18,0.3)', color: '#F39C12' }}>
+                  style={{ background: 'rgba(243,156,18,0.1)', border: '1px solid rgba(243,156,18,0.3)', color: 'hsl(var(--warn))' }}>
                   <Eye className="w-3 h-3" /> Reconocer
                 </button>
               )}
               <button onClick={() => onResolver(alerta)} disabled={busy}
                 className="px-3 py-1.5 rounded text-xs font-mono flex items-center gap-1 disabled:opacity-50"
-                style={{ background: 'rgba(39,174,96,0.1)', border: '1px solid rgba(39,174,96,0.3)', color: '#27AE60' }}>
+                style={{ background: 'rgba(39,174,96,0.1)', border: '1px solid rgba(39,174,96,0.3)', color: 'hsl(var(--ok))' }}>
                 <CheckCircle className="w-3 h-3" /> Resolver
               </button>
               {!alerta.escalada && alerta.destinatario_rol !== 'alta_direccion' && (
                 <button onClick={() => onEscalar(alerta)} disabled={busy}
                   className="px-3 py-1.5 rounded text-xs font-mono text-white flex items-center gap-1 disabled:opacity-50"
-                  style={{ background: '#003399' }}>
+                  style={{ background: 'hsl(var(--primary))' }}>
                   {busy ? <Loader2 className="w-3 h-3 animate-spin" /> : <ArrowUpCircle className="w-3 h-3" />} Escalar
                 </button>
               )}
               <button onClick={() => onArchivar(alerta)} disabled={busy}
                 className="px-3 py-1.5 rounded text-xs font-mono flex items-center gap-1 disabled:opacity-50"
-                style={{ background: '#0A1628', border: '1px solid #1E2D4A', color: '#4A6FA5' }}>
+                style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))', color: 'hsl(var(--muted-foreground))' }}>
                 <Archive className="w-3 h-3" /> Archivar
               </button>
             </div>

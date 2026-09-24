@@ -21,9 +21,9 @@ const OK = ['aprobado', 'aprobada', 'cerrado', 'cerrada', 'completada', 'verde',
 
 function badgeStyle(valor) {
   const v = String(valor).toLowerCase();
-  if (CRITICO.includes(v)) return { background: 'rgba(211,84,0,0.1)', color: '#C24A00', border: '1px solid rgba(211,84,0,0.3)' };
-  if (OK.includes(v)) return { background: 'rgba(39,174,96,0.1)', color: '#1E8A4C', border: '1px solid rgba(39,174,96,0.3)' };
-  return { background: '#F1F4FB', color: '#003399', border: '1px solid #DCE4F6' };
+  if (CRITICO.includes(v)) return { background: 'rgba(211,84,0,0.1)', color: 'hsl(var(--danger))', border: '1px solid rgba(211,84,0,0.3)' };
+  if (OK.includes(v)) return { background: 'rgba(39,174,96,0.1)', color: 'hsl(var(--ok))', border: '1px solid rgba(39,174,96,0.3)' };
+  return { background: 'hsl(var(--surface-2))', color: 'hsl(var(--primary))', border: '1px solid hsl(var(--surface-2))' };
 }
 
 export default function SmartDataCard({ records }) {
@@ -32,7 +32,7 @@ export default function SmartDataCard({ records }) {
 
   return (
     <div className="space-y-2">
-      <div className="text-[10px] font-mono tracking-widest" style={{ color: '#8A94A6' }}>
+      <div className="text-[10px] font-mono tracking-widest" style={{ color: 'hsl(var(--muted-foreground))' }}>
         {records.length} REGISTRO{records.length !== 1 ? 'S' : ''} · DATOS EN VIVO
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -41,7 +41,7 @@ export default function SmartDataCard({ records }) {
           const badges = BADGE_KEYS.filter(k => r[k] !== undefined && r[k] !== null && r[k] !== '').slice(0, 3);
           const rows = ROW_KEYS.filter(([k]) => r[k] !== undefined && r[k] !== null && r[k] !== '').slice(0, 4);
           return (
-            <div key={r.id || i} className="rounded-xl p-3" style={{ background: '#FFFFFF', border: '1px solid #E9E6E1' }}>
+            <div key={r.id || i} className="rounded-xl p-3" style={{ background: 'hsl(var(--foreground))', border: '1px solid hsl(var(--surface-1))' }}>
               <div className="flex flex-wrap gap-1 mb-1.5">
                 {badges.map(k => (
                   <span key={k} className="px-1.5 py-0.5 rounded text-[9px] font-mono uppercase" style={badgeStyle(r[k])}>
@@ -49,15 +49,15 @@ export default function SmartDataCard({ records }) {
                   </span>
                 ))}
               </div>
-              <div className="text-xs font-semibold leading-snug mb-1.5" style={{ color: '#141821' }}>
+              <div className="text-xs font-semibold leading-snug mb-1.5" style={{ color: 'hsl(var(--foreground))' }}>
                 {titleKey ? String(r[titleKey]).slice(0, 120) : r.id || '—'}
               </div>
               {rows.length > 0 && (
                 <div className="space-y-0.5">
                   {rows.map(([k, label, fmt]) => (
                     <div key={k} className="flex justify-between gap-2 text-[10px]">
-                      <span className="font-mono" style={{ color: '#A8B0BF' }}>{label}</span>
-                      <span className="font-medium text-right truncate" style={{ color: '#41485A' }}>{String(fmt(r[k])).slice(0, 60)}</span>
+                      <span className="font-mono" style={{ color: 'hsl(var(--muted-foreground))' }}>{label}</span>
+                      <span className="font-medium text-right truncate" style={{ color: 'hsl(var(--muted-foreground))' }}>{String(fmt(r[k])).slice(0, 60)}</span>
                     </div>
                   ))}
                 </div>
@@ -67,7 +67,7 @@ export default function SmartDataCard({ records }) {
         })}
       </div>
       {resto > 0 && (
-        <div className="text-[10px] font-mono" style={{ color: '#A8B0BF' }}>+ {resto} registro(s) más — pídeme el detalle</div>
+        <div className="text-[10px] font-mono" style={{ color: 'hsl(var(--muted-foreground))' }}>+ {resto} registro(s) más — pídeme el detalle</div>
       )}
     </div>
   );

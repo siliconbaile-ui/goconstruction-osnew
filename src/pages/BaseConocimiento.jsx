@@ -113,21 +113,21 @@ Entrega:
   return (
     <div className="p-4 lg:p-6 space-y-5">
       <div>
-        <div className="font-mono text-xs mb-1" style={{ color: '#4A6FA5' }}>MÓDULO 2 · MOTOR RAG Y VERIFICACIÓN</div>
+        <div className="font-mono text-xs mb-1" style={{ color: 'hsl(var(--muted-foreground))' }}>MÓDULO 2 · MOTOR RAG Y VERIFICACIÓN</div>
         <h1 className="text-xl font-bold text-white">Base de Conocimiento Técnico</h1>
-        <p className="text-sm mt-1" style={{ color: '#4A6FA5' }}>
+        <p className="text-sm mt-1" style={{ color: 'hsl(var(--muted-foreground))' }}>
           Planos, EETT y normativas indexadas. Toda respuesta cita la página exacta del documento original.
         </p>
       </div>
 
       <div className="grid grid-cols-3 gap-3">
         {[
-          { label: 'DOCUMENTOS', value: visibles.length, color: '#4A6FA5', icon: BookOpen },
-          { label: 'INDEXADOS', value: indexados, color: indexados === visibles.length && visibles.length > 0 ? '#27AE60' : '#F39C12', icon: Database },
-          { label: 'PÁGINAS INDEXADAS', value: paginas, color: '#5B8DEF', icon: BookOpen },
+          { label: 'DOCUMENTOS', value: visibles.length, color: 'hsl(var(--muted-foreground))', icon: BookOpen },
+          { label: 'INDEXADOS', value: indexados, color: indexados === visibles.length && visibles.length > 0 ? 'hsl(var(--ok))' : 'hsl(var(--warn))', icon: Database },
+          { label: 'PÁGINAS INDEXADAS', value: paginas, color: 'hsl(var(--info))', icon: BookOpen },
         ].map(s => (
           <OrionCard key={s.label} className="p-4">
-            <div className="font-mono text-[10px] uppercase tracking-wider mb-2" style={{ color: '#4A6FA5' }}>{s.label}</div>
+            <div className="font-mono text-[10px] uppercase tracking-wider mb-2" style={{ color: 'hsl(var(--muted-foreground))' }}>{s.label}</div>
             <div className="text-2xl font-bold" style={{ color: s.color }}>{s.value}</div>
           </OrionCard>
         ))}
@@ -136,27 +136,27 @@ Entrega:
       <ConsultaTecnica proyectoId={proyectoId} />
 
       <OrionCard className="p-5">
-        <div className="font-mono text-xs mb-4 uppercase" style={{ color: '#4A6FA5' }}>INGESTA DE DOCUMENTOS TÉCNICOS</div>
+        <div className="font-mono text-xs mb-4 uppercase" style={{ color: 'hsl(var(--muted-foreground))' }}>INGESTA DE DOCUMENTOS TÉCNICOS</div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
           <div>
-            <label className="text-xs font-mono mb-1 block" style={{ color: '#4A6FA5' }}>Obra</label>
+            <label className="text-xs font-mono mb-1 block" style={{ color: 'hsl(var(--muted-foreground))' }}>Obra</label>
             <select value={proyectoId} onChange={e => setProyectoId(e.target.value)}
-              className="w-full px-3 py-2 rounded text-sm text-white font-mono" style={{ background: '#0A1628', border: '1px solid #1E2D4A' }}>
+              className="w-full px-3 py-2 rounded text-sm text-white font-mono" style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}>
               <option value="">Todas</option>
               {proyectos.map(p => <option key={p.id} value={p.id}>{p.nombre}</option>)}
             </select>
           </div>
           <div>
-            <label className="text-xs font-mono mb-1 block" style={{ color: '#4A6FA5' }}>Tipo</label>
+            <label className="text-xs font-mono mb-1 block" style={{ color: 'hsl(var(--muted-foreground))' }}>Tipo</label>
             <select value={tipo} onChange={e => setTipo(e.target.value)}
-              className="w-full px-3 py-2 rounded text-sm text-white font-mono" style={{ background: '#0A1628', border: '1px solid #1E2D4A' }}>
+              className="w-full px-3 py-2 rounded text-sm text-white font-mono" style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}>
               {TIPOS.map(t => <option key={t} value={t}>{t}</option>)}
             </select>
           </div>
           <div>
-            <label className="text-xs font-mono mb-1 block" style={{ color: '#4A6FA5' }}>Especialidad</label>
+            <label className="text-xs font-mono mb-1 block" style={{ color: 'hsl(var(--muted-foreground))' }}>Especialidad</label>
             <select value={especialidad} onChange={e => setEspecialidad(e.target.value)}
-              className="w-full px-3 py-2 rounded text-sm text-white font-mono" style={{ background: '#0A1628', border: '1px solid #1E2D4A' }}>
+              className="w-full px-3 py-2 rounded text-sm text-white font-mono" style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}>
               {ESPECIALIDADES.map(t => <option key={t} value={t}>{t}</option>)}
             </select>
           </div>
@@ -164,11 +164,11 @@ Entrega:
         <input ref={fileRef} type="file" multiple className="hidden" onChange={subir} accept=".pdf,.png,.jpg,.jpeg,.xlsx,.csv,.html" />
         <button onClick={() => fileRef.current?.click()} disabled={subiendo}
           className="w-full py-6 rounded flex flex-col items-center gap-2 disabled:opacity-50"
-          style={{ background: '#0A1628', border: '1px dashed #1E2D4A' }}>
+          style={{ background: 'hsl(var(--surface-0))', border: '1px dashed hsl(var(--surface-2))' }}>
           {subiendo
-            ? <Loader2 className="w-6 h-6 animate-spin" style={{ color: '#003399' }} />
-            : <Upload className="w-6 h-6" style={{ color: '#4A6FA5' }} />}
-          <span className="font-mono text-xs" style={{ color: '#4A6FA5' }}>
+            ? <Loader2 className="w-6 h-6 animate-spin" style={{ color: 'hsl(var(--primary))' }} />
+            : <Upload className="w-6 h-6" style={{ color: 'hsl(var(--muted-foreground))' }} />}
+          <span className="font-mono text-xs" style={{ color: 'hsl(var(--muted-foreground))' }}>
             {subiendo ? 'SUBIENDO E INDEXANDO...' : 'SUBIR PLANOS, EETT, NORMATIVAS O PROTOCOLOS'}
           </span>
         </button>

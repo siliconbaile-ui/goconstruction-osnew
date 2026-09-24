@@ -133,7 +133,7 @@ export default function SincronizacionDatos() {
   return (
     <div className="p-4 lg:p-6 space-y-5">
       <div>
-        <div className="font-mono text-xs mb-1" style={{ color: '#4A6FA5' }}>MÓDULO P0 · INGESTA DE DATOS</div>
+        <div className="font-mono text-xs mb-1" style={{ color: 'hsl(var(--muted-foreground))' }}>MÓDULO P0 · INGESTA DE DATOS</div>
         <h1 className="text-xl font-bold text-white">Sincronización de Datos — Carga Masiva de Partidas</h1>
       </div>
 
@@ -147,49 +147,49 @@ export default function SincronizacionDatos() {
           <OrionCard className="p-5 space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="text-xs font-mono mb-1 block" style={{ color: '#4A6FA5' }}>Proyecto destino</label>
+                <label className="text-xs font-mono mb-1 block" style={{ color: 'hsl(var(--muted-foreground))' }}>Proyecto destino</label>
                 <select value={proyectoId} onChange={e => setProyectoId(e.target.value)}
                   className="w-full px-3 py-2 rounded text-sm text-white font-mono"
-                  style={{ background: '#0A1628', border: '1px solid #1E2D4A' }}>
+                  style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}>
                   {proyectos.map(p => <option key={p.id} value={p.id}>{p.nombre}</option>)}
                 </select>
               </div>
               <div>
-                <label className="text-xs font-mono mb-1 block" style={{ color: '#4A6FA5' }}>Fuente de dato</label>
+                <label className="text-xs font-mono mb-1 block" style={{ color: 'hsl(var(--muted-foreground))' }}>Fuente de dato</label>
                 <select value={fuente} onChange={e => setFuente(e.target.value)}
                   className="w-full px-3 py-2 rounded text-sm text-white font-mono"
-                  style={{ background: '#0A1628', border: '1px solid #1E2D4A' }}>
+                  style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}>
                   {['nupav', 'agisoft', 'csv', 'manual'].map(f => <option key={f} value={f}>{f.toUpperCase()}</option>)}
                 </select>
               </div>
             </div>
 
             {proyecto?.ultima_sincronizacion && (
-              <div className="flex items-center gap-2 font-mono text-xs" style={{ color: '#4A6FA5' }}>
+              <div className="flex items-center gap-2 font-mono text-xs" style={{ color: 'hsl(var(--muted-foreground))' }}>
                 <Clock className="w-3 h-3" />
                 ÚLTIMA SINCRONIZACIÓN: {new Date(proyecto.ultima_sincronizacion).toLocaleString('es-CL')}
               </div>
             )}
 
             <label className="block cursor-pointer rounded-lg p-8 text-center transition-colors hover:bg-white/[0.02]"
-              style={{ border: '1px dashed #1E2D4A', background: '#0A1628' }}>
+              style={{ border: '1px dashed hsl(var(--surface-2))', background: 'hsl(var(--surface-0))' }}>
               <input ref={inputRef} type="file" accept=".csv,.xlsx,.json" className="hidden"
                 onChange={e => procesarArchivo(e.target.files?.[0])} />
               {extrayendo ? (
                 <>
-                  <Loader2 className="w-8 h-8 mx-auto mb-3 animate-spin" style={{ color: '#003399' }} />
-                  <div className="font-mono text-xs" style={{ color: '#4A6FA5' }}>EXTRAYENDO DATOS DEL ARCHIVO...</div>
+                  <Loader2 className="w-8 h-8 mx-auto mb-3 animate-spin" style={{ color: 'hsl(var(--primary))' }} />
+                  <div className="font-mono text-xs" style={{ color: 'hsl(var(--muted-foreground))' }}>EXTRAYENDO DATOS DEL ARCHIVO...</div>
                 </>
               ) : (
                 <>
-                  <UploadCloud className="w-8 h-8 mx-auto mb-3" style={{ color: '#4A6FA5' }} />
+                  <UploadCloud className="w-8 h-8 mx-auto mb-3" style={{ color: 'hsl(var(--muted-foreground))' }} />
                   <div className="text-sm text-white mb-1">{archivo ? archivo.name : 'Cargar archivo de partidas'}</div>
-                  <div className="font-mono text-[11px]" style={{ color: '#4A6FA5' }}>CSV · XLSX · JSON</div>
+                  <div className="font-mono text-[11px]" style={{ color: 'hsl(var(--muted-foreground))' }}>CSV · XLSX · JSON</div>
                 </>
               )}
             </label>
 
-            <div className="flex items-start gap-2 font-mono text-[11px]" style={{ color: '#4A6FA5' }}>
+            <div className="flex items-start gap-2 font-mono text-[11px]" style={{ color: 'hsl(var(--muted-foreground))' }}>
               <FileSpreadsheet className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
               <span>Columnas reconocidas: codigo, nombre, categoria, avance_programado, avance_real, fecha_inicio_programada, fecha_fin_programada, monto_contrato_usd, subcontratista, responsable.</span>
             </div>
@@ -197,8 +197,8 @@ export default function SincronizacionDatos() {
 
           {error && (
             <div className="rounded-lg p-3 flex items-center gap-3" style={{ background: 'rgba(211,84,0,0.08)', border: '1px solid rgba(211,84,0,0.3)' }}>
-              <XCircle className="w-4 h-4 flex-shrink-0" style={{ color: '#D35400' }} />
-              <span className="text-sm" style={{ color: '#D35400' }}>{error}</span>
+              <XCircle className="w-4 h-4 flex-shrink-0" style={{ color: 'hsl(var(--danger))' }} />
+              <span className="text-sm" style={{ color: 'hsl(var(--danger))' }}>{error}</span>
             </div>
           )}
 
@@ -208,9 +208,9 @@ export default function SincronizacionDatos() {
                 ? { background: 'rgba(39,174,96,0.08)', border: '1px solid rgba(39,174,96,0.3)' }
                 : { background: 'rgba(211,84,0,0.08)', border: '1px solid rgba(211,84,0,0.3)' }}>
               {resultado.ok
-                ? <CheckCircle className="w-4 h-4 flex-shrink-0" style={{ color: '#27AE60' }} />
-                : <XCircle className="w-4 h-4 flex-shrink-0" style={{ color: '#D35400' }} />}
-              <span className="text-sm" style={{ color: resultado.ok ? '#27AE60' : '#D35400' }}>
+                ? <CheckCircle className="w-4 h-4 flex-shrink-0" style={{ color: 'hsl(var(--ok))' }} />
+                : <XCircle className="w-4 h-4 flex-shrink-0" style={{ color: 'hsl(var(--danger))' }} />}
+              <span className="text-sm" style={{ color: resultado.ok ? 'hsl(var(--ok))' : 'hsl(var(--danger))' }}>
                 {resultado.ok
                   ? `${resultado.total} partida(s) importada(s) correctamente${resultado.omitidas ? ` · ${resultado.omitidas} fila(s) omitida(s) sin nombre` : ''}. La detección de desviaciones se ejecuta automáticamente.`
                   : `Falló la importación: ${resultado.mensaje}. Se generó una alerta crítica de sincronización.`}
@@ -224,13 +224,13 @@ export default function SincronizacionDatos() {
               <div className="flex gap-2">
                 <button onClick={importar} disabled={importando}
                   className="flex items-center gap-2 px-4 py-2 rounded text-sm font-medium text-white disabled:opacity-50"
-                  style={{ background: '#003399' }}>
+                  style={{ background: 'hsl(var(--primary))' }}>
                   {importando ? <Loader2 className="w-4 h-4 animate-spin" /> : <Database className="w-4 h-4" />}
                   {importando ? 'Importando...' : `Importar ${filas.filter(f => f.nombre).length} partidas`}
                 </button>
                 <button onClick={() => { setFilas([]); setArchivo(null); if (inputRef.current) inputRef.current.value = ''; }}
                   className="px-4 py-2 rounded text-sm font-medium text-slate-400 hover:text-white"
-                  style={{ background: '#0A1628', border: '1px solid #1E2D4A' }}>
+                  style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}>
                   Descartar
                 </button>
               </div>

@@ -2,9 +2,9 @@ import OrionCard from '@/components/OrionCard';
 import { FileBarChart, AlertTriangle, ListChecks, Trash2 } from 'lucide-react';
 
 const SEMAFORO = {
-  verde: { color: '#27AE60', label: 'VERDE · BAJO CONTROL' },
-  amarillo: { color: '#F39C12', label: 'AMARILLO · ATENCIÓN' },
-  rojo: { color: '#D35400', label: 'ROJO · CRÍTICO' },
+  verde: { color: 'hsl(var(--ok))', label: 'VERDE · BAJO CONTROL' },
+  amarillo: { color: 'hsl(var(--warn))', label: 'AMARILLO · ATENCIÓN' },
+  rojo: { color: 'hsl(var(--danger))', label: 'ROJO · CRÍTICO' },
 };
 
 export default function InformeCard({ informe, onEliminar }) {
@@ -19,7 +19,7 @@ export default function InformeCard({ informe, onEliminar }) {
           </div>
           <div>
             <div className="text-sm font-bold text-white">{informe.periodo || 'Informe'}</div>
-            <div className="font-mono text-[10px]" style={{ color: '#4A6FA5' }}>
+            <div className="font-mono text-[10px]" style={{ color: 'hsl(var(--muted-foreground))' }}>
               {informe.fecha_generacion ? new Date(informe.fecha_generacion).toLocaleString('es-CL') : ''}
             </div>
           </div>
@@ -38,37 +38,37 @@ export default function InformeCard({ informe, onEliminar }) {
         {[
           { l: 'AVANCE REAL', v: `${(informe.avance_real ?? 0).toFixed(1)}%` },
           { l: 'PROGRAMADO', v: `${(informe.avance_programado ?? 0).toFixed(1)}%` },
-          { l: 'DESVIACIÓN', v: `${(informe.desviacion ?? 0).toFixed(1)}%`, c: (informe.desviacion ?? 0) > 5 ? '#D35400' : '#27AE60' },
-          { l: 'NC ABIERTAS', v: informe.nc_abiertas ?? 0, c: (informe.nc_abiertas ?? 0) > 0 ? '#F39C12' : '#27AE60' },
+          { l: 'DESVIACIÓN', v: `${(informe.desviacion ?? 0).toFixed(1)}%`, c: (informe.desviacion ?? 0) > 5 ? 'hsl(var(--danger))' : 'hsl(var(--ok))' },
+          { l: 'NC ABIERTAS', v: informe.nc_abiertas ?? 0, c: (informe.nc_abiertas ?? 0) > 0 ? 'hsl(var(--warn))' : 'hsl(var(--ok))' },
           { l: 'RDIs ABIERTOS', v: informe.rdis_abiertos ?? 0 },
-          { l: 'USD BLOQUEADO', v: `$${(informe.monto_bloqueado_usd ?? 0).toLocaleString('en-US')}`, c: (informe.monto_bloqueado_usd ?? 0) > 0 ? '#D35400' : '#27AE60' },
+          { l: 'USD BLOQUEADO', v: `$${(informe.monto_bloqueado_usd ?? 0).toLocaleString('en-US')}`, c: (informe.monto_bloqueado_usd ?? 0) > 0 ? 'hsl(var(--danger))' : 'hsl(var(--ok))' },
         ].map(k => (
-          <div key={k.l} className="p-2.5 rounded" style={{ background: '#0A1628', border: '1px solid #131F36' }}>
-            <div className="font-mono text-[9px] tracking-wider mb-1" style={{ color: '#4A6FA5' }}>{k.l}</div>
-            <div className="text-sm font-bold" style={{ color: k.c || '#FFFFFF' }}>{k.v}</div>
+          <div key={k.l} className="p-2.5 rounded" style={{ background: 'hsl(var(--surface-0))', border: '1px solid hsl(var(--surface-2))' }}>
+            <div className="font-mono text-[9px] tracking-wider mb-1" style={{ color: 'hsl(var(--muted-foreground))' }}>{k.l}</div>
+            <div className="text-sm font-bold" style={{ color: k.c || 'hsl(var(--foreground))' }}>{k.v}</div>
           </div>
         ))}
       </div>
 
       <div className="space-y-3 text-sm">
         <div>
-          <div className="font-mono text-[10px] tracking-wider mb-1" style={{ color: '#4A6FA5' }}>RESUMEN EJECUTIVO</div>
-          <p className="whitespace-pre-wrap leading-relaxed" style={{ color: '#CBD5E1' }}>{informe.resumen_ejecutivo}</p>
+          <div className="font-mono text-[10px] tracking-wider mb-1" style={{ color: 'hsl(var(--muted-foreground))' }}>RESUMEN EJECUTIVO</div>
+          <p className="whitespace-pre-wrap leading-relaxed" style={{ color: 'hsl(var(--hairline))' }}>{informe.resumen_ejecutivo}</p>
         </div>
         {informe.riesgos_principales && (
           <div className="p-3 rounded" style={{ background: 'rgba(211,84,0,0.06)', border: '1px solid rgba(211,84,0,0.25)' }}>
-            <div className="font-mono text-[10px] tracking-wider mb-1 flex items-center gap-1" style={{ color: '#D35400' }}>
+            <div className="font-mono text-[10px] tracking-wider mb-1 flex items-center gap-1" style={{ color: 'hsl(var(--danger))' }}>
               <AlertTriangle className="w-3 h-3" /> RIESGOS PRINCIPALES
             </div>
-            <p className="whitespace-pre-wrap leading-relaxed text-xs" style={{ color: '#E2B49A' }}>{informe.riesgos_principales}</p>
+            <p className="whitespace-pre-wrap leading-relaxed text-xs" style={{ color: 'hsl(var(--danger) / 0.5)' }}>{informe.riesgos_principales}</p>
           </div>
         )}
         {informe.acciones_recomendadas && (
           <div className="p-3 rounded" style={{ background: 'rgba(0,51,153,0.08)', border: '1px solid rgba(0,51,153,0.3)' }}>
-            <div className="font-mono text-[10px] tracking-wider mb-1 flex items-center gap-1" style={{ color: '#5B8DEF' }}>
+            <div className="font-mono text-[10px] tracking-wider mb-1 flex items-center gap-1" style={{ color: 'hsl(var(--info))' }}>
               <ListChecks className="w-3 h-3" /> ACCIONES RECOMENDADAS
             </div>
-            <p className="whitespace-pre-wrap leading-relaxed text-xs" style={{ color: '#B6C9EA' }}>{informe.acciones_recomendadas}</p>
+            <p className="whitespace-pre-wrap leading-relaxed text-xs" style={{ color: 'hsl(var(--info) / 0.4)' }}>{informe.acciones_recomendadas}</p>
           </div>
         )}
       </div>
