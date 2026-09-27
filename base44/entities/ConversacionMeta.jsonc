@@ -60,7 +60,11 @@
         }
       ]
     },
-    "read": null,
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
     "update": {
       "$or": [
         {
